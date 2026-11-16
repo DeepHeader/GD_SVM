@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Machine Learning Playground | 직접 발견하는 머신러닝</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#202735;--mut:#667085;--mut2:#98a2b3;--line:#e6e8ee;--soft:#f6f7fb;--soft2:#eef0f6;
+  --acc:#3f5bd8;--gd:#6f5ce6;--mo:#e0704f;--ad:#1f9e8f;--a:#4f78d8;--b:#e39b3d;--err:#d6455d;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--math:'STIX Two Text','Times New Roman',serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Noto Sans KR',Arial,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;line-height:1.6}
+body.scrubbing{cursor:ew-resize;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+a{color:inherit}
+
+/* NAV */
+header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;height:62px;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;text-decoration:none;letter-spacing:-.01em}
+.logo i{width:32px;height:32px;border-radius:8px;background:var(--acc);display:grid;place-items:center}
+.nav{display:flex;gap:28px;margin:0 auto;height:100%}
+.nav a{display:flex;align-items:center;text-decoration:none;font-size:14px;color:var(--mut);border-bottom:2px solid transparent;padding-top:2px}
+.nav a.on{color:var(--acc);font-weight:700;border-color:var(--acc)}
+.hd-r{display:flex;align-items:center;gap:12px;font-size:12.5px;color:var(--mut)}
+.prog{border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-family:var(--mono);font-size:12px}
+.prog b{color:var(--ink)}
+
+.view[hidden]{display:none}
+.eyebrow{font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.02em}
+h1,h2,h3{letter-spacing:-.02em;margin:0}
+.muted{color:var(--mut)}
+.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;transition:.15s}
+.btn:hover{border-color:#cfd4df;background:var(--soft)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.pri:hover{filter:brightness(1.07)}
+.btn.gdc{background:var(--gd);border-color:var(--gd);color:#fff}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:8px}
+.card{border:1px solid var(--line);border-radius:16px;background:#fff}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:#fff}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;padding:3px;background:var(--soft);gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;border-radius:7px;padding:6px 11px;font-size:12.5px;color:var(--mut)}
+.seg button.on{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+/* HOME */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;padding:72px 0 56px;align-items:center}
+.hero h1{font-size:54px;line-height:1.08;font-weight:800;margin:14px 0 18px}
+.hero h1 em{font-style:normal;color:var(--acc)}
+.hero .lead{font-size:19px;font-weight:700;margin:0 0 8px}
+.hero .ctas{display:flex;gap:10px;margin:26px 0 18px;flex-wrap:wrap}
+.preview{padding:18px;display:grid;gap:12px;background:var(--soft);border-radius:20px}
+.preview .card{padding:14px 16px}
+.preview .ph{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:6px}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:28px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.steps4 div{display:flex;gap:10px;align-items:flex-start}
+.steps4 b{font-family:var(--mono);font-size:12px;color:var(--acc);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.steps4 p{margin:0;font-size:13.5px}
+.steps4 small{display:block;color:var(--mut);font-size:12px}
+section.block{padding:64px 0}
+.labs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:28px}
+.lab{padding:26px;display:flex;flex-direction:column;gap:12px}
+.lab .tags{display:flex;gap:6px;flex-wrap:wrap}
+.lab h3{font-size:24px}
+.callout{background:var(--soft);border-radius:20px;padding:34px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:start}
+.callout h3{font-size:22px}
+.foot{padding:56px 0 70px;text-align:center}
+.foot h2{font-size:30px;margin-bottom:8px}
+
+/* LAB */
+.crumb{font-size:12.5px;color:var(--mut);padding:22px 0 6px}
+.crumb a{text-decoration:none}
+.labhead{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0 22px}
+.labhead h1{font-size:34px;font-weight:800;margin-top:6px}
+.labhead h1 small{font-size:16px;color:var(--mut2);font-weight:500;margin-left:10px}
+.labhead p{margin:10px 0 0;color:var(--mut)}
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:12px;padding:10px 14px;gap:8px}
+.stepper button{border:0;background:none;display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mut);padding:4px 0}
+.stepper button b{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--mut2)}
+.stepper button.on{color:var(--ink);font-weight:700}
+.stepper button.on b{background:var(--ink);color:#fff;border-color:var(--ink)}
+.subnav{display:flex;gap:18px;padding:22px 0 18px;border-bottom:1px solid var(--line);margin-bottom:22px;font-size:14px}
+.subnav button{border:0;background:none;padding:0;color:var(--mut)}
+.subnav button.on{color:var(--ink);font-weight:700}
+.labgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}
+.stage{padding:20px 22px;min-width:0}
+.side{background:#fafbfd;border-left:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:16px}
+.side h3{font-size:19px}
+.stage-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:10px;flex-wrap:wrap}
+.stage-h .t{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--gd);box-shadow:0 0 0 4px rgba(111,92,230,.15)}
+svg text{font-family:'Noto Sans KR',Arial,sans-serif}
+.plot{width:100%;height:auto;display:block;touch-action:none}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;margin-top:10px}
+.stats div{padding:10px 14px;border-right:1px solid var(--line)}
+.stats div:last-child{border:0}
+.stats small{display:block;font-size:11.5px;color:var(--mut)}
+.stats b{font-family:var(--mono);font-size:16px}
+.note{font-size:12px;color:var(--mut2);margin:10px 0 0}
+.box{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;font-size:13.5px}
+.box h4{margin:0 0 6px;font-size:13.5px}
+.box p{margin:0}
+.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.presets button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 2px;font-size:12.5px;font-weight:700}
+.presets button small{display:block;font-weight:400;color:var(--mut2);font-size:10.5px}
+.presets button.on{border-color:var(--gd);background:#f3f1fe;color:var(--gd)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.lbl{font-size:12.5px;font-weight:700;margin-bottom:6px;display:block}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
+
+/* FORMULA + SCRUB */
+.fx{border:1px solid #dcd7fb;background:linear-gradient(180deg,#fbfaff,#fff);border-radius:14px;padding:14px 16px 12px;position:relative}
+.fx.blue{border-color:#cfdaf6;background:linear-gradient(180deg,#f8faff,#fff)}
+.fx-h{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--mut);margin-bottom:6px;gap:8px}
+.fx-h b{color:var(--ink);font-size:12.5px}
+.fl{font-family:var(--math);font-size:23px;line-height:1.2;padding:4px 0 24px;white-space:nowrap;overflow-x:auto;overflow-y:visible}
+.fl.md{font-size:19px}
+.fl.sm{font-size:16px;padding-bottom:22px}
+.fl.np{padding-bottom:6px}
+.mv{font-style:italic}
+.fl sub{font-size:.62em}
+.fl sup{font-size:.62em}
+.sym{--c:var(--gd);position:relative;display:inline-block;cursor:ew-resize;padding:0 3px;margin:0 1px;border-radius:6px;color:var(--c);touch-action:none;user-select:none;-webkit-user-select:none;outline:none;transition:background .12s}
+.sym.wide{margin:0 12px}
+.sym .g{font-style:italic;font-weight:600;border-bottom:2px dashed currentColor;line-height:1.05}
+.sym .v{position:absolute;left:50%;top:calc(100% + 3px);transform:translateX(-50%);font:600 10.5px/1 var(--mono);font-style:normal;padding:3px 6px;border-radius:999px;background:color-mix(in srgb,var(--c) 13%,#fff);white-space:nowrap;pointer-events:none}
+.sym:hover,.sym:focus-visible,.sym.drag{background:color-mix(in srgb,var(--c) 11%,transparent)}
+.sym.drag .v,.sym:hover .v{background:var(--c);color:#fff}
+.sym.pulse::after{content:'';position:absolute;inset:-5px -3px;border-radius:9px;border:2px solid var(--c);animation:pulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes pulse{0%{opacity:.8;transform:scale(.9)}100%{opacity:0;transform:scale(1.35)}}
+.hlk{border-radius:5px;transition:background .15s}
+.live{font-family:var(--mono);font-size:12px;color:var(--mut);background:var(--soft);border-radius:8px;padding:8px 10px;line-height:1.6;overflow-x:auto;white-space:nowrap}
+.live b{color:var(--ink)}
+#svm-live,#lift-live{white-space:normal}
+.regime{font-size:12.5px;margin-top:8px;padding:9px 11px;border-radius:9px;background:#f3f1fe;color:#4b3cb8}
+.regime.warn{background:#fff3e8;color:#b05a12}
+.regime.bad{background:#fdecef;color:#b42340}
+.coach{position:absolute;z-index:5;background:var(--ink);color:#fff;font-size:12px;padding:6px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;animation:bob 1.4s ease-in-out infinite}
+.coach::after{content:'';position:absolute;left:18px;bottom:-5px;border:5px solid transparent;border-top-color:var(--ink);border-bottom:0}
+@keyframes bob{50%{transform:translateY(-3px)}}
+#tip{position:fixed;z-index:100;pointer-events:none;transform:translate(-50%,-100%);background:var(--ink);color:#fff;border-radius:10px;padding:8px 11px 9px;min-width:170px;opacity:0;transition:opacity .12s;box-shadow:0 8px 24px rgba(16,24,40,.25)}
+#tip.on{opacity:1}
+#tip .tl{font-size:11.5px;color:#c6cbe0}
+#tip .tl b{font-family:var(--math);font-style:italic;font-size:15px;color:#fff;margin-right:4px}
+#tip .tv{font:600 18px/1.2 var(--mono);margin:2px 0 6px}
+#tip .tt{height:4px;border-radius:4px;background:#3c4558;position:relative}
+#tip .tt i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:#a99cff}
+#tip .te{display:flex;justify-content:space-between;font-size:10.5px;color:#aab1c5;margin-top:5px;gap:12px}
+
+/* highlight links */
+.lk{transition:opacity .15s,stroke-width .15s}
+body[data-hl=eta1] .lk-eta1{stroke-width:4.5}
+body[data-hl=eta1] .lk-eta1t{font-weight:800;fill:var(--gd)}
+body[data-hl=eta1] .lk-ghost{opacity:1}
+body[data-hl=x0] .lk-x0{opacity:1!important;r:8}
+body[data-hl=eta2] .ball2{stroke-width:3}
+body[data-hl=beta] .m-gd,body[data-hl=beta] .m-ad{opacity:.12}
+body[data-hl=b1] .m-gd,body[data-hl=b1] .m-mo,body[data-hl=b2] .m-gd,body[data-hl=b2] .m-mo{opacity:.12}
+body[data-hl=sx] .lk-start,body[data-hl=sy] .lk-start{stroke-width:4}
+body[data-hl=C] .lk-C{opacity:1!important}
+body[data-hl=gam] .lk-gam{opacity:.9!important}
+body[data-hl=liftc] .lk-c{stroke-width:3.5}
+.grad-hl:hover{background:rgba(214,69,93,.1)}
+
+/* 2D */
+.methods{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.mcard{border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:12.5px;transition:opacity .15s}
+.mcard h5{margin:0 0 6px;font-size:13px;display:flex;gap:6px;align-items:center}
+.mcard .kv{display:flex;justify-content:space-between}
+.mcard .kv b{font-family:var(--mono)}
+.mcard .st{margin-top:6px;color:var(--mut);font-size:12px}
+.fxcards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.fxcards .fx{border-color:var(--line)}
+.fxcards .fl{font-size:19px}
+.fxcards p{font-size:12.5px;color:var(--mut);margin:6px 0 0}
+.kt{font-size:11.5px;color:var(--mut);font-weight:700}
+.map{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.map canvas{display:block;width:100%;height:auto}
+.map svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mut);flex-wrap:wrap}
+.legend span{display:inline-flex;gap:5px;align-items:center}
+.warnbox{background:#fff8ee;border:1px solid #f5dcb6;border-radius:14px;padding:16px 18px;font-size:13.5px;margin-top:18px}
+
+/* SVM */
+.svmplot{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:520px;margin:0 auto}
+.svmplot canvas{display:block;width:100%;height:auto;image-rendering:auto}
+.svmplot svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.tools{display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px;gap:8px;flex-wrap:wrap}
+select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;background:#fff}
+.liftgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.liftsteps{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mut);margin:14px 0}
+.liftsteps span{border:1px solid var(--line);border-radius:999px;padding:3px 12px}
+.liftsteps span.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* summary + quiz */
+.sum3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+.sum3 .card{padding:20px}
+.sum3 b{font-family:var(--mono);color:var(--acc);font-size:12px}
+.sum3 h4{margin:6px 0;font-size:16px}
+.sum3 p{margin:0;font-size:13.5px;color:var(--mut)}
+.quiz{display:grid;gap:12px;margin-top:18px}
+.q{padding:18px}
+.q h4{margin:0 0 10px;font-size:15px}
+.q .opts{display:grid;gap:6px}
+.q .opts button{text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;font-size:13.5px}
+.q .opts button:hover{background:var(--soft)}
+.q .opts button.ok{border-color:#36a26b;background:#edf8f2;color:#1d6b44;font-weight:700}
+.q .opts button.no{border-color:#e7a3ae;background:#fdf1f3;color:#a3283f}
+.q .fb{font-size:12.5px;margin-top:8px;color:var(--mut)}
+.next{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--soft);border-radius:16px;padding:20px 22px;margin:22px 0 70px;flex-wrap:wrap}
+.sechead{margin:56px 0 18px}
+.sechead h2{font-size:26px;margin-top:6px}
+.sechead p{margin:8px 0 0;color:var(--mut)}
+
+
+/* CONCEPT */
+.why{border:1px solid var(--line);border-radius:20px;padding:24px 26px;margin-bottom:26px;background:#fff}
+.why-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.why-h h3{font-size:20px}
+.why3{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:16px}
+.why3>div{border-radius:14px;padding:18px;background:var(--soft)}
+.why3 .n{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--acc)}
+.why3 h4{margin:4px 0 8px;font-size:15.5px;letter-spacing:-.01em}
+.why3 p{margin:0 0 8px;font-size:13.5px;color:#3b4456}
+.why3 p:last-child{margin-bottom:0}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:10px 0 4px;font-size:12.5px}
+.flow span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.flow span.k{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:700}
+.flow i{font-style:normal;color:var(--mut2)}
+.eg{background:#fff;border:1px dashed #cfd4df;border-radius:10px;padding:10px 12px;font-size:12.5px;margin-top:8px;color:var(--mut)}
+.eg b{color:var(--ink)}
+.uses{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.uses span{font-size:12px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 9px}
+.fit{font-size:12.5px;margin:0;padding:0;list-style:none}
+.fit li{padding:3px 0 3px 20px;position:relative}
+.fit li::before{position:absolute;left:0;font-weight:800}
+.fit li.y::before{content:'✓';color:#2f8f5b}
+.fit li.w::before{content:'△';color:#b9770e;font-size:11px;top:5px}
+.bridge{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:13px;color:var(--mut)}
+.bridge::after{content:'';flex:1;height:1px;background:var(--line)}
+@media (max-width:960px){.why3{grid-template-columns:1fr}}
+
+.illu{width:100%;height:auto;display:block;border-radius:14px;margin:4px 0 16px;box-shadow:0 1px 0 rgba(16,24,40,.04)}
+.illu .fog{animation:fog 9s ease-in-out infinite alternate}
+@keyframes fog{to{transform:translateX(-18px)}}
+@media (prefers-reduced-motion:reduce){.illu .fog{animation:none}}
+
+.concept{margin:34px 0 10px}
+.analogy{display:grid;grid-template-columns:1.1fr 1fr;gap:22px;align-items:stretch}
+.story{background:var(--soft);border-radius:18px;padding:26px 28px}
+.story .big{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.45;margin:6px 0 12px}
+.story p{margin:0 0 10px;color:#3b4456;font-size:14.5px}
+.map4{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.map4 th{background:var(--soft);font-size:12px;color:var(--mut);text-align:left;padding:10px 14px;font-weight:700}
+.map4 td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
+.map4 td:last-child{font-family:var(--math);font-size:18px;font-style:italic;white-space:nowrap}
+.map4 tr:hover td{background:#fbfaff}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.cbox{border:1px solid var(--line);border-radius:18px;padding:22px}
+.cbox h3{font-size:18px;margin:4px 0 6px}
+.cbox>p{margin:0 0 12px;color:var(--mut);font-size:13.5px}
+.decode{display:flex;align-items:flex-start;justify-content:center;gap:6px;flex-wrap:wrap;font-family:var(--math);font-size:28px;padding:14px 0 4px}
+.decode .pt{display:flex;flex-direction:column;align-items:center;border-radius:10px;padding:2px 8px 8px;cursor:default;transition:background .15s}
+.decode .pt:hover{background:var(--soft2)}
+.decode .pt small{font-family:'Noto Sans KR',sans-serif;font-size:11.5px;font-style:normal;color:var(--mut);margin-top:8px;padding-top:6px;border-top:2px solid currentColor;white-space:nowrap}
+.decode .op{padding-top:2px;color:var(--mut2)}
+.loop{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}
+.loop div{border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;position:relative;background:#fff}
+.loop b{display:block;font-family:var(--mono);font-size:11px;color:var(--acc);margin-bottom:4px}
+.loop div:not(:last-child)::after{content:'→';position:absolute;right:-10px;top:50%;transform:translate(50%,-50%);color:var(--mut2);font-size:13px}
+.loop div:last-child{background:#f8f7ff;border-color:#e5e0fd}
+.say{margin-top:10px;font-size:13px;padding:10px 12px;border-radius:10px;background:var(--soft)}
+.terms{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px}
+.terms div{border:1px solid var(--line);border-radius:14px;padding:14px;font-size:13px}
+.terms b{display:block;font-size:14px;margin-bottom:4px}
+.terms i{display:block;font-style:normal;color:var(--mut);font-size:12px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+body[data-hl=cx] .lk-cx{stroke-width:4}
+body[data-hl=sang] .lk-sang{stroke-width:4}
+@media (max-width:960px){.analogy,.cgrid{grid-template-columns:1fr}.terms{grid-template-columns:1fr 1fr}.loop{grid-template-columns:1fr 1fr}.loop div::after{display:none}}
+@media (max-width:960px){
+  .hero{grid-template-columns:1fr;padding-top:40px}.hero h1{font-size:40px}
+  .labgrid{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid var(--line)}
+  .labs,.callout,.fxcards,.methods,.sum3,.liftgrid{grid-template-columns:1fr}
+  .steps4{grid-template-columns:1fr 1fr}.stepper{grid-template-columns:repeat(3,1fr)}
+  .nav{gap:16px}.hd-r span{display:none}
+}
+@media (max-width:560px){.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}.fl{font-size:19px}.wrap{padding:0 16px}}
+</style>
+</head>
+<body>
+<div id="tip"></div>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#home"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M7.5 15h9"/></svg></i>ML Playground</a>
+    <nav class="nav">
+      <a href="#home" data-v="home">홈</a>
+      <a href="#gd" data-v="gd">경사하강법</a>
+      <a href="#svm" data-v="svm">SVM</a>
+    </nav>
+    <div class="hd-r"><span>누구나 시작하는 AI</span><div class="prog"><b id="progN">0</b> / 2</div></div>
+  </div>
+</header>
+
+<!-- ============ HOME ============ -->
+<main id="v-home" class="view">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <span class="chip"><span style="width:6px;height:6px;border-radius:50%;background:var(--acc)"></span>직접 발견하는 머신러닝</span>
+        <h1>Machine Learning<br><em>Playground</em>.</h1>
+        <p class="lead">어려운 머신러닝, 직접 움직여 보면 쉬워집니다.</p>
+        <p class="muted" style="margin:0">쉬운 비유와 수식 속 기호를 직접 끌어 보면서<br>AI가 배우는 원리를 손으로 느껴 보세요.</p>
+        <div class="ctas">
+          <a class="btn pri" href="#gd">▶ 첫 번째 실험 시작하기</a>
+          <button class="btn" onclick="document.getElementById('labs').scrollIntoView()">실험실 둘러보기 ↓</button>
+        </div>
+        <div class="row"><span class="chip">⏱ 한 주제에 약 5분</span><span class="chip">✦ 사전 지식 없이 시작</span><span class="chip" style="color:var(--gd);border-color:#dcd7fb">⇆ 수식 기호를 끌어서 조절</span></div>
+      </div>
+      <div class="preview">
+        <div class="card">
+          <div class="ph"><span>실험 01 · 공이 가장 낮은 곳으로</span><span class="chip">경사하강법</span></div>
+          <svg viewBox="0 0 420 150" class="plot">
+            <path d="M20,10 Q210,250 400,10" fill="#f1effe" stroke="#7b6cf0" stroke-width="2.5"/>
+            <line x1="20" y1="130" x2="400" y2="130" stroke="#e6e8ee"/>
+            <circle cx="70" cy="45" r="9" fill="#6f5ce6"/><line x1="82" y1="45" x2="150" y2="45" stroke="#6f5ce6" stroke-width="2.5" marker-end="url(#ah0)"/>
+            <defs><marker id="ah0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#6f5ce6"/></marker></defs>
+            <text x="250" y="40" font-size="20" font-family="STIX Two Text,serif" fill="#202735">x ← x − <tspan fill="#6f5ce6" font-style="italic" text-decoration="underline">η</tspan>∇L</text>
+          </svg>
+        </div>
+        <div class="card">
+          <div class="ph"><span>실험 02 · 두 그룹 사이의 여유 공간</span><span class="chip">SVM</span></div>
+          <svg viewBox="0 0 420 150" class="plot">
+            <rect x="0" y="0" width="420" height="150" fill="#f7f9ff"/>
+            <path d="M120,150 L330,0" stroke="#202735" stroke-width="2"/><path d="M85,150 L295,0 M155,150 L365,0" stroke="#98a2b3" stroke-dasharray="5 4"/>
+            <g fill="#4f78d8"><circle cx="60" cy="40" r="6"/><circle cx="110" cy="70" r="6"/><circle cx="150" cy="30" r="6"/><circle cx="70" cy="100" r="6"/><circle cx="190" cy="50" r="6" stroke="#202735" stroke-width="2"/></g>
+            <g fill="#e39b3d"><rect x="290" y="90" width="11" height="11"/><rect x="340" y="60" width="11" height="11"/><rect x="250" y="120" width="11" height="11" stroke="#202735" stroke-width="2"/><rect x="370" y="110" width="11" height="11"/></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="steps4">
+      <div><b>01</b><p>쉬운 비유<small>개념을 일상의 장면으로</small></p></div>
+      <div><b>02</b><p>움직임 관찰<small>공과 경계가 어떻게 바뀌는지</small></p></div>
+      <div><b>03</b><p>직접 실험<small>수식 기호를 끌어서 값 조절</small></p></div>
+      <div><b>04</b><p>나의 말로 이해<small>퀴즈로 확인하기</small></p></div>
+    </div>
+
+    <section class="block" id="labs">
+      <span class="eyebrow">실험실</span>
+      <h2 style="font-size:32px;margin-top:6px">오늘, 어떤 원리를 발견할까요?</h2>
+      <p class="muted" style="margin:6px 0 0">2개의 실험실 · 무제한 실험</p>
+      <div class="labs">
+        <div class="card lab">
+          <span class="eyebrow">LAB 01 · 약 5분</span>
+          <h3>경사하강법 <span class="muted" style="font-size:15px;font-weight:500">Gradient Descent</span></h3>
+          <p class="muted" style="margin:0">골짜기를 내려가는 공을 보며, 학습률 <i style="font-family:var(--math)">η</i>에 따라 달라지는 움직임을 실험합니다. 수식 속 <i style="font-family:var(--math)">η</i>를 끌면 화살표(한 걸음)의 길이가 바로 바뀝니다.</p>
+          <div class="tags"><span class="chip">경사하강법</span><span class="chip">학습률</span><span class="chip">손실 함수</span><span class="chip">모멘텀 · Adam</span></div>
+          <a class="btn gdc" href="#gd" style="align-self:flex-start;margin-top:6px">경사하강법 실험하기 →</a>
+        </div>
+        <div class="card lab">
+          <span class="eyebrow" style="color:var(--a)">LAB 02 · 약 5분</span>
+          <h3>SVM <span class="muted" style="font-size:15px;font-weight:500">Support Vector Machine</span></h3>
+          <p class="muted" style="margin:0">두 그룹의 점을 직접 움직이며 결정 경계가 만들어지는 모습을 봅니다. 수식 속 <i style="font-family:var(--math)">C</i>와 <i style="font-family:var(--math)">γ</i>를 끌면 경계와 마진이 실시간으로 다시 학습됩니다.</p>
+          <div class="tags"><span class="chip">결정 경계</span><span class="chip">마진</span><span class="chip">커널</span></div>
+          <a class="btn pri" href="#svm" style="align-self:flex-start;margin-top:6px">SVM 실험하기 →</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="callout">
+      <div><span class="eyebrow">비교</span><h3 style="margin-top:6px">두 실험실,<br>서로 다른 질문.</h3></div>
+      <div><b>경사하강법</b><p class="muted" style="margin:4px 0 0;font-size:14px">“오차를 어떻게 줄일까?” — 손실을 줄이도록 값을 반복해서 고치는 <b>최적화 방법</b>입니다.</p></div>
+      <div><b>SVM</b><p class="muted" style="margin:4px 0 0;font-size:14px">“두 그룹을 어떻게 나눌까?” — 여유 공간이 넓은 경계를 찾는 <b>분류 모델</b>입니다. SVM 학습에도 최적화가 필요하지만, 꼭 경사하강법일 필요는 없어요.</p></div>
+    </div>
+
+    <div class="foot">
+      <h2>한 번 움직여 보면, 이해가 시작됩니다.</h2>
+      <p class="muted">작은 실험에서 시작하는 큰 이해. · 대학생을 위한 머신러닝 실험실</p>
+      <a class="btn pri" href="#gd" style="margin-top:10px">학습 시작</a>
+    </div>
+  </div>
+</main>
+
+<!-- ============ GD ============ -->
+<main id="v-gd" class="view" hidden>
+  <div class="wrap">
+    <div class="crumb"><a href="#home">실험실 홈</a> &nbsp;›&nbsp; 경사하강법</div>
+    <div class="labhead">
+      <div>
+        <span class="eyebrow" style="color:var(--gd)">실험실 01 · 최적화</span>
+        <h1>경사하강법<small>Gradient Descent</small></h1>
+        <p>산에서 가장 낮은 곳을 찾듯, AI도 오차가 줄어드는 방향으로 한 걸음씩 나아갑니다.</p>
+      </div>
+    </div>
+    <div class="stepper" data-for="gd">
+      <button data-go="gd-concept"><b>01</b>개념 이해</button>
+      <button data-go="gd-1d"><b>02</b>움직임 관찰</button>
+      <button data-go="gd-1d" class="on"><b>03</b>직접 실험</button>
+      <button data-go="gd-2d"><b>04</b>결과 해석</button>
+      <button data-go="gd-sum"><b>05</b>핵심 정리</button>
+    </div>
+
+    <section class="concept" id="gd-concept">
+      <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--gd)">STEP 01 · 개념 이해</span><h2>안개 낀 산에서 가장 낮은 곳 찾기</h2><p>경사하강법은 ‘틀린 정도(손실)’를 가장 작게 만드는 값을 찾는 방법이에요. 왜 필요한지 → 비유 → 수식 순서로 살펴볼게요.</p></div>
+      <div class="why">
+        <div class="why-h"><span class="eyebrow" style="color:var(--gd)">먼저, 맥락부터</span><h3>경사하강법은 왜 필요할까요?</h3></div>
+        <div class="why3">
+          <div>
+            <span class="n" style="color:var(--gd)">01 · 어떤 문제를 풀까?</span>
+            <h4>AI의 ‘학습’ = 좋은 값 찾기</h4>
+            <p>AI 모델은 숫자(가중치)를 잔뜩 가진 계산식이에요. 학습이란 <b>예측이 정답에 가까워지도록 이 숫자들을 고치는 과정</b>입니다.</p>
+            <div class="flow"><span>예측하기</span><i>→</i><span>얼마나 틀렸나? (손실)</span><i>→</i><span class="k" style="background:var(--gd);border-color:var(--gd)">값 고치기</span><i>↺</i></div>
+            <div class="eg"><b>예)</b> 집값 = <b>w</b> × 면적 + <b>b</b>. w와 b가 엉뚱하면 예측이 크게 틀려요. ‘얼마나 틀렸는지’를 숫자 하나로 나타낸 것이 <b>손실</b>이고, 이걸 가장 작게 만드는 w, b를 찾아야 해요.</div>
+          </div>
+          <div>
+            <span class="n" style="color:var(--gd)">02 · 왜 필요할까?</span>
+            <h4>다 해볼 수는 없으니까</h4>
+            <p>값이 2개라면 이것저것 대입해 볼 수도 있어요. 하지만 실제 모델은 값이 <b>수백만~수십억 개</b>예요.</p>
+            <div class="eg">값 10개를 각각 100가지씩만 시도해도 <b>100¹⁰ = 10²⁰</b>가지 조합. 1초에 10억 번 계산해도 <b>3천 년</b> 넘게 걸려요.</div>
+            <p style="margin-top:10px">경사하강법은 전부 시도하는 대신, <b>지금 위치에서 손실이 줄어드는 방향</b>만 계산해서 조금씩 나아가요. 그래서 값이 아무리 많아도 쓸 수 있습니다.</p>
+          </div>
+          <div>
+            <span class="n" style="color:var(--gd)">03 · 언제 쓸까?</span>
+            <h4>손실을 줄여야 하는 거의 모든 곳</h4>
+            <div class="uses"><span>🧠 딥러닝 · 신경망 학습</span><span>💬 ChatGPT 같은 언어 모델</span><span>🖼 이미지 인식</span><span>📈 선형·로지스틱 회귀</span><span>🎬 추천 시스템</span></div>
+            <ul class="fit">
+              <li class="y">조절할 값이 아주 많을 때</li>
+              <li class="y">손실의 기울기를 계산할 수 있을 때</li>
+              <li class="w">학습률을 잘못 고르면 느리거나 발산 — 아래 실험의 주제예요</li>
+              <li class="w">가장 낮은 곳(전역 최솟값)을 항상 보장하진 않아요</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="bridge">그럼 이 과정을 장면으로 떠올려 볼게요 ↓</div>
+      <div class="analogy">
+        <div class="story">
+          <span class="eyebrow" style="color:var(--gd)">비유</span>
+          <div class="big">짙은 안개 때문에 앞이 안 보여요.<br>그래도 산 아래로 내려가야 한다면?</div><svg class="illu" viewBox="0 0 460 240" role="img" aria-label="안개 낀 산에서 등산객이 발밑 경사를 느끼며 내려가는 그림">
+<defs>
+ <linearGradient id="gi-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eeebff"/><stop offset="1" stop-color="#fbfaff"/></linearGradient>
+ <linearGradient id="gi-gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a8df3"/><stop offset="1" stop-color="#5a46d6"/></linearGradient>
+ <radialGradient id="gi-hole" cx="125" cy="122.7" r="95" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#000"/><stop offset=".6" stop-color="#000"/><stop offset="1" stop-color="#fff"/></radialGradient>
+ <mask id="gi-mask"><rect width="460" height="240" fill="url(#gi-hole)"/></mask>
+ <filter id="gi-blur" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
+ <marker id="gi-ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#fff"/></marker>
+</defs>
+<rect width="460" height="240" rx="14" fill="url(#gi-sky)"/>
+<path d="M0,240 L0.0,94.8 L5.0,91.5 L10.0,88.8 L15.0,86.6 L20.0,84.9 L25.0,83.9 L30.0,83.4 L35.0,83.5 L40.0,84.1 L45.0,85.2 L50.0,86.9 L55.0,89.0 L60.0,91.5 L65.0,94.3 L70.0,97.4 L75.0,100.8 L80.0,104.2 L85.0,107.8 L90.0,111.3 L95.0,114.8 L100.0,118.1 L105.0,121.3 L110.0,124.2 L115.0,126.7 L120.0,128.9 L125.0,130.8 L130.0,132.1 L135.0,133.1 L140.0,133.6 L145.0,133.6 L150.0,133.1 L155.0,132.3 L160.0,131.0 L165.0,129.3 L170.0,127.3 L175.0,125.0 L180.0,122.5 L185.0,119.8 L190.0,117.0 L195.0,114.1 L200.0,111.3 L205.0,108.6 L210.0,106.0 L215.0,103.6 L220.0,101.6 L225.0,99.8 L230.0,98.5 L235.0,97.6 L240.0,97.1 L245.0,97.1 L250.0,97.6 L255.0,98.7 L260.0,100.2 L265.0,102.2 L270.0,104.7 L275.0,107.6 L280.0,110.9 L285.0,114.6 L290.0,118.5 L295.0,122.7 L300.0,127.0 L305.0,131.5 L310.0,135.9 L315.0,140.3 L320.0,144.5 L325.0,148.5 L330.0,152.2 L335.0,155.6 L340.0,158.6 L345.0,161.1 L350.0,163.1 L355.0,164.5 L360.0,165.3 L365.0,165.5 L370.0,165.1 L375.0,164.1 L380.0,162.5 L385.0,160.2 L390.0,157.4 L395.0,154.1 L400.0,150.3 L405.0,146.0 L410.0,141.4 L415.0,136.5 L420.0,131.4 L425.0,126.2 L430.0,120.9 L435.0,115.6 L440.0,110.4 L445.0,105.3 L450.0,100.6 L455.0,96.1 L460.0,92.0 L460,240 Z" fill="#ddd7fb"/>
+<path d="M0,240 L0.0,124.8 L5.0,121.9 L10.0,119.6 L15.0,117.9 L20.0,116.6 L25.0,116.0 L30.0,115.9 L35.0,116.3 L40.0,117.3 L45.0,118.8 L50.0,120.8 L55.0,123.2 L60.0,126.0 L65.0,129.1 L70.0,132.5 L75.0,136.0 L80.0,139.7 L85.0,143.4 L90.0,147.1 L95.0,150.7 L100.0,154.1 L105.0,157.3 L110.0,160.2 L115.0,162.7 L120.0,164.9 L125.0,166.6 L130.0,167.9 L135.0,168.7 L140.0,169.0 L145.0,168.8 L150.0,168.2 L155.0,167.1 L160.0,165.5 L165.0,163.5 L170.0,161.2 L175.0,158.6 L180.0,155.7 L185.0,152.6 L190.0,149.5 L195.0,146.2 L200.0,143.0 L205.0,139.8 L210.0,136.8 L215.0,134.1 L220.0,131.6 L225.0,129.4 L230.0,127.6 L235.0,126.3 L240.0,125.4 L245.0,125.0 L250.0,125.1 L255.0,125.8 L260.0,127.0 L265.0,128.6 L270.0,130.8 L275.0,133.4 L280.0,136.4 L285.0,139.8 L290.0,143.5 L295.0,147.4 L300.0,151.6 L305.0,155.8 L310.0,160.1 L315.0,164.4 L320.0,168.5 L325.0,172.5 L330.0,176.2 L335.0,179.6 L340.0,182.6 L345.0,185.2 L350.0,187.3 L355.0,188.9 L360.0,189.9 L365.0,190.3 L370.0,190.1 L375.0,189.3 L380.0,187.9 L385.0,186.0 L390.0,183.5 L395.0,180.5 L400.0,177.0 L405.0,173.2 L410.0,169.0 L415.0,164.5 L420.0,159.8 L425.0,154.9 L430.0,150.0 L435.0,145.1 L440.0,140.4 L445.0,135.8 L450.0,131.4 L455.0,127.4 L460.0,123.7 L460,240 Z" fill="#c9c0f7" opacity=".8"/>
+<path d="M0,240 L0.0,65.0 L5.0,70.1 L10.0,75.2 L15.0,80.1 L20.0,85.0 L25.0,89.7 L30.0,94.4 L35.0,98.9 L40.0,103.4 L45.0,107.8 L50.0,112.1 L55.0,116.2 L60.0,120.3 L65.0,124.3 L70.0,128.2 L75.0,132.0 L80.0,135.7 L85.0,139.3 L90.0,142.8 L95.0,146.2 L100.0,149.5 L105.0,152.7 L110.0,155.8 L115.0,158.9 L120.0,161.8 L125.0,164.6 L130.0,167.4 L135.0,170.0 L140.0,172.5 L145.0,175.0 L150.0,177.3 L155.0,179.6 L160.0,181.8 L165.0,183.8 L170.0,185.8 L175.0,187.7 L180.0,189.4 L185.0,191.1 L190.0,192.7 L195.0,194.2 L200.0,195.6 L205.0,196.9 L210.0,198.1 L215.0,199.2 L220.0,200.2 L225.0,201.1 L230.0,201.9 L235.0,202.6 L240.0,203.3 L245.0,203.8 L250.0,204.2 L255.0,204.6 L260.0,204.8 L265.0,205.0 L270.0,205.0 L275.0,205.0 L280.0,204.8 L285.0,204.6 L290.0,204.2 L295.0,203.8 L300.0,203.3 L305.0,202.6 L310.0,201.9 L315.0,201.1 L320.0,200.2 L325.0,199.2 L330.0,198.1 L335.0,196.9 L340.0,195.6 L345.0,194.2 L350.0,192.7 L355.0,191.1 L360.0,189.4 L365.0,187.7 L370.0,185.8 L375.0,183.8 L380.0,181.8 L385.0,179.6 L390.0,177.3 L395.0,175.0 L400.0,172.5 L405.0,170.0 L410.0,167.4 L415.0,164.6 L420.0,161.8 L425.0,158.9 L430.0,155.8 L435.0,152.7 L440.0,149.5 L445.0,146.2 L450.0,142.8 L455.0,139.3 L460.0,135.7 L460,240 Z" fill="url(#gi-gr)"/>
+<g transform="translate(270,205.0)"><line y1="0" y2="-24" stroke="#fff" stroke-width="1.6"/><path d="M0,-24 L13,-19 L0,-14Z" fill="#ffd166"/></g>
+<g mask="url(#gi-mask)"><g class="fog">
+ <rect x="-30" width="520" height="240" fill="#fff" opacity=".5"/>
+ <ellipse cx="300" cy="160" rx="160" ry="34" fill="#fff" opacity=".95" filter="url(#gi-blur)"/>
+ <ellipse cx="390" cy="100" rx="120" ry="28" fill="#fff" opacity=".9" filter="url(#gi-blur)"/>
+ <ellipse cx="230" cy="208" rx="150" ry="24" fill="#fff" opacity=".85" filter="url(#gi-blur)"/>
+</g></g>
+<ellipse cx="28.0" cy="91.0" rx="4" ry="2.2" fill="#fff" opacity="0.35" transform="rotate(32.4 28.0 91.0)"/><ellipse cx="50.0" cy="110.6" rx="4" ry="2.2" fill="#fff" opacity="0.50" transform="rotate(32.4 50.0 110.6)"/><ellipse cx="72.0" cy="128.2" rx="4" ry="2.2" fill="#fff" opacity="0.65" transform="rotate(32.4 72.0 128.2)"/>
+<path d="M121,154.4 Q147.5,143.3 178,181.7" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="5 4" marker-end="url(#gi-ah)"/>
+<ellipse cx="180" cy="187.2" rx="5" ry="2.4" fill="#fff" opacity=".95"/>
+<g transform="translate(105,152.7) scale(1.55)">
+ <path d="M-16,-10.1 L16,10.1" stroke="#ffd166" stroke-width="2.2" stroke-linecap="round"/>
+ <line x1="-3" y1="-1" x2="-6" y2="-14" stroke="#202735" stroke-width="2.6" stroke-linecap="round"/>
+ <line x1="4" y1="3" x2="2" y2="-14" stroke="#202735" stroke-width="2.6" stroke-linecap="round"/>
+ <rect x="-9" y="-30" width="8" height="12" rx="2" fill="#e0704f"/>
+ <line x1="-2" y1="-14" x2="1" y2="-30" stroke="#202735" stroke-width="3.2" stroke-linecap="round"/>
+ <line x1="0" y1="-26" x2="10" y2="-16" stroke="#202735" stroke-width="2.2" stroke-linecap="round"/>
+ <line x1="10" y1="-22" x2="13" y2="6" stroke="#8a6a3f" stroke-width="1.8" stroke-linecap="round"/>
+ <circle cx="2" cy="-35" r="5.5" fill="#202735"/>
+ <path d="M-4,-37 Q2,-46 8,-37Z" fill="#e0704f"/>
+</g>
+<g font-size="11.5" font-weight="700">
+ <rect x="49" y="54.7" width="104" height="22" rx="11" fill="#fff" stroke="#202735"/><text x="101" y="69.7" fill="#202735" text-anchor="middle">나 = 지금 값 x</text>
+ <rect x="7" y="166.7" width="124" height="22" rx="11" fill="#ffd166"/><text x="69" y="181.7" fill="#202735" text-anchor="middle">발밑 경사 = 기울기 ∇L</text>
+ <rect x="155.5" y="105.3" width="84" height="22" rx="11" fill="#202735"/><text x="197.5" y="120.3" fill="#fff" text-anchor="middle">한 걸음 = η</text>
+ <text x="300" y="233.0" fill="#4b3cb8" text-anchor="middle" stroke="#fff" stroke-width="3" paint-order="stroke">가장 낮은 곳 = 최솟값 (안개 속이라 안 보여요)</text>
+ <text x="14" y="24" fill="#5a46d6">↕ 높이 = 손실 L</text>
+ <text x="446" y="24" fill="#8a80b8" text-anchor="end" font-weight="500">☁ 안개 = 전체 모양은 모름</text>
+</g>
+</svg>
+          <p>멀리 볼 수 없으니 ‘어디가 가장 낮은지’는 알 수 없어요. 대신 <b>발밑의 경사</b>는 느낄 수 있죠.</p>
+          <p>그래서 이렇게 해요. 발밑이 <b>내려가는 쪽으로 한 걸음</b> 옮기고, 다시 경사를 느끼고, 또 한 걸음. 이걸 반복하면 결국 골짜기 바닥에 도착합니다.</p>
+          <p style="margin:0">AI도 똑같아요. 정답을 한 번에 알 수 없으니, <b>지금 위치에서 손실이 줄어드는 방향</b>으로 조금씩 값을 고쳐 나갑니다.</p>
+        </div>
+        <table class="map4">
+          <tr><th>산에서는</th><th>머신러닝에서는</th><th>기호</th></tr>
+          <tr><td>지금 서 있는 위치</td><td>모델이 가진 값 (가중치, 파라미터)</td><td>x, θ</td></tr>
+          <tr><td>그 위치의 높이</td><td>손실 — 얼마나 틀렸는지</td><td>L(x)</td></tr>
+          <tr><td>발밑의 경사 (어느 쪽이 오르막?)</td><td>기울기 — 손실이 커지는 방향</td><td>∇L(x)</td></tr>
+          <tr><td>한 걸음의 보폭</td><td>학습률 — 한 번에 고치는 양</td><td>η</td></tr>
+          <tr><td>골짜기 바닥</td><td>손실이 가장 작은 값 (최솟값)</td><td>x*</td></tr>
+        </table>
+      </div>
+      <div class="cgrid">
+        <div class="cbox">
+          <span class="kt">개념 ① 기울기가 알려주는 것</span>
+          <h3>기울기의 부호 = 오르막 방향</h3>
+          <p>수식 속 <b style="color:var(--err)">x</b>를 좌우로 끌어 공의 위치를 옮겨 보세요. 접선이 기울어진 방향을 보면 어느 쪽이 오르막인지 알 수 있어요.</p>
+          <div class="fx" style="border-color:#f3cfd6;background:linear-gradient(180deg,#fff8f9,#fff)">
+            <div class="fl md">∇L(<span class="sym" data-p="cx" style="--c:var(--err)"><span class="g">x</span></span>) = 2·<span class="mv">x</span> = <b id="cx-val" style="font-style:normal">−6.0</b></div>
+          </div>
+          <svg id="gdc-svg" class="plot" viewBox="0 0 420 220" style="margin-top:8px"></svg>
+          <div class="say" id="cx-say"></div>
+        </div>
+        <div class="cbox">
+          <span class="kt">개념 ② 한 걸음의 공식 해부</span>
+          <h3>새 위치 = 지금 위치 − 보폭 × 오르막 방향</h3>
+          <p>오르막 방향(∇L)의 <b>반대</b>로 가야 내려가니까 빼기(−)를 씁니다. 각 기호에 마우스를 올려 보세요.</p>
+          <div class="decode">
+            <span class="pt" style="color:var(--gd)" title="한 걸음 옮긴 뒤의 새 위치"><span><span class="mv">x</span><sub style="font-size:.55em">t+1</sub></span><small>새 위치</small></span>
+            <span class="op">=</span>
+            <span class="pt" style="color:#5b6478" title="지금 서 있는 위치"><span><span class="mv">x</span><sub style="font-size:.55em">t</sub></span><small>지금 위치</small></span>
+            <span class="op">−</span>
+            <span class="pt" style="color:var(--gd)" title="한 걸음의 크기. 너무 작으면 느리고, 너무 크면 바닥을 지나쳐요"><span class="mv">η</span><small>보폭 (학습률)</small></span>
+            <span class="op">·</span>
+            <span class="pt" style="color:var(--err)" title="손실이 커지는 쪽. 이것의 반대로 간다"><span>∇L(<span class="mv">x</span><sub style="font-size:.55em">t</sub>)</span><small>오르막 방향</small></span>
+          </div>
+          <div class="loop" style="margin-top:18px">
+            <div><b>01</b>지금 위치에서 손실 L 계산</div>
+            <div><b>02</b>기울기 ∇L 계산 (어느 쪽이 오르막?)</div>
+            <div><b>03</b>반대 방향으로 η만큼 이동</div>
+            <div><b>04 · 반복</b>손실이 더 줄지 않을 때까지</div>
+          </div>
+          <div class="say">실제 AI는 x 하나가 아니라 <b>수백만 개의 값</b>을 동시에 고쳐요. 그래서 ∇L은 숫자 하나가 아니라 ‘방향을 가리키는 화살표(벡터)’가 됩니다. 아래 2D 실험에서 이 모습을 볼 수 있어요.</div>
+        </div>
+      </div>
+    </section>
+    <div class="subnav">
+      <button class="on" data-go="gd-1d">기본 실험 · U자 골짜기</button>
+      <button data-go="gd-2d">새로운 실험 · 2D / 모멘텀 / Adam ↓</button>
+    </div>
+
+    <div class="labgrid" id="gd-1d">
+      <div class="stage">
+        <div class="stage-h">
+          <div class="t"><span class="dot"></span>손실의 골짜기</div>
+          <div class="row"><label class="check"><input type="checkbox" id="gd1-tan" checked> 기울기 보기</label><span class="chip">손실 함수 · <i style="font-family:var(--math)">x</i>²</span></div>
+        </div>
+        <p class="muted" style="margin:0 0 4px;font-size:13px">공을 따라 가장 낮은 곳을 찾아보세요. 보라색 화살표가 <b>다음 한 걸음</b>입니다.</p>
+        <svg id="gd1-svg" class="plot" viewBox="0 0 640 380"></svg>
+        <div class="legend" style="margin-top:4px">
+          <span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#6f5ce6"/></svg>현재 위치</span>
+          <span><svg width="18" height="12"><line x1="0" y1="6" x2="18" y2="6" stroke="#6f5ce6" stroke-width="3"/></svg>다음 한 걸음 (−η·∇L)</span>
+          <span><svg width="18" height="12"><line x1="0" y1="6" x2="18" y2="6" stroke="#b9b0f5" stroke-width="2" stroke-dasharray="3 3"/></svg>이 η로 갈 미래 경로</span>
+          <span><svg width="18" height="12"><line x1="0" y1="6" x2="18" y2="6" stroke="#d6455d" stroke-width="2" stroke-dasharray="5 3"/></svg>접선 · 기울기</span>
+        </div>
+        <div class="stats">
+          <div><small>반복 횟수</small><b id="gd1-k">0단계</b></div>
+          <div><small>현재 위치 x</small><b id="gd1-x">−4.000</b></div>
+          <div><small>기울기</small><b id="gd1-g">−8.000</b></div>
+          <div><small>손실값</small><b id="gd1-l">16.000</b></div>
+        </div>
+        <div style="margin-top:14px"><div class="stage-h"><div class="t" style="font-size:13px">손실은 어떻게 변할까요?</div><span class="chip" id="gd1-lossstate">학습 전</span></div>
+          <svg id="gd1-loss" class="plot" viewBox="0 0 640 130"></svg></div>
+        <p class="note">숫자와 손실 그래프는 완료된 계산 단계 기준입니다. 공의 중간 움직임은 위치 사이를 보여주는 애니메이션입니다. 발산하면 축 범위가 자동으로 넓어집니다.</p>
+      </div>
+      <aside class="side">
+        <div><span class="eyebrow" style="color:var(--gd)">직접 실험하기</span><h3>한 걸음의 크기를 바꾸면?</h3>
+        <p class="muted" style="margin:4px 0 0;font-size:13px">수식 속 <b style="color:var(--gd)">보라색 기호</b>를 클릭한 채 <b>좌우로 끌어</b> 보세요.</p></div>
+        <div class="fx" id="gd1-fx">
+          <div class="fx-h"><b>업데이트 규칙</b><span>⇆ 기호를 끌어서 조절</span></div>
+          <div class="fl"><span class="mv">x</span><sub>t+1</sub> = <span class="mv">x</span><sub>t</sub> − <span class="sym" data-p="eta1"><span class="g">η</span></span> · <span class="hlk grad-hl" id="gd1-gradterm" style="color:var(--err)">∇L(<span class="mv">x</span><sub>t</sub>)</span></div>
+          <div class="fl sm"><span class="mv">L</span>(<span class="mv">x</span>) = <span class="mv">x</span>²,&nbsp; ∇L = 2<span class="mv">x</span>,&nbsp; 출발 <span class="sym wide" data-p="x0" style="--c:#5b6478"><span class="g">x<sub>0</sub></span></span></div>
+          <div class="live" id="gd1-live"></div>
+          <div class="regime" id="gd1-regime"></div>
+        </div>
+        <div><span class="lbl">빠른 설정 (η)</span>
+          <div class="presets" id="gd1-presets">
+            <button data-eta="0.03">작게<small>천천히</small></button>
+            <button data-eta="0.15">적절하게<small>안정적</small></button>
+            <button data-eta="0.85">크게<small>넘나들며</small></button>
+            <button data-eta="1.05">너무 크게<small>발산</small></button>
+          </div></div>
+        <div><span class="lbl">애니메이션 속도</span>
+          <div class="seg" id="gd1-speed"><button data-s="0.5">0.5배속</button><button data-s="1" class="on">1배속</button><button data-s="2">2배속</button><button data-s="3">3배속</button></div></div>
+        <div class="row">
+          <button class="btn gdc" id="gd1-play" style="flex:1">▶ 학습 시작</button>
+          <button class="btn sm" id="gd1-step">한 단계</button>
+          <button class="btn sm" id="gd1-reset">처음부터</button>
+        </div>
+        <div class="box"><h4>이렇게 실험해 보세요</h4><p class="muted">① <b>η</b>를 끌면서 화살표 길이 변화 보기<br>② ‘적절하게’로 학습 시작<br>③ 학습 중에 <b>η</b>를 크게 끌어 보기 — 공이 바로 반응해요</p></div>
+        <div class="box" style="background:#f8f7ff;border-color:#e5e0fd"><h4>지금 무슨 일이 일어났나요?</h4><p id="gd1-explain" class="muted">학습 시작을 눌러 보세요. 공이 기울기의 반대 방향으로 한 걸음씩 움직입니다.</p></div>
+      </aside>
+    </div>
+
+    <!-- 2D -->
+    <div id="gd-2d" class="sechead">
+      <span class="eyebrow" style="color:var(--gd)">새로운 실험 · 2D 최적화 비교</span>
+      <h2>웅덩이를 넘어가는 힘, 이동의 기억</h2>
+      <p>기본 경사하강법 · 모멘텀 · Adam을 같은 지형과 출발점에서 비교해 보세요. 아래 <b>수식의 η, β, β₁, β₂</b>를 끌면 세 경로가 그 자리에서 다시 계산됩니다.</p>
+    </div>
+    <div class="labgrid">
+      <div class="stage">
+        <div class="stage-h">
+          <div class="seg" id="gd2-terr"><button data-t="wells" class="on">두 웅덩이</button><button data-t="saddle">안장점</button><button data-t="valley">좁은 골짜기</button></div>
+          <span class="chip">색이 진할수록 손실이 큼 · 지도를 끌어 출발점 이동</span>
+        </div>
+        <div class="map"><canvas id="gd2-cv" width="600" height="400"></canvas><svg id="gd2-svg" viewBox="0 0 600 400"></svg></div>
+        <div class="row" style="justify-content:space-between;margin-top:10px">
+          <div class="legend"><span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#6f5ce6"/></svg>기본 경사하강법</span><span><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" fill="#e0704f"/></svg>모멘텀</span><span><svg width="12" height="12"><path d="M6,0L12,6L6,12L0,6z" fill="#1f9e8f"/></svg>Adam</span></div>
+          <span class="kt">계산 단계 <span id="gd2-k" style="font-family:var(--mono)">0 / 250</span></span>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn gdc" id="gd2-play">▶ 세 방법 비교 시작</button>
+          <button class="btn sm" id="gd2-step">한 단계</button>
+          <button class="btn sm" id="gd2-reset">처음부터</button>
+          <button class="btn sm" id="gd2-end">결과까지</button>
+          <div class="seg" id="gd2-speed" style="margin-left:auto"><button data-s="0.5">0.5배속</button><button data-s="1" class="on">1배속</button><button data-s="2">2배속</button><button data-s="4">4배속</button></div>
+        </div>
+        <div class="methods">
+          <div class="mcard m-gd"><h5><svg width="10" height="10"><circle cx="5" cy="5" r="5" fill="#6f5ce6"/></svg>기본 경사하강법</h5><div class="kv"><span>손실</span><b id="c-gd-l">–</b></div><div class="kv"><span>이번 이동량</span><b id="c-gd-s">–</b></div><div class="st" id="c-gd-t"></div></div>
+          <div class="mcard m-mo"><h5><svg width="10" height="10"><rect width="10" height="10" fill="#e0704f"/></svg>모멘텀</h5><div class="kv"><span>손실</span><b id="c-mo-l">–</b></div><div class="kv"><span>이번 이동량</span><b id="c-mo-s">–</b></div><div class="st" id="c-mo-t"></div></div>
+          <div class="mcard m-ad"><h5><svg width="10" height="10"><path d="M5,0L10,5L5,10L0,5z" fill="#1f9e8f"/></svg>Adam</h5><div class="kv"><span>손실</span><b id="c-ad-l">–</b></div><div class="kv"><span>이번 이동량</span><b id="c-ad-s">–</b></div><div class="st" id="c-ad-t"></div></div>
+        </div>
+        <div style="margin-top:14px"><div class="t" style="font-size:13px;font-weight:700">세 방법의 손실 변화</div><svg id="gd2-loss" class="plot" viewBox="0 0 600 150"></svg></div>
+        <p class="note">숫자는 실제 계산값이며, 공의 중간 움직임만 부드럽게 보간합니다. 같은 학습률이 각 방법에 가장 좋은 설정이라는 뜻은 아닙니다.</p>
+      </div>
+      <aside class="side">
+        <div><span class="eyebrow" style="color:var(--gd)">같은 조건, 서로 다른 움직임</span><h3 id="gd2-q">관성으로 작은 턱을 넘을까요?</h3>
+        <p class="muted" id="gd2-qd" style="margin:4px 0 0;font-size:13px"></p></div>
+        <div class="fx">
+          <div class="fx-h"><b>공통 설정</b><span>⇆ 기호를 끌어서 조절</span></div>
+          <div class="fl md">학습률 <span class="sym" data-p="eta2"><span class="g">η</span></span></div>
+          <div class="fl md"><span class="mv">θ</span><sub>0</sub> = (<span class="sym wide" data-p="sx" style="--c:#5b6478"><span class="g">x<sub>0</sub></span></span>, <span class="sym wide" data-p="sy" style="--c:#5b6478"><span class="g">y<sub>0</sub></span></span>)</div>
+          <p class="muted" style="font-size:12px;margin:0">값을 바꾸면 세 경로가 즉시 다시 계산되고, 재생 위치는 그대로 유지돼요.</p>
+        </div>
+        <div class="box" id="gd2-explain"></div>
+      </aside>
+    </div>
+
+    <div class="fxcards">
+      <div class="fx m-gd"><div class="kt">01 · 현재 기울기만</div><h4 style="margin:2px 0 6px">기본 경사하강법</h4>
+        <div class="fl np">g<sub>t</sub> = ∇L(<span class="mv">θ</span><sub>t−1</sub>)</div>
+        <div class="fl"><span class="mv">θ</span><sub>t</sub> = <span class="mv">θ</span><sub>t−1</sub> − <span class="sym" data-p="eta2"><span class="g">η</span></span>g<sub>t</sub></div>
+        <p>현재 위치의 내리막만 보고 이동합니다. θ는 (x, y), η는 학습률입니다.</p></div>
+      <div class="fx m-mo" style="border-color:#f3d3c8"><div class="kt">02 · 이전 이동을 기억</div><h4 style="margin:2px 0 6px">모멘텀</h4>
+        <div class="fl">v<sub>t</sub> = <span class="sym" data-p="beta" style="--c:var(--mo)"><span class="g">β</span></span>v<sub>t−1</sub> − <span class="sym" data-p="eta2"><span class="g">η</span></span>g<sub>t</sub></div>
+        <div class="fl np"><span class="mv">θ</span><sub>t</sub> = <span class="mv">θ</span><sub>t−1</sub> + v<sub>t</sub></div>
+        <p><b>β</b>가 0이면 이전 이동을 잊어 기본 경사하강법과 같아져요. 클수록 이전 이동이 오래 남습니다. ‘관성’과 비슷하지만 실제 물리 시뮬레이션은 아닙니다.</p></div>
+      <div class="fx m-ad" style="border-color:#c8ebe6"><div class="kt">03 · 방향 + 크기의 기억</div><h4 style="margin:2px 0 6px">Adam</h4>
+        <div class="fl sm">m<sub>t</sub> = <span class="sym" data-p="b1" style="--c:var(--ad)"><span class="g">β<sub>1</sub></span></span>m<sub>t−1</sub> + (1−β<sub>1</sub>)g<sub>t</sub></div>
+        <div class="fl sm">s<sub>t</sub> = <span class="sym" data-p="b2" style="--c:var(--ad)"><span class="g">β<sub>2</sub></span></span>s<sub>t−1</sub> + (1−β<sub>2</sub>)g<sub>t</sub>²</div>
+        <div class="fl md"><span class="mv">θ</span><sub>t</sub> = <span class="mv">θ</span><sub>t−1</sub> − <span class="sym" data-p="eta2"><span class="g">η</span></span> m̂<sub>t</sub> / (√ŝ<sub>t</sub> + ε)</div>
+        <p>기울기의 평균(m)으로 방향을, 제곱의 평균(s)으로 좌표별 걸음 크기를 조절합니다. m̂, ŝ는 초기 편향을 보정한 값이에요.</p></div>
+    </div>
+    <div class="warnbox"><b>모멘텀과 Adam은 만능 탈출 버튼이 아니에요.</b><br>로컬 미니멈은 ‘가짜 값’이 아니라 실제로 주변보다 낮은 곳입니다. 모멘텀은 내려오며 쌓인 이동량으로 턱을 넘을 수 있지만, 이미 정지했거나 턱이 높으면 못 넘을 수 있어요. Adam도 전역 최솟값 도달이나 안장점 탈출을 보장하지 않습니다.</div>
+
+    <div id="gd-sum" class="sechead"><span class="eyebrow" style="color:var(--gd)">STEP 05 · 핵심 정리</span><h2>AI의 학습도, 작은 수정의 반복</h2></div>
+    <div class="sum3">
+      <div class="card"><b>01</b><h4>틀린 정도를 확인해요</h4><p>‘손실’은 얼마나 틀렸는지를 나타내는 값입니다. 이 실험에서는 x²로 단순화했어요.</p></div>
+      <div class="card"><b>02</b><h4>기울기의 반대로 움직여요</h4><p>기울기는 그 자리에서 어느 쪽이 오르막인지 알려줘요. 반대쪽으로 움직이면 내리막을 찾을 수 있습니다.</p></div>
+      <div class="card"><b>03</b><h4>한 걸음의 크기(η)가 중요해요</h4><p>η가 작으면 느리고, 너무 크면 최솟값을 지나치거나 발산할 수 있어요. x²에서는 η &gt; 1이면 발산합니다.</p></div>
+    </div>
+    <div class="sechead" style="margin-top:44px"><span class="eyebrow">배운 내용을 내 것으로</span><h2 style="font-size:22px">30초, 이해도 체크 <span class="chip" id="qz-gd-n">0 / 3</span></h2></div>
+    <div class="quiz" id="qz-gd"></div>
+    <div class="next"><span>경사하강법은 손실을 줄이는 방법이에요. 다음 실험실에서는 데이터를 구분하는 모델, SVM을 만나봅니다.</span><a class="btn pri" href="#svm">다음 실험실 · 서포트 벡터 머신 →</a></div>
+  </div>
+</main>
+
+<!-- ============ SVM ============ -->
+<main id="v-svm" class="view" hidden>
+  <div class="wrap">
+    <div class="crumb"><a href="#home">실험실 홈</a> &nbsp;›&nbsp; 서포트 벡터 머신</div>
+    <div class="labhead"><div>
+      <span class="eyebrow" style="color:var(--a)">실험실 02 · 분류</span>
+      <h1>서포트 벡터 머신<small>Support Vector Machine</small></h1>
+      <p>두 팀 사이에 길을 만든다면? SVM은 여유 공간을 확보하면서 두 그룹을 구분합니다.</p></div></div>
+    <div class="stepper">
+      <button data-go="svm-concept"><b>01</b>개념 이해</button>
+      <button data-go="svm-lab"><b>02</b>움직임 관찰</button>
+      <button data-go="svm-lab" class="on"><b>03</b>직접 실험</button>
+      <button data-go="svm-lift"><b>04</b>결과 해석</button>
+      <button data-go="svm-sum"><b>05</b>핵심 정리</button>
+    </div>
+
+    <section class="concept" id="svm-concept">
+      <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--a)">STEP 01 · 개념 이해</span><h2>두 팀 사이에 가장 넓은 길 내기</h2><p>SVM(서포트 벡터 머신)은 데이터를 두 그룹으로 나누는 <b>분류 모델</b>이에요. 핵심은 “그냥 나누는 것”이 아니라 “가장 여유 있게 나누는 것”입니다. 왜 필요한지 → 비유 → 수식 순서로 살펴볼게요.</p></div>
+      <div class="why">
+        <div class="why-h"><span class="eyebrow" style="color:var(--a)">먼저, 맥락부터</span><h3>SVM은 왜 필요할까요?</h3></div>
+        <div class="why3">
+          <div>
+            <span class="n" style="color:var(--a)">01 · 어떤 문제를 풀까?</span>
+            <h4>‘이건 A일까, B일까?’ — 분류</h4>
+            <p>정답이 붙은 예시들을 보고 <b>두 그룹을 가르는 기준(경계)</b>을 배운 뒤, 처음 보는 데이터가 어느 쪽인지 판단하는 문제예요.</p>
+            <div class="flow"><span>정답 붙은 데이터</span><i>→</i><span class="k" style="background:var(--a);border-color:var(--a)">경계 학습</span><i>→</i><span>새 데이터 분류</span></div>
+            <div class="eg"><b>예)</b> 메일의 특정 단어 수, 링크 개수 같은 특성으로 <b>스팸 / 정상</b>을 나누기. 지금까지 받은 메일로 경계를 배우고, 내일 올 메일을 분류해요.</div>
+          </div>
+          <div>
+            <span class="n" style="color:var(--a)">02 · 왜 필요할까?</span>
+            <h4>나누는 선은 무수히 많으니까</h4>
+            <p>학습 데이터를 완벽하게 나누는 선은 하나가 아니에요. 그런데 진짜 목표는 이미 본 데이터가 아니라 <b>처음 보는 데이터</b>를 맞히는 것이죠.</p>
+            <div class="eg">한쪽에 바짝 붙은 선은, 새 데이터가 조금만 다르게 들어와도 틀려요. <b>양쪽과 가장 멀리 떨어진 선</b>이 새 데이터에도 가장 안전합니다.</div>
+            <p style="margin-top:10px">SVM은 이 ‘가장 여유 있는 경계’를 수학적으로 찾아주는 방법이에요. 커널을 쓰면 직선으로 안 나뉘는 데이터도 곡선 경계로 나눌 수 있어요.</p>
+          </div>
+          <div>
+            <span class="n" style="color:var(--a)">03 · 언제 쓸까?</span>
+            <h4>깔끔한 경계가 필요한 분류</h4>
+            <div class="uses"><span>📧 스팸 메일 거르기</span><span>📝 문서·감성 분류</span><span>🧬 유전자·의료 데이터 분류</span><span>🏭 불량품 판별</span><span>✍️ 손글씨 숫자 인식</span></div>
+            <ul class="fit">
+              <li class="y">데이터가 수백~수만 개 정도로 많지 않을 때</li>
+              <li class="y">특성(열)이 많을 때 — 텍스트처럼</li>
+              <li class="w">데이터가 수백만 개 이상이면 학습이 느려요</li>
+              <li class="w">사진·음성처럼 복잡한 데이터는 요즘 딥러닝이 주로 맡아요</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="bridge">그럼 ‘가장 여유 있는 경계’를 장면으로 떠올려 볼게요 ↓</div>
+      <div class="analogy">
+        <div class="story">
+          <span class="eyebrow" style="color:var(--a)">비유</span>
+          <div class="big">운동장에 두 반 학생들이 모여 있어요.<br>사이에 길을 하나 낸다면?</div><svg class="illu" viewBox="0 0 460 240" role="img" aria-label="운동장에서 두 반 학생들 사이에 넓은 길이 나 있는 그림">
+<defs><clipPath id="si-c"><rect width="460" height="240" rx="14"/></clipPath>
+<pattern id="si-grass" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#eaf4ec"/><path d="M3,12 l2,-4 M11,6 l1.5,-3.5" stroke="#cfe6d4" stroke-width="1.4" stroke-linecap="round"/></pattern>
+<marker id="si-ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#202735"/></marker></defs>
+<g clip-path="url(#si-c)">
+<rect width="460" height="240" fill="url(#si-grass)"/>
+<path d="M-86.9,381.8 L478.8,-183.9 L516.9,-145.8 L-48.8,419.9 Z" fill="#d9dce4"/>
+<path d="M-86.9,381.8 L478.8,-183.9" stroke="#9aa1ad" stroke-width="2" stroke-dasharray="7 5"/>
+<path d="M-48.8,419.9 L516.9,-145.8" stroke="#9aa1ad" stroke-width="2" stroke-dasharray="7 5"/>
+<path d="M-67.8,400.8 L497.8,-164.8" stroke="#202735" stroke-width="3"/>
+<ellipse cx="95.0" cy="64.0" rx="10" ry="6.5" fill="#4f78d8"/><circle cx="95.0" cy="61.0" r="5.6" fill="#2b3550" stroke="#fff" stroke-width="1.4"/><ellipse cx="140.0" cy="40.0" rx="10" ry="6.5" fill="#4f78d8"/><circle cx="140.0" cy="37.0" r="5.6" fill="#2b3550" stroke="#fff" stroke-width="1.4"/><ellipse cx="70.0" cy="122.0" rx="10" ry="6.5" fill="#4f78d8"/><circle cx="70.0" cy="119.0" r="5.6" fill="#2b3550" stroke="#fff" stroke-width="1.4"/><ellipse cx="120.0" cy="100.0" rx="10" ry="6.5" fill="#4f78d8"/><circle cx="120.0" cy="97.0" r="5.6" fill="#2b3550" stroke="#fff" stroke-width="1.4"/><ellipse cx="60.0" cy="92.0" rx="10" ry="6.5" fill="#4f78d8"/><circle cx="60.0" cy="89.0" r="5.6" fill="#2b3550" stroke="#fff" stroke-width="1.4"/><ellipse cx="150.0" cy="72.0" rx="10" ry="6.5" fill="#4f78d8"/><circle cx="150.0" cy="69.0" r="5.6" fill="#2b3550" stroke="#fff" stroke-width="1.4"/><circle cx="170.5" cy="108.8" r="15" fill="none" stroke="#202735" stroke-width="2" stroke-dasharray="3 2.5"/><ellipse cx="170.5" cy="110.8" rx="10" ry="6.5" fill="#4f78d8"/><circle cx="170.5" cy="107.8" r="5.6" fill="#2b3550" stroke="#fff" stroke-width="1.4"/><circle cx="212.9" cy="66.4" r="15" fill="none" stroke="#202735" stroke-width="2" stroke-dasharray="3 2.5"/><ellipse cx="212.9" cy="68.4" rx="10" ry="6.5" fill="#4f78d8"/><circle cx="212.9" cy="65.4" r="5.6" fill="#2b3550" stroke="#fff" stroke-width="1.4"/><ellipse cx="300.0" cy="177.0" rx="10" ry="6.5" fill="#e39b3d"/><circle cx="300.0" cy="174.0" r="5.6" fill="#5a3a12" stroke="#fff" stroke-width="1.4"/><ellipse cx="345.0" cy="142.0" rx="10" ry="6.5" fill="#e39b3d"/><circle cx="345.0" cy="139.0" r="5.6" fill="#5a3a12" stroke="#fff" stroke-width="1.4"/><ellipse cx="285.0" cy="214.0" rx="10" ry="6.5" fill="#e39b3d"/><circle cx="285.0" cy="211.0" r="5.6" fill="#5a3a12" stroke="#fff" stroke-width="1.4"/><ellipse cx="372.0" cy="200.0" rx="10" ry="6.5" fill="#e39b3d"/><circle cx="372.0" cy="197.0" r="5.6" fill="#5a3a12" stroke="#fff" stroke-width="1.4"/><ellipse cx="255.0" cy="192.0" rx="10" ry="6.5" fill="#e39b3d"/><circle cx="255.0" cy="189.0" r="5.6" fill="#5a3a12" stroke="#fff" stroke-width="1.4"/><ellipse cx="395.0" cy="167.0" rx="10" ry="6.5" fill="#e39b3d"/><circle cx="395.0" cy="164.0" r="5.6" fill="#5a3a12" stroke="#fff" stroke-width="1.4"/><circle cx="245.4" cy="141.3" r="15" fill="none" stroke="#202735" stroke-width="2" stroke-dasharray="3 2.5"/><ellipse cx="245.4" cy="143.3" rx="10" ry="6.5" fill="#e39b3d"/><circle cx="245.4" cy="140.3" r="5.6" fill="#5a3a12" stroke="#fff" stroke-width="1.4"/>
+<line x1="251.1" y1="43.8" x2="289.2" y2="81.9" stroke="#202735" stroke-width="2" marker-start="url(#si-ah)" marker-end="url(#si-ah)"/>
+</g>
+<g font-size="11.5" font-weight="700">
+ <rect x="297.2" y="51.8" width="94" height="22" rx="11" fill="#202735"/><text x="344.2" y="66.8" fill="#fff" text-anchor="middle">길의 폭 = 마진</text>
+ <rect x="97.6" y="211.4" width="138" height="22" rx="11" fill="#fff" stroke="#202735"/><text x="166.6" y="226.4" fill="#202735" text-anchor="middle">한가운데 선 = 결정 경계</text>
+ <rect x="62.9" y="28.4" width="168" height="22" rx="11" fill="#ffd166"/><text x="146.9" y="43.4" fill="#202735" text-anchor="middle">길에 닿은 학생 = 서포트 벡터</text>
+ <line x1="204.9" y1="50.4" x2="208.9" y2="54.4" stroke="#202735"/>
+ <text x="16" y="24" fill="#2f53b0">A반</text>
+ <text x="444" y="226" fill="#b06a12" text-anchor="end">B반</text>
+</g>
+</svg>
+          <p>두 반을 나누는 선은 여러 개 그을 수 있어요. 하지만 한쪽 학생에 바짝 붙은 선은, 학생이 조금만 움직여도 반이 뒤바뀌어 버리죠.</p>
+          <p>SVM은 <b>양쪽 학생들과 최대한 멀리 떨어진, 가장 넓은 길</b>을 냅니다. 길의 한가운데 선이 <b>결정 경계</b>, 길의 폭이 <b>마진</b>이에요.</p>
+          <p style="margin:0">그리고 길 가장자리에 딱 닿아 있는 학생들이 길의 위치를 정해요. 이 학생들이 바로 <b>서포트 벡터</b> — 경계를 ‘떠받치는(support)’ 점입니다.</p>
+        </div>
+        <table class="map4">
+          <tr><th>운동장에서는</th><th>머신러닝에서는</th><th>기호</th></tr>
+          <tr><td>각 학생의 위치</td><td>데이터 한 개 (특성값들)</td><td>xᵢ</td></tr>
+          <tr><td>어느 반인지</td><td>정답 라벨 (A = +1, B = −1)</td><td>yᵢ</td></tr>
+          <tr><td>길 한가운데 선</td><td>결정 경계</td><td>f(x) = 0</td></tr>
+          <tr><td>길의 폭</td><td>마진 — 경계 주변의 여유 공간</td><td>2 / ‖w‖</td></tr>
+          <tr><td>길 가장자리에 닿은 학생</td><td>서포트 벡터</td><td>αᵢ &gt; 0</td></tr>
+        </table>
+      </div>
+      <div class="cgrid">
+        <div class="cbox">
+          <span class="kt">개념 ① 왜 ‘가장 넓은 길’일까?</span>
+          <h3>경계의 각도를 바꾸면 길의 폭이 달라져요</h3>
+          <p>수식 속 <b style="color:var(--a)">θ</b>를 좌우로 끌어 경계를 돌려 보세요. 길이 가장 넓어지는 각도가 SVM이 찾는 답이에요.</p>
+          <div class="fx blue">
+            <div class="fl md">경계 방향 <span class="sym" data-p="sang" style="--c:var(--a)"><span class="g">θ</span></span> &nbsp;→&nbsp; 길의 폭 = <b id="sang-w" style="font-style:normal">–</b></div>
+          </div>
+          <svg id="svmc-svg" class="plot" viewBox="0 0 420 300" style="margin-top:8px"></svg>
+          <div class="say" id="sang-say"></div>
+        </div>
+        <div class="cbox">
+          <span class="kt">개념 ② 경계를 수식으로 쓰면</span>
+          <h3>점수 f(x)의 부호로 그룹을 정해요</h3>
+          <p>SVM은 각 점에 점수를 매기고, 점수가 양수면 A, 음수면 B로 분류해요. 각 기호에 마우스를 올려 보세요.</p>
+          <div class="decode">
+            <span class="pt" style="color:var(--ink)" title="점 x의 점수. 양수면 A, 음수면 B"><span>f(<span class="mv">x</span>)</span><small>점수</small></span>
+            <span class="op">=</span>
+            <span class="pt" style="color:var(--a)" title="경계에 수직인 방향. 길이가 짧을수록 마진이 넓다"><span class="mv">w</span><small>경계의 방향</small></span>
+            <span class="op">·</span>
+            <span class="pt" style="color:#5b6478" title="분류할 데이터"><span class="mv">x</span><small>데이터</small></span>
+            <span class="op">+</span>
+            <span class="pt" style="color:var(--b)" title="경계를 평행이동시키는 값"><span class="mv">b</span><small>위치 보정</small></span>
+          </div>
+          <div class="loop" style="grid-template-columns:repeat(3,1fr);margin-top:18px">
+            <div><b>f(x) = 0</b>결정 경계 — 길 한가운데</div>
+            <div><b>f(x) = ±1</b>마진 경계 — 길의 양쪽 가장자리</div>
+            <div><b>폭 = 2 / ‖w‖</b>‖w‖를 줄일수록 길이 넓어져요</div>
+          </div>
+          <div class="say">그래서 SVM은 <b>½‖w‖²을 최소화</b>(= 길을 최대한 넓게)하면서, 모든 점이 자기 쪽 길 밖에 있도록(<span style="font-family:var(--math);font-style:italic">yᵢ f(xᵢ) ≥ 1</span>) 경계를 찾습니다. 직접 실험에서 보게 될 수식이 바로 이것이에요.</div>
+        </div>
+      </div>
+      <div class="terms">
+        <div><b>결정 경계</b>두 그룹을 나누는 기준선<i>길 한가운데 선</i></div>
+        <div><b>마진</b>경계 주변의 여유 공간<i>길의 폭</i></div>
+        <div><b>서포트 벡터</b>경계 위치를 정하는 점<i>길 가장자리에 닿은 학생</i></div>
+        <div><b>소프트 마진 · C</b>일부 점이 길을 침범해도 허용하는 정도<i>C가 크면 침범에 엄격</i></div>
+        <div><b>커널 · γ</b>직선으로 안 될 때, 공간을 바꿔 곡선 경계를 만드는 방법<i>아래 ‘위로 올리기’ 실험</i></div>
+      </div>
+    </section>
+    <div class="subnav"><button class="on" data-go="svm-lab">데이터 실험</button><button data-go="svm-lift">2D → 3D 차원 확장 ↓</button></div>
+
+    <div class="sechead" style="margin-top:6px"><span class="eyebrow" style="color:var(--a)">직접 실험하기</span><h2>먼저, 직선 하나로 나눠 볼까요?</h2><p>두 무리를 나누는 직선과 마진부터 관찰하세요. 그다음 직선으로 나눌 수 없는 데이터에서 <b>γ</b>를 끌어 보세요.</p></div>
+    <div class="labgrid" id="svm-lab">
+      <div class="stage">
+        <div class="stage-h"><div class="t"><span class="dot" style="background:var(--a);box-shadow:0 0 0 4px rgba(79,120,216,.15)"></span>두 그룹 사이, 가장 좋은 경계</div><span class="chip" id="svm-state">데이터 준비 완료</span></div>
+        <div class="tools">
+          <div class="seg" id="svm-mode"><button data-m="move" class="on">✥ 이동</button><button data-m="add">＋ 추가</button><button data-m="del">🗑 삭제</button></div>
+          <div class="seg" id="svm-grp"><button data-g="1" class="on"><span style="color:var(--a)">●</span> A그룹</button><button data-g="-1"><span style="color:var(--b)">■</span> B그룹</button></div>
+        </div>
+        <div class="svmplot"><canvas id="svm-cv" width="230" height="230"></canvas><svg id="svm-svg" viewBox="0 0 460 460"></svg></div>
+        <div class="legend" style="justify-content:center;margin-top:8px"><span><svg width="18" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#202735" stroke-width="2.5"/></svg>결정 경계</span><span><svg width="18" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#667085" stroke-width="1.6" stroke-dasharray="4 3"/></svg>마진 경계</span><span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="none" stroke="#202735" stroke-width="2"/></svg>서포트 벡터</span><span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="none" stroke="#d6455d" stroke-width="2"/></svg>마진 위반 (C에 마우스)</span></div>
+        <div class="stats">
+          <div><small>데이터</small><b id="svm-n">–</b></div>
+          <div><small>서포트 벡터</small><b id="svm-sv">—개</b></div>
+          <div><small>학습 데이터 정답률</small><b id="svm-acc">—%</b></div>
+          <div><small>마진 위반 점</small><b id="svm-vi">—개</b></div>
+        </div>
+        <p class="note">정답률은 지금 화면의 학습 데이터 기준이며, 새로운 데이터에서의 성능을 뜻하지 않습니다. 한 번 학습한 뒤에는 점을 움직이거나 C·γ를 끌 때마다 바로 다시 학습합니다.</p>
+      </div>
+      <aside class="side">
+        <div><span class="eyebrow" style="color:var(--a)">직접 실험하기</span><h3>데이터가 달라지면?</h3><p class="muted" style="margin:4px 0 0;font-size:13px">점을 끌어 보고, 수식 속 <b style="color:var(--a)">C</b>와 <b style="color:#0f8a7a">γ</b>를 좌우로 끌어 보세요.</p></div>
+        <div><span class="lbl">예제 데이터</span>
+          <select id="svm-ds">
+            <option value="blobs">두 무리 · 직선으로 나누기</option>
+            <option value="circles">동심원 · 한 그룹이 둘러싸기</option>
+            <option value="overlap">겹친 데이터 · 마진 위반 관찰</option>
+            <option value="xor">대각선 네 무리 · XOR</option>
+            <option value="moons">두 초승달 · 휘어진 경계</option>
+            <option value="spirals">두 나선 · 복잡한 경계</option>
+          </select></div>
+        <div class="fx blue" id="svm-fx">
+          <div class="fx-h"><b>SVM이 푸는 문제</b><div class="seg" id="svm-kern"><button data-k="linear" class="on">선형</button><button data-k="rbf">RBF</button></div></div>
+          <div class="fl md">min&nbsp; ½‖<span class="mv">w</span>‖² + <span class="sym" data-p="C" style="--c:var(--a)"><span class="g">C</span></span> Σ ξ<sub>i</sub></div>
+          <div class="fl sm np" style="color:var(--mut)"><span class="mv">y<sub>i</sub></span> f(<span class="mv">x<sub>i</sub></span>) ≥ 1 − ξ<sub>i</sub>,&nbsp; ξ<sub>i</sub> ≥ 0</div>
+          <div class="fl md" id="svm-kline-lin" style="padding-bottom:8px">K(<span class="mv">x</span>, <span class="mv">x′</span>) = <span class="mv">x</span> · <span class="mv">x′</span></div>
+          <div class="fl md" id="svm-kline-rbf" hidden>K(<span class="mv">x</span>, <span class="mv">x′</span>) = exp(−<span class="sym" data-p="gam" style="--c:#0f8a7a"><span class="g">γ</span></span>‖<span class="mv">x</span> − <span class="mv">x′</span>‖²)</div>
+          <div class="live" id="svm-live">SVM 학습을 누르거나 C를 끌면 학습합니다.</div>
+          <div class="regime" id="svm-regime" style="background:#eef3fe;color:#2f53b0"></div>
+        </div>
+        <div><label class="check"><input type="checkbox" id="svm-showm" checked> 마진 영역 보기</label><label class="check"><input type="checkbox" id="svm-showsv" checked> 서포트 벡터 강조</label></div>
+        <div class="row"><button class="btn pri" id="svm-train" style="flex:1">▶ SVM 학습</button><button class="btn sm" id="svm-resetds">데이터셋 초기화</button></div>
+        <div class="box" style="background:#f6f9ff;border-color:#dce6fb"><h4>지금 무슨 일이 일어났나요?</h4><p class="muted" id="svm-explain">먼저 SVM 학습을 눌러 두 무리를 나누는 직선을 찾아보세요.</p></div>
+      </aside>
+    </div>
+
+    <div id="svm-lift" class="sechead"><span class="eyebrow" style="color:var(--a)">먼저 눈으로 이해하기 / 동심원</span><h2>둘러싸인 점들, 위로 올리면?</h2><p>작은 원은 아래에, 큰 원은 위에. 새로 만든 ‘높이’가 두 그룹을 나누는 단서가 됩니다. 수식 속 <b>c</b>를 끌어 자르는 높이를 바꿔 보세요.</p></div>
+    <div class="card" style="padding:22px">
+      <div class="liftsteps"><span id="ls1" class="on">01 원래 점 보기</span>→<span id="ls2">02 그릇처럼 들어 올리기</span>→<span id="ls3">03 가운데로 나누기 ✓</span></div>
+      <div class="liftgrid">
+        <div><div class="kt">위에서 본 두 원 · ● 안쪽 A · ■ 바깥쪽 B</div><svg id="lift-top" class="plot" viewBox="0 0 360 300"></svg></div>
+        <div><div class="kt">옆에서 보면 · 새 높이 z ↑</div><svg id="lift-side" class="plot" viewBox="0 0 360 300"></svg></div>
+      </div>
+      <div class="row" style="margin-top:12px;align-items:flex-start;gap:18px">
+        <div class="fx blue" style="flex:1;min-width:280px">
+          <div class="fx-h"><b>새 좌표를 하나 더하기</b><span>⇆ c를 끌어서 조절</span></div>
+          <div class="fl md"><span class="mv">z</span> = <span class="mv">x</span>² + <span class="mv">y</span>²,&nbsp;&nbsp; <span class="mv">z</span> &lt; <span class="sym" data-p="liftc" style="--c:var(--a)"><span class="g">c</span></span> 이면 A그룹</div>
+          <div class="live" id="lift-live"></div>
+        </div>
+        <div style="flex:1;min-width:240px">
+          <p class="muted" style="margin:0 0 10px;font-size:13.5px" id="lift-msg">평평할 때는, 직선으로 못 나눠요. 높이가 없을 때는 옆에서 보면 같은 줄에 겹쳐요.</p>
+          <button class="btn pri" id="lift-btn">점들을 위로 올리기 →</button>
+          <p class="note">축을 돌리는 것이 아니라 정보를 하나 추가하는 거예요. 위에서 보면 “z = c” 평면은 반지름 √c인 원 경계가 됩니다 — RBF 커널이 곡선 경계를 그리는 직관이에요.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="svm-sum" class="sechead"><span class="eyebrow" style="color:var(--a)">STEP 05 · 핵심 정리</span><h2>점을 구분하는 세 가지 단서</h2></div>
+    <div class="sum3">
+      <div class="card"><b>결정 경계</b><h4>f(x) = 0</h4><p>두 그룹을 구분하는 기준이에요. 선형 커널은 직선, RBF 커널은 데이터에 맞는 곡선 경계를 학습할 수 있어요.</p></div>
+      <div class="card"><b>마진 · C</b><h4>여유 공간 vs 오류</h4><p>소프트 마진 SVM은 일부 점의 마진 침범을 허용합니다. C가 작으면 넓은 마진을, 크면 적은 오류를 더 중요하게 봐요.</p></div>
+      <div class="card"><b>서포트 벡터</b><h4>경계를 만드는 점</h4><p>경계를 결정하는 데 기여하는 점이에요. 소프트 마진에서는 점선 위뿐 아니라 마진 안이나 반대편에도 있을 수 있어요.</p></div>
+    </div>
+    <div class="sechead" style="margin-top:44px"><span class="eyebrow">배운 내용을 내 것으로</span><h2 style="font-size:22px">30초, 이해도 체크 <span class="chip" id="qz-svm-n">0 / 3</span></h2></div>
+    <div class="quiz" id="qz-svm"></div>
+    <div class="next"><span>SVM은 데이터를 구분하는 모델, 경사하강법은 손실을 줄이는 최적화 방법이에요. SVM 학습에 반드시 경사하강법만 쓰는 것은 아닙니다.</span><a class="btn" href="#gd">다른 방법도 관찰하기 · 경사하강법 →</a></div>
+  </div>
+</main>
+
+<script>
+/* ================= utils ================= */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v)), lerp=(a,b,t)=>a+(b-a)*t;
+const M=v=>String(v).replace(/^-/,'−');
+const nf=(v,d=3)=>!isFinite(v)?'∞':M(Math.abs(v)>=1e4?v.toExponential(2):v.toFixed(d));
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ================= scrubbable params ================= */
+const P={};
+function defParam(name,o){P[name]=Object.assign({subs:[],fmt:v=>v.toFixed(2)},o);}
+function frac(p,v){return p.log?Math.log(v/p.min)/Math.log(p.max/p.min):(v-p.min)/(p.max-p.min)}
+function unfrac(p,f){return p.log?p.min*Math.pow(p.max/p.min,f):p.min+f*(p.max-p.min)}
+function setParam(name,v,silent){
+  const p=P[name]; v=clamp(v,p.min,p.max);
+  if(p.step) v=Math.round(v/p.step)*p.step;
+  v=+v.toPrecision(6);
+  const changed=v!==p.v; p.v=v; syncSym(name);
+  if(changed&&!silent) p.subs.forEach(f=>f(v));
+}
+function syncSym(name){
+  const p=P[name];
+  $$(`.sym[data-p="${name}"]`).forEach(el=>{const t=el.querySelector('.v'); if(t)t.textContent=p.fmt(p.v); el.setAttribute('aria-valuenow',p.v); el.setAttribute('aria-valuetext',p.fmt(p.v));});
+  if(tipFor===name) updateTip();
+}
+const tip=$('#tip'); let tipFor=null,tipEl=null;
+function showTip(el,name){tipFor=name;tipEl=el;tip.classList.add('on');updateTip();}
+function updateTip(){
+  if(!tipFor)return; const p=P[tipFor], f=clamp(frac(p,p.v),0,1);
+  tip.innerHTML=`<div class="tl"><b>${p.sym}</b>${p.label}</div><div class="tv">${p.fmt(p.v)}</div><div class="tt"><i style="width:${f*100}%"></i></div><div class="te"><span>← ${p.lo}</span><span>${p.hi} →</span></div>`;
+  const r=tipEl.getBoundingClientRect(); tip.style.left=(r.left+r.width/2)+'px'; tip.style.top=(r.top-10)+'px';
+}
+function hideTip(){tipFor=null;tip.classList.remove('on');}
+window.addEventListener('scroll',()=>{if(tipFor&&!document.body.classList.contains('scrubbing'))hideTip();else if(tipFor)updateTip();},{passive:true});
+let coachDone=false;
+function hideCoach(){if(coachDone)return;coachDone=true;$$('.coach').forEach(c=>c.remove());$$('.sym.pulse').forEach(s=>s.classList.remove('pulse'));}
+function bindSyms(){
+  $$('.sym').forEach(el=>{
+    if(el._b)return; el._b=1;
+    const name=el.dataset.p,p=P[name];
+    el.insertAdjacentHTML('beforeend','<span class="v"></span>');
+    el.tabIndex=0; el.setAttribute('role','slider'); el.setAttribute('aria-label',p.label+' — 좌우로 끌거나 방향키로 조절');
+    el.setAttribute('aria-valuemin',p.min); el.setAttribute('aria-valuemax',p.max);
+    let st=null;
+    const hl=on=>{if(on)document.body.dataset.hl=name;else if(document.body.dataset.hl===name)delete document.body.dataset.hl;};
+    el.addEventListener('pointerdown',e=>{
+      if(e.button>0)return; e.preventDefault(); el.focus({preventScroll:true});
+      try{el.setPointerCapture(e.pointerId)}catch(_){}
+      st={x:e.clientX,f:frac(p,p.v)}; el.classList.add('drag'); document.body.classList.add('scrubbing'); hl(true); showTip(el,name); hideCoach();
+    });
+    el.addEventListener('pointermove',e=>{
+      if(!st)return;
+      const f=clamp(st.f+(e.clientX-st.x)/(e.shiftKey?1000:260),0,1);
+      setParam(name,unfrac(p,f));
+    });
+    const end=()=>{if(!st)return; st=null; el.classList.remove('drag'); document.body.classList.remove('scrubbing'); if(!el.matches(':hover')){hl(false);hideTip();}};
+    el.addEventListener('pointerup',end); el.addEventListener('pointercancel',end); el.addEventListener('lostpointercapture',end);
+    el.addEventListener('pointerenter',()=>{if(document.body.classList.contains('scrubbing'))return; hl(true); showTip(el,name);});
+    el.addEventListener('pointerleave',()=>{if(st)return; hl(false); hideTip();});
+    el.addEventListener('focus',()=>{hl(true);});
+    el.addEventListener('blur',()=>{hl(false); if(tipEl===el)hideTip();});
+    el.addEventListener('keydown',e=>{
+      const d={ArrowRight:1,ArrowUp:1,ArrowLeft:-1,ArrowDown:-1}[e.key]; if(!d)return; e.preventDefault(); hideCoach();
+      let nv=unfrac(p,clamp(frac(p,p.v)+d*(e.shiftKey?0.1:0.02),0,1));
+      if(p.step&&Math.abs(nv-p.v)<p.step) nv=p.v+d*p.step;
+      setParam(name,nv); showTip(el,name);
+    });
+  });
+  Object.keys(P).forEach(syncSym);
+}
+function tweenParam(name,to,ms=380){
+  const from=P[name].v,t0=performance.now();
+  (function f(now){const t=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-t,3); setParam(name,lerp(from,to,e)); if(t<1)requestAnimationFrame(f);})(t0);
+}
+
+defParam('eta1',{v:0.15,min:0.01,max:1.1,step:0.01,sym:'η',label:'학습률 (한 걸음의 크기)',lo:'작은 걸음',hi:'큰 걸음'});
+defParam('x0',{v:-4,min:-4.5,max:4.5,step:0.1,sym:'x₀',label:'시작 위치',lo:'왼쪽 −4.5',hi:'오른쪽 +4.5',fmt:v=>M(v.toFixed(1))});
+defParam('eta2',{v:0.05,min:0.005,max:0.2,step:0.001,sym:'η',label:'공통 학습률',lo:'작게',hi:'크게',fmt:v=>v.toFixed(3)});
+defParam('beta',{v:0.9,min:0,max:0.99,step:0.01,sym:'β',label:'모멘텀의 기억',lo:'잊음 (=GD)',hi:'오래 기억'});
+defParam('b1',{v:0.9,min:0,max:0.99,step:0.01,sym:'β₁',label:'Adam · 방향의 기억',lo:'짧게',hi:'길게'});
+defParam('b2',{v:0.999,min:0.5,max:0.9999,step:0.0001,sym:'β₂',label:'Adam · 크기의 기억',lo:'짧게',hi:'길게',fmt:v=>v.toFixed(4).replace(/0+$/,'').replace(/\.$/,'')});
+defParam('sx',{v:-2.1,min:-2.3,max:2.3,step:0.01,sym:'x₀',label:'출발점 x',lo:'왼쪽',hi:'오른쪽',fmt:v=>M(v.toFixed(2))});
+defParam('sy',{v:0.2,min:-1.5,max:1.5,step:0.01,sym:'y₀',label:'출발점 y',lo:'아래',hi:'위',fmt:v=>M(v.toFixed(2))});
+defParam('C',{v:1,min:0.01,max:100,log:true,sym:'C',label:'오류 벌점의 세기',lo:'넓은 마진',hi:'적은 오류',fmt:v=>v<1?v.toFixed(2):v<10?v.toFixed(1):v.toFixed(0)});
+defParam('gam',{v:0.45,min:0.05,max:5,log:true,sym:'γ',label:'RBF 커널의 날카로움',lo:'완만한 경계',hi:'구불구불',fmt:v=>v.toFixed(2)});
+defParam('cx',{v:-3,min:-4.5,max:4.5,step:0.1,sym:'x',label:'공의 위치',lo:'왼쪽',hi:'오른쪽',fmt:v=>M(v.toFixed(1))});
+defParam('sang',{v:100,min:0,max:180,step:1,sym:'θ',label:'경계 방향 (각도)',lo:'0°',hi:'180°',fmt:v=>v.toFixed(0)+'°'});
+defParam('liftc',{v:5,min:0.5,max:16,step:0.1,sym:'c',label:'자르는 높이',lo:'낮게',hi:'높게',fmt:v=>v.toFixed(1)});
+
+/* ================= router ================= */
+const views=['home','gd','svm'];
+function go(){
+  const h=location.hash.slice(1), v=views.includes(h)?h:'home';
+  $$('.view').forEach(s=>s.hidden=s.id!=='v-'+v);
+  $$('.nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===v));
+  window.scrollTo(0,0); hideTip();
+  if(v==='gd'){gdc.render();gd1.render();gd2.redraw();}
+  if(v==='svm'){svmc.render();svm.render();lift.render();}
+  if(v!=='home'&&!coachDone) setTimeout(placeCoach,80);
+}
+function placeCoach(){
+  $$('.coach').forEach(c=>c.remove());
+  const v=$('.view:not([hidden])'); if(!v||v.id==='v-home')return;
+  const el=v.id==='v-gd'?$('#gd1-fx .sym[data-p=eta1]'):$('#svm-fx .sym[data-p=C]');
+  if(!el)return; el.classList.add('pulse');
+  const box=el.closest('.fx'); const c=document.createElement('div'); c.className='coach';
+  c.textContent=v.id==='v-gd'?'← η를 클릭한 채 좌우로 끌어보세요 →':'← C를 클릭한 채 좌우로 끌어보세요 →';
+  box.appendChild(c);
+  const br=box.getBoundingClientRect(), er=el.getBoundingClientRect();
+  c.style.left=Math.max(4,er.left-br.left-12)+'px'; c.style.top=(er.top-br.top-34)+'px';
+}
+window.addEventListener('hashchange',go);
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>{const t=document.getElementById(b.dataset.go); if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:'smooth'});}));
+function segBind(id,attr,fn){$$('#'+id+' button').forEach(b=>b.addEventListener('click',()=>{$$('#'+id+' button').forEach(x=>x.classList.toggle('on',x===b));fn(b.dataset[attr]);}));}
+
+/* ================= GD 1D ================= */
+const gd1=(()=>{
+  const W=640,H=380,ml=48,mr=14,mt=14,mb=34,MAX=20;
+  const L=x=>x*x,G=x=>2*x;
+  let xs=[P.x0.v],anim=null,playing=false,speed=1,showTan=true,viewM=5;
+  const svg=$('#gd1-svg'),loss=$('#gd1-loss');
+  const done=()=>anim?xs.length-2:xs.length-1;
+  const xc=()=>xs[done()];
+  function regime(eta){
+    const r=1-2*eta;
+    if(eta<0.06)return['warn',`매 걸음 x가 ${r.toFixed(2)}배 → 아주 천천히 내려가요. 너무 작은 걸음은 시간이 오래 걸려요.`];
+    if(eta<0.45)return['',`매 걸음 x가 ${r.toFixed(2)}배 → 같은 쪽에서 안정적으로 최솟값에 다가가요.`];
+    if(eta<=0.55)return['',`매 걸음 x가 ${M(r.toFixed(2))}배 → 거의 한 번에 바닥에 도착해요! (x²에서는 η=0.5가 정확히 한 걸음)`];
+    if(eta<0.98)return['warn',`매 걸음 x가 ${M(r.toFixed(2))}배 → 최솟값을 넘나들며(진동) 다가가요.`];
+    if(eta<=1.0)return['bad',`매 걸음 x가 ${M(r.toFixed(2))}배 → 양쪽을 영원히 왔다 갔다 해요.`];
+    return['bad',`매 걸음 x가 ${M(r.toFixed(2))}배 → 걸음이 너무 커서 점점 멀어져요(발산).`];
+  }
+  function ended(){const x=xs.at(-1);return xs.length>MAX||Math.abs(x)>1e4||Math.abs(x)<5e-4;}
+  function doStep(){
+    if(anim)return;
+    if(ended()){stop();explainEnd();return;}
+    const a=xs.at(-1),b=a-P.eta1.v*G(a); xs.push(b);
+    anim={a,b,t0:performance.now(),dur:700/speed,t:0};
+    requestAnimationFrame(tick);
+  }
+  function tick(now){
+    if(!anim)return;
+    const t=Math.min(1,(now-anim.t0)/anim.dur); anim.t=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+    if(t>=1){anim=null;render();
+      if(ended()){stop();explainEnd();} else if(playing) setTimeout(()=>{if(playing)doStep();},140/speed);
+      else explainStep();
+      return;}
+    render(); requestAnimationFrame(tick);
+  }
+  function play(){if(playing){stop();return;} if(ended())reset(); playing=true; updBtn(); explain('학습 중… 공이 기울기의 <b>반대 방향</b>으로 η만큼 비례한 걸음을 내딛어요. 학습 중에 <b>η</b>를 끌어 보세요!'); doStep();}
+  function stop(){playing=false;updBtn();}
+  function reset(){stop();anim=null;xs=[P.x0.v];render();explain('학습 시작을 눌러 보세요. 공이 기울기의 반대 방향으로 한 걸음씩 움직입니다.');}
+  function updBtn(){$('#gd1-play').textContent=playing?'❚❚ 일시정지':(ended()&&xs.length>1?'↻ 다시 학습':'▶ 학습 시작');}
+  function explain(h){$('#gd1-explain').innerHTML=h;}
+  function explainStep(){const k=done(),x=xs[k],p=xs[k-1];explain(`${k}단계: 기울기 ${nf(G(p))}의 반대 방향으로 ${nf(-P.eta1.v*G(p))}만큼 이동해 x = ${nf(x)}가 됐어요. 손실 ${nf(L(p))} → ${nf(L(x))}.`);}
+  function explainEnd(){
+    const x=xs.at(-1),k=xs.length-1;
+    if(Math.abs(x)>1e4||(Math.abs(x)>Math.abs(xs[0])&&P.eta1.v>1))explain(`<b style="color:var(--err)">발산!</b> η = ${P.eta1.v.toFixed(2)}는 너무 커서 매 걸음 최솟값을 더 크게 넘어가요. 손실이 오히려 커졌어요. η를 1보다 작게 끌어 보세요.`);
+    else if(Math.abs(x)<5e-4)explain(`<b>${k}단계 만에 바닥 도착!</b> η = ${P.eta1.v.toFixed(2)}일 때 손실이 거의 0이 됐어요. η를 바꿔 걸린 단계 수를 비교해 보세요.`);
+    else if(Math.abs(1-2*P.eta1.v)>=0.999)explain(`η = ${P.eta1.v.toFixed(2)}에서는 공이 양쪽을 같은 높이로 오가며 제자리걸음을 해요. 손실이 줄지 않아요.`);
+    else explain(`${k}단계 동안 x = ${nf(x)}까지 왔어요(손실 ${nf(L(x))}). ${P.eta1.v<0.06?'걸음이 작아 아직 갈 길이 멀어요.':'조금 더 하면 바닥에 닿아요.'}`);
+  }
+  function render(){
+    const k=done(),x=xs[k],eta=P.eta1.v,g=G(x),nx=x-eta*g;
+    const cur=anim?lerp(anim.a,anim.b,anim.t):x;
+    let m=5; xs.forEach(v=>m=Math.max(m,Math.abs(v)*1.1)); m=Math.max(m,Math.min(Math.abs(nx)*1.1,1e5)); m=Math.min(m,2e4);
+    viewM=anim?lerp(viewM,m,.2):m; const R=viewM, Y=R*R*1.04;
+    const sx=v=>ml+(v+R)/(2*R)*(W-ml-mr), sy=v=>H-mb-v/Y*(H-mt-mb);
+    let s=`<defs><clipPath id="c1"><rect x="${ml}" y="${mt}" width="${W-ml-mr}" height="${H-mt-mb}"/></clipPath>
+      <marker id="ah1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#6f5ce6"/></marker>
+      <radialGradient id="bg1"><stop offset="0" stop-color="#8b7cf5"/><stop offset="1" stop-color="#5a46d6"/></radialGradient></defs>`;
+    for(let i=0;i<=4;i++){const v=-R+i*R/2,X=sx(v);s+=`<line x1="${X}" y1="${mt}" x2="${X}" y2="${H-mb}" stroke="#eef0f4"/><text x="${X}" y="${H-mb+18}" font-size="11" fill="#98a2b3" text-anchor="middle">${M((Math.abs(v)<1e-9?0:v).toFixed(R>50?0:1))}</text>`;
+      const yv=Y/1.04*i/4,YY=sy(yv);s+=`<line x1="${ml}" y1="${YY}" x2="${W-mr}" y2="${YY}" stroke="#eef0f4"/><text x="${ml-8}" y="${YY+4}" font-size="11" fill="#98a2b3" text-anchor="end">${yv>=1e4?yv.toExponential(0):Math.round(yv)}</text>`;}
+    s+=`<text x="${ml}" y="${mt-2}" font-size="10.5" fill="#98a2b3">손실 (틀린 정도)</text><text x="${W-mr}" y="${H-4}" font-size="10.5" fill="#98a2b3" text-anchor="end">현재 값 x →</text>`;
+    let d='',area='';for(let i=0;i<=160;i++){const v=-R+2*R*i/160;d+=(i?'L':'M')+sx(v).toFixed(1)+','+sy(L(v)).toFixed(1);}
+    area=d+`L${sx(R)},${mt}L${sx(-R)},${mt}Z`;
+    s+=`<g clip-path="url(#c1)"><path d="${area}" fill="#f4f2fe"/><path d="${d}" fill="none" stroke="#7b6cf0" stroke-width="2.5"/>`;
+    s+=`<g transform="translate(${sx(0)},${sy(0)})"><line y1="0" y2="-26" stroke="#202735"/><path d="M0,-26 L12,-21 L0,-16Z" fill="#202735"/></g><text x="${sx(0)+6}" y="${sy(0)-30}" font-size="10.5" fill="#202735">목표: 가장 낮은 곳</text>`;
+    // future ghost
+    if(!anim){let gx=x,gp=`M${sx(gx)},${sy(L(gx))}`,dots='';
+      for(let i=1;i<=8;i++){gx=gx-eta*G(gx); if(Math.abs(gx)>R*3)break; gp+=`L${sx(gx)},${sy(L(gx))}`; dots+=`<circle cx="${sx(gx)}" cy="${sy(L(gx))}" r="3.2" fill="#fff" stroke="#b9b0f5" stroke-width="1.5" opacity="${(1-i/10).toFixed(2)}"/>`;}
+      s+=`<g class="lk lk-ghost" opacity=".75"><path d="${gp}" fill="none" stroke="#b9b0f5" stroke-width="1.6" stroke-dasharray="4 4"/>${dots}</g>`;}
+    // history
+    if(k>0){let hp='';for(let i=0;i<=k;i++)hp+=(i?'L':'M')+sx(xs[i])+','+sy(L(xs[i]));
+      s+=`<path d="${hp}" fill="none" stroke="#6f5ce6" stroke-opacity=".35" stroke-width="1.5"/>`;
+      for(let i=0;i<k;i++)s+=`<circle cx="${sx(xs[i])}" cy="${sy(L(xs[i]))}" r="3.5" fill="#6f5ce6" opacity=".35"/>`;}
+    s+=`<circle class="lk lk-x0" cx="${sx(xs[0])}" cy="${sy(L(xs[0]))}" r="5" fill="none" stroke="#5b6478" stroke-width="1.5" opacity=".5"/>`;
+    // tangent
+    const cy=anim?lerp(L(anim.a),L(anim.b),anim.t)+Math.sin(Math.PI*anim.t)*Y*0.06:L(cur);
+    if(showTan&&!anim){const dx=R*0.32;s+=`<line id="gd1-tan-l" x1="${sx(x-dx)}" y1="${sy(L(x)-2*x*dx)}" x2="${sx(x+dx)}" y2="${sy(L(x)+2*x*dx)}" stroke="#d6455d" stroke-width="1.8" stroke-dasharray="6 4"/>`;}
+    // step arrow
+    if(!anim&&Math.abs(nx-x)>1e-9){const y0=sy(L(x)),X0=sx(x),X1=sx(nx);
+      s+=`<line x1="${X1}" y1="${y0}" x2="${X1}" y2="${sy(L(nx))}" stroke="#6f5ce6" stroke-dasharray="2 3" opacity=".6"/>`;
+      s+=`<circle cx="${X1}" cy="${sy(L(nx))}" r="8" fill="#fff" stroke="#6f5ce6" stroke-width="1.6" stroke-dasharray="3 2"/>`;
+      s+=`<line class="lk lk-eta1" x1="${X0+(X1>X0?10:-10)}" y1="${y0}" x2="${X1}" y2="${y0}" stroke="#6f5ce6" stroke-width="3" marker-end="url(#ah1)"/>`;
+      const tx=clamp((X0+X1)/2,ml+60,W-mr-60);
+      s+=`<text class="lk-eta1t" x="${tx}" y="${y0-10}" font-size="12" fill="#5a46d6" text-anchor="middle">−η·∇L = ${nf(nx-x,2)}</text>`;}
+    s+=`<circle cx="${sx(cur)}" cy="${sy(cy)}" r="17" fill="#6f5ce6" opacity=".12"/><circle cx="${sx(cur)}" cy="${sy(cy)}" r="10" fill="url(#bg1)" stroke="#fff" stroke-width="2"/></g>`;
+    svg.innerHTML=s;
+    // stats
+    $('#gd1-k').textContent=k+'단계'; $('#gd1-x').textContent=nf(x); $('#gd1-g').textContent=nf(g); $('#gd1-l').textContent=nf(L(x));
+    $('#gd1-live').innerHTML=`<b>${nf(nx)}</b> = ${nf(x)} − <b style="color:var(--gd)">${eta.toFixed(2)}</b> × (${nf(g)})`;
+    const [cls,msg]=regime(eta); const rg=$('#gd1-regime'); rg.className='regime '+cls; rg.textContent=msg;
+    $$('#gd1-presets button').forEach(b=>b.classList.toggle('on',Math.abs(+b.dataset.eta-eta)<0.005));
+    // loss chart
+    const lw=640,lh=130,lm=40,n=Math.max(10,k),lmax=Math.max(...xs.slice(0,k+1).map(L),1e-9);
+    const lx=i=>lm+i/n*(lw-lm-12),ly=v=>lh-22-Math.min(v/lmax,1.05)*(lh-36);
+    let ls=`<line x1="${lm}" y1="${lh-22}" x2="${lw-12}" y2="${lh-22}" stroke="#e6e8ee"/><text x="${lm-6}" y="${ly(lmax)+4}" font-size="10.5" fill="#98a2b3" text-anchor="end">${lmax>=1e4?lmax.toExponential(0):lmax.toFixed(0)}</text><text x="${lm-6}" y="${lh-18}" font-size="10.5" fill="#98a2b3" text-anchor="end">0</text><text x="${lw-12}" y="${lh-4}" font-size="10.5" fill="#98a2b3" text-anchor="end">${n}단계 →</text><text x="${lm}" y="${lh-4}" font-size="10.5" fill="#98a2b3">0</text>`;
+    let lp='';for(let i=0;i<=k;i++)lp+=(i?'L':'M')+lx(i)+','+ly(L(xs[i]));
+    ls+=`<path d="${lp}" fill="none" stroke="#6f5ce6" stroke-width="2"/>`;
+    for(let i=0;i<=k;i++)ls+=`<circle cx="${lx(i)}" cy="${ly(L(xs[i]))}" r="3" fill="#6f5ce6"/>`;
+    loss.innerHTML=ls;
+    $('#gd1-lossstate').textContent=k===0?'학습 전':(L(x)<L(xs[k-1])?'손실 감소 ↓':L(x)>L(xs[k-1])?'손실 증가 ↑':'제자리');
+    updBtn();
+  }
+  P.eta1.subs.push(()=>render());
+  P.x0.subs.push(()=>reset());
+  $('#gd1-play').onclick=play; $('#gd1-step').onclick=()=>{stop();doStep();}; $('#gd1-reset').onclick=reset;
+  $('#gd1-tan').onchange=e=>{showTan=e.target.checked;render();};
+  $$('#gd1-presets button').forEach(b=>b.onclick=()=>{hideCoach();tweenParam('eta1',+b.dataset.eta);});
+  segBind('gd1-speed','s',v=>speed=+v);
+  const gt=$('#gd1-gradterm');
+  gt.addEventListener('mouseenter',()=>{const l=$('#gd1-tan-l');if(l)l.setAttribute('stroke-width','4');});
+  gt.addEventListener('mouseleave',()=>{const l=$('#gd1-tan-l');if(l)l.setAttribute('stroke-width','1.8');});
+  return {render};
+})();
+
+/* ================= GD 2D ================= */
+const TER={
+  wells:{f:(x,y)=>x**4/4-x*x-0.3*x+y*y+1.5,g:(x,y)=>[x**3-2*x-0.3,2*y],s:[-2.1,0.2],
+    q:'관성으로 작은 턱을 넘을까요?',qd:'왼쪽은 로컬 미니멈, 오른쪽은 더 깊은 전역 미니멈이에요. 내려오던 이동량이 남아 있다면 가운데 턱을 넘을 수 있어요.',
+    st:(x,y)=>x<-0.15?'왼쪽 웅덩이(로컬)':'오른쪽 웅덩이(더 깊은 곳)',
+    marks:[[-1.33,0,'로컬 미니멈'],[1.48,0,'더 깊은 최솟값'],[-0.15,0,'넘어야 할 턱']]},
+  saddle:{f:(x,y)=>0.5*x*x+y**4/4-y*y/2+0.25,g:(x,y)=>[x,y**3-y],s:[1.9,0.03],
+    q:'평평한 안장점에서 빠져나올까요?',qd:'가운데는 x 방향으로는 바닥, y 방향으로는 꼭대기인 안장점이에요. 위·아래 골짜기로 빠져나가야 손실이 더 낮아져요.',
+    st:(x,y)=>Math.abs(y)<0.15?'안장점 근처에 머묾':'골짜기로 탈출',
+    marks:[[0,0,'안장점'],[0,1,'골짜기'],[0,-1,'골짜기']]},
+  valley:{f:(x,y)=>0.04*x*x+12*y*y,g:(x,y)=>[0.08*x,24*y],s:[-2.1,0.5],
+    q:'좁은 골짜기에서 지그재그를 피할까요?',qd:'y 방향은 가파르고 x 방향은 완만한 길쭉한 골짜기예요. η가 크면 y로 튀고, 작으면 x로 너무 느려요. η를 0.08 근처까지 끌어 보세요.',
+    st:(x,y)=>Math.abs(x)<0.3?'바닥 근처 도착':'골짜기를 따라 이동 중',
+    marks:[[0,0,'최솟값']]}
+};
+const gd2=(()=>{
+  const N=250,X0=-2.4,X1=2.4,Y0=-1.6,Y1=1.6,W=600,H=400;
+  const px=x=>(x-X0)/(X1-X0)*W, py=y=>(1-(y-Y0)/(Y1-Y0))*H, ix=X=>X0+X/W*(X1-X0), iy=Y=>Y0+(1-Y/H)*(Y1-Y0);
+  let terr='wells',tr=null,k=0,playing=false,speed=1,raf=0,last=0;
+  const cv=$('#gd2-cv'),ctx=cv.getContext('2d'),svg=$('#gd2-svg'),lossv=$('#gd2-loss');
+  const COL={gd:'#6f5ce6',mo:'#e0704f',ad:'#1f9e8f'};
+  function heat(){
+    const t=TER[terr],img=ctx.createImageData(W,H),vals=new Float32Array(W*H);let mn=1e9,mx=-1e9;
+    for(let j=0;j<H;j++)for(let i=0;i<W;i++){const v=t.f(ix(i+.5),iy(j+.5));vals[j*W+i]=v;if(v<mn)mn=v;if(v>mx)mx=v;}
+    const pal=[[250,249,255],[226,221,252],[190,180,245],[140,124,226],[86,68,180],[52,40,120]];
+    for(let p=0;p<W*H;p++){let u=Math.log1p((vals[p]-mn)*4)/Math.log1p((mx-mn)*4);
+      const band=(u*14)%1; const f=u*(pal.length-1),i=Math.min(pal.length-2,Math.floor(f)),r=f-i;
+      let c=[0,1,2].map(q=>lerp(pal[i][q],pal[i+1][q],r)); if(band<0.06)c=c.map(q=>q*0.9);
+      img.data[p*4]=c[0];img.data[p*4+1]=c[1];img.data[p*4+2]=c[2];img.data[p*4+3]=255;}
+    ctx.putImageData(img,0,0);
+  }
+  function sim(){
+    const t=TER[terr],x0=P.sx.v,y0=P.sy.v,eta=P.eta2.v,beta=P.beta.v,b1=P.b1.v,b2=P.b2.v,eps=1e-8;
+    const run=kind=>{let x=x0,y=y0,vx=0,vy=0,mx=0,my=0,qx=0,qy=0,dead=false;const out=[[x,y,t.f(x,y),0]];
+      for(let i=1;i<=N;i++){
+        if(dead){const l=out.at(-1);out.push([l[0],l[1],l[2],0]);continue;}
+        const [gx,gy]=t.g(x,y);let dx,dy;
+        if(kind==='gd'){dx=-eta*gx;dy=-eta*gy;}
+        else if(kind==='mo'){vx=beta*vx-eta*gx;vy=beta*vy-eta*gy;dx=vx;dy=vy;}
+        else{mx=b1*mx+(1-b1)*gx;my=b1*my+(1-b1)*gy;qx=b2*qx+(1-b2)*gx*gx;qy=b2*qy+(1-b2)*gy*gy;
+          const c1=1-Math.pow(b1,i),c2=1-Math.pow(b2,i);dx=-eta*(mx/c1)/(Math.sqrt(qx/c2)+eps);dy=-eta*(my/c1)/(Math.sqrt(qy/c2)+eps);}
+        x+=dx;y+=dy;
+        if(!isFinite(x)||!isFinite(y)||Math.abs(x)>20||Math.abs(y)>20){dead=true;x=clamp(x||0,-20,20);y=clamp(y||0,-20,20);out.push([x,y,NaN,Math.hypot(dx,dy)]);continue;}
+        out.push([x,y,t.f(x,y),Math.hypot(dx,dy)]);}
+      return {pts:out,dead};};
+    tr={gd:run('gd'),mo:run('mo'),ad:run('ad')};
+  }
+  function at(kind,kk){const p=tr[kind].pts,i=Math.floor(kk),f=kk-i,a=p[i],b=p[Math.min(N,i+1)];return[lerp(a[0],b[0],f),lerp(a[1],b[1],f)];}
+  function redraw(){heat();render();}
+  function render(){
+    const t=TER[terr],ki=Math.floor(k);
+    let s=`<defs><clipPath id="c2"><rect width="${W}" height="${H}"/></clipPath></defs><g clip-path="url(#c2)">`;
+    t.marks.forEach(([x,y,l])=>{s+=`<g opacity=".85"><circle cx="${px(x)}" cy="${py(y)}" r="3" fill="#fff"/><text x="${px(x)}" y="${py(y)+(l==='넘어야 할 턱'?-10:18)}" font-size="11" fill="#fff" text-anchor="middle" stroke="#2b2160" stroke-width="3" paint-order="stroke">${l}</text></g>`;});
+    for(const kd of ['gd','mo','ad']){
+      const p=tr[kd].pts;let full='',past='';
+      p.forEach((q,i)=>{const c=`${px(q[0]).toFixed(1)},${py(q[1]).toFixed(1)}`;full+=(i?'L':'M')+c;if(i<=ki)past+=(i?'L':'M')+c;});
+      const [bx,by]=at(kd,k);past+=`L${px(bx)},${py(by)}`;
+      s+=`<g class="m-${kd} lk"><path d="${full}" fill="none" stroke="${COL[kd]}" stroke-width="1.5" stroke-opacity=".35" stroke-dasharray="3 3"/><path d="${past}" fill="none" stroke="${COL[kd]}" stroke-width="2.6" stroke-linejoin="round"/>`;
+      const X=px(bx),Y=py(by);
+      if(kd==='gd')s+=`<circle class="ball2" cx="${X}" cy="${Y}" r="8" fill="${COL[kd]}" stroke="#fff" stroke-width="2"/>`;
+      else if(kd==='mo')s+=`<rect class="ball2" x="${X-7}" y="${Y-7}" width="14" height="14" rx="2" fill="${COL[kd]}" stroke="#fff" stroke-width="2"/>`;
+      else s+=`<path class="ball2" d="M${X},${Y-9}L${X+9},${Y}L${X},${Y+9}L${X-9},${Y}Z" fill="${COL[kd]}" stroke="#fff" stroke-width="2"/>`;
+      s+='</g>';
+    }
+    s+=`<g class="lk-start" stroke="#fff" stroke-width="2.5"><circle cx="${px(P.sx.v)}" cy="${py(P.sy.v)}" r="11" fill="none"/><line x1="${px(P.sx.v)-5}" y1="${py(P.sy.v)}" x2="${px(P.sx.v)+5}" y2="${py(P.sy.v)}"/><line x1="${px(P.sx.v)}" y1="${py(P.sy.v)-5}" x2="${px(P.sx.v)}" y2="${py(P.sy.v)+5}"/></g><text x="${px(P.sx.v)+15}" y="${py(P.sy.v)-12}" font-size="11" fill="#fff" stroke="#2b2160" stroke-width="3" paint-order="stroke">출발</text></g>`;
+    svg.innerHTML=s;
+    $('#gd2-k').textContent=`${ki} / ${N}`;
+    for(const kd of ['gd','mo','ad']){const q=tr[kd].pts[ki],dead=tr[kd].dead&&!isFinite(q[2]);
+      $(`#c-${kd}-l`).textContent=dead?'발산':q[2].toFixed(4);$(`#c-${kd}-s`).textContent=q[3].toFixed(4);
+      $(`#c-${kd}-t`).textContent=dead?'⚠ 지도 밖으로 튕겨 나감':`x ${nf(q[0])} · y ${nf(q[1])} · ${ki}단계 · `+(ki===0?'같은 위치에서 출발 준비':t.st(q[0],q[1]));}
+    // loss chart
+    const lw=600,lh=150,lm=40;let all=[];for(const kd in tr)tr[kd].pts.forEach(q=>{if(isFinite(q[2]))all.push(q[2]);});
+    const mn=Math.min(...all),mx=Math.max(...all),rg=Math.max(mx-mn,1e-6);
+    const lx=i=>lm+i/N*(lw-lm-10),ly=v=>isFinite(v)?lh-22-(v-mn)/rg*(lh-34):8;
+    let ls=`<line x1="${lm}" y1="${lh-22}" x2="${lw-10}" y2="${lh-22}" stroke="#e6e8ee"/><text x="${lm-6}" y="${lh-18}" font-size="10.5" fill="#98a2b3" text-anchor="end">${mn.toFixed(2)}</text><text x="${lm-6}" y="16" font-size="10.5" fill="#98a2b3" text-anchor="end">${mx.toFixed(2)}</text><text x="${lw-10}" y="${lh-4}" font-size="10.5" fill="#98a2b3" text-anchor="end">${N}단계 →</text>`;
+    for(const kd of ['gd','mo','ad']){let d='',d2='';tr[kd].pts.forEach((q,i)=>{const c=lx(i).toFixed(1)+','+ly(q[2]).toFixed(1);d+=(i?'L':'M')+c;if(i<=ki)d2+=(i?'L':'M')+c;});
+      ls+=`<g class="m-${kd} lk"><path d="${d}" fill="none" stroke="${COL[kd]}" stroke-opacity=".25" stroke-width="1.5"/><path d="${d2}" fill="none" stroke="${COL[kd]}" stroke-width="2.2"/></g>`;}
+    ls+=`<line x1="${lx(k)}" y1="6" x2="${lx(k)}" y2="${lh-22}" stroke="#202735" stroke-dasharray="3 3"/>`;
+    lossv.innerHTML=ls;
+    $('#gd2-play').textContent=playing?'❚❚ 일시정지':(k>=N?'↻ 다시 비교':'▶ 세 방법 비교 시작');
+    explain();
+  }
+  function explain(){
+    const ki=Math.floor(k),f=kd=>tr[kd].pts[ki],t=TER[terr];
+    let h;
+    if(ki===0)h=`<h4>무엇을 볼까요?</h4><p class="muted">점선은 <b>지금 설정으로 250단계 동안 갈 경로</b>예요. 재생하지 않아도 <b>η · β · β₁ · β₂</b>를 끌면 점선이 바로 바뀝니다.</p>`;
+    else{const best=['gd','mo','ad'].filter(kd=>isFinite(f(kd)[2])).sort((a,b)=>f(a)[2]-f(b)[2])[0];
+      const nm={gd:'기본 경사하강법',mo:'모멘텀',ad:'Adam'};
+      h=`<h4>${ki}단계 · 지금 가장 낮은 곳: ${best?nm[best]:'—'}</h4><p class="muted">`+['gd','mo','ad'].map(kd=>`${nm[kd]}: ${tr[kd].dead&&!isFinite(f(kd)[2])?'발산':t.st(f(kd)[0],f(kd)[1])}`).join('<br>')+`</p>`;}
+    $('#gd2-explain').innerHTML=h;
+  }
+  function loop(now){if(!playing)return;const dt=Math.min(0.05,(now-last)/1000);last=now;k=Math.min(N,k+dt*30*speed);render();if(k>=N){playing=false;render();return;}raf=requestAnimationFrame(loop);}
+  function play(){if(playing){playing=false;render();return;}if(k>=N)k=0;playing=true;last=performance.now();raf=requestAnimationFrame(loop);}
+  function setTerr(t){terr=t;k=0;playing=false;setParam('sx',TER[t].s[0],true);setParam('sy',TER[t].s[1],true);$('#gd2-q').textContent=TER[t].q;$('#gd2-qd').textContent=TER[t].qd;sim();redraw();}
+  ['eta2','beta','b1','b2','sx','sy'].forEach(n=>P[n].subs.push(()=>{sim();render();}));
+  $('#gd2-play').onclick=play;$('#gd2-step').onclick=()=>{playing=false;k=Math.min(N,Math.floor(k)+1);render();};
+  $('#gd2-reset').onclick=()=>{playing=false;k=0;render();};$('#gd2-end').onclick=()=>{playing=false;k=N;render();};
+  segBind('gd2-terr','t',setTerr);segBind('gd2-speed','s',v=>speed=+v);
+  // drag start on map
+  let dragging=false;
+  const toXY=e=>{const r=svg.getBoundingClientRect();return[ix((e.clientX-r.left)/r.width*W),iy((e.clientY-r.top)/r.height*H)];};
+  svg.addEventListener('pointerdown',e=>{dragging=true;svg.setPointerCapture(e.pointerId);playing=false;const [x,y]=toXY(e);setParam('sx',x,true);setParam('sy',y);});
+  svg.addEventListener('pointermove',e=>{if(!dragging)return;const [x,y]=toXY(e);setParam('sx',x,true);setParam('sy',y);});
+  svg.addEventListener('pointerup',()=>dragging=false);
+  setTerr('wells');
+  return {redraw,render};
+})();
+
+/* ================= SVM ================= */
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const DS={
+  blobs:{k:'linear',C:1,g:0.45,gen(r){const p=[];for(let i=0;i<12;i++)p.push({x:-1.6+gauss(r)*.9,y:2+gauss(r)*.9,c:1});for(let i=0;i<12;i++)p.push({x:1.8+gauss(r)*.9,y:-2.2+gauss(r)*.9,c:-1});return p;},
+    ex:'두 무리는 직선 하나로 나눌 수 있어요. 굵은 선이 결정 경계, 점선 사이가 마진(여유 공간)입니다. 테두리 친 점이 경계를 만드는 서포트 벡터예요. 서포트 벡터가 아닌 점을 움직이면 경계가 거의 그대로예요!'},
+  circles:{k:'rbf',C:10,g:0.45,gen(r){const p=[];for(let i=0;i<14;i++){const a=r()*6.283,d=r()*1.4;p.push({x:d*Math.cos(a),y:d*Math.sin(a),c:1});}for(let i=0;i<22;i++){const a=r()*6.283,d=2.6+r()*1;p.push({x:d*Math.cos(a),y:d*Math.sin(a),c:-1});}return p;},
+    ex:'바깥 그룹이 안쪽을 둘러싸서 직선으로는 못 나눠요. RBF 커널은 점 주변의 ‘영향 범위’를 이용해 둥근 경계를 만듭니다. γ를 끌면 영향 반경(점선 원)이 바뀌어요.'},
+  overlap:{k:'linear',C:1,g:0.45,gen(r){const p=[];for(let i=0;i<14;i++)p.push({x:-.9+gauss(r)*1.3,y:.9+gauss(r)*1.3,c:1});for(let i=0;i<14;i++)p.push({x:.9+gauss(r)*1.3,y:-.9+gauss(r)*1.3,c:-1});return p;},
+    ex:'두 그룹이 섞여 있어 완벽한 직선은 없어요. 소프트 마진 SVM은 일부 점이 마진을 침범하도록 허용합니다. C를 작게 끌면 마진이 넓어지고 위반이 늘고, 크게 끌면 마진이 좁아져요.'},
+  xor:{k:'rbf',C:10,g:0.5,gen(r){const p=[];[[1,1,1],[-1,-1,1],[1,-1,-1],[-1,1,-1]].forEach(([a,b,c])=>{for(let i=0;i<8;i++)p.push({x:a*2.3+gauss(r)*.7,y:b*2.3+gauss(r)*.7,c});});return p;},
+    ex:'대각선끼리 같은 그룹인 XOR 배치는 직선 하나로 나눌 수 없는 대표 예제예요. RBF 커널이 네 구역을 나누는 곡선 경계를 학습합니다.'},
+  moons:{k:'rbf',C:10,g:0.8,gen(r){const p=[];for(let i=0;i<16;i++){const t=Math.PI*i/15;p.push({x:2.2*Math.cos(t)-1.1+gauss(r)*.2,y:2.2*Math.sin(t)-.5+gauss(r)*.2,c:1});p.push({x:2.2*(1-Math.cos(t))-1.1+gauss(r)*.2,y:2.2*(.5-Math.sin(t))-.5+gauss(r)*.2,c:-1});}return p;},
+    ex:'서로 맞물린 초승달이에요. γ가 너무 작으면 경계가 직선에 가까워 틀리고, 적당하면 휘어진 경계로 잘 나눕니다.'},
+  spirals:{k:'rbf',C:100,g:2.5,gen(r){const p=[];for(let i=0;i<36;i++){const t=i/36*2.4*Math.PI+.7,d=t*.46;p.push({x:d*Math.cos(t)+gauss(r)*.08,y:d*Math.sin(t)+gauss(r)*.08,c:1});p.push({x:-d*Math.cos(t)+gauss(r)*.08,y:-d*Math.sin(t)+gauss(r)*.08,c:-1});}return p;},
+    ex:'두 나선은 아주 복잡한 경계가 필요해요. γ를 크게(날카롭게) 해야 나선을 따라가지만, 너무 크면 점 하나하나에만 맞춘 경계(과적합)가 돼요.'}
+};
+function smo(X,Y,K,C,r){
+  const n=X.length,a=new Float64Array(n);let b=0,passes=0,it=0;const tol=1e-3;
+  const f=i=>{let s=b;for(let j=0;j<n;j++)if(a[j]>0)s+=a[j]*Y[j]*K[j][i];return s;};
+  while(passes<6&&it<400){let ch=0;
+    for(let i=0;i<n;i++){const Ei=f(i)-Y[i];
+      if((Y[i]*Ei<-tol&&a[i]<C)||(Y[i]*Ei>tol&&a[i]>0)){
+        let j=Math.floor(r()*(n-1));if(j>=i)j++;const Ej=f(j)-Y[j],ai=a[i],aj=a[j];
+        let lo,hi;if(Y[i]!==Y[j]){lo=Math.max(0,aj-ai);hi=Math.min(C,C+aj-ai);}else{lo=Math.max(0,ai+aj-C);hi=Math.min(C,ai+aj);}
+        if(hi-lo<1e-12)continue;const eta=2*K[i][j]-K[i][i]-K[j][j];if(eta>=0)continue;
+        a[j]=clamp(aj-Y[j]*(Ei-Ej)/eta,lo,hi);if(Math.abs(a[j]-aj)<1e-6)continue;
+        a[i]=ai+Y[i]*Y[j]*(aj-a[j]);
+        const b1=b-Ei-Y[i]*(a[i]-ai)*K[i][i]-Y[j]*(a[j]-aj)*K[i][j],b2=b-Ej-Y[i]*(a[i]-ai)*K[i][j]-Y[j]*(a[j]-aj)*K[j][j];
+        b=(a[i]>0&&a[i]<C)?b1:(a[j]>0&&a[j]<C)?b2:(b1+b2)/2;ch++;}}
+    it++;passes=ch===0?passes+1:0;}
+  return {a,b};
+}
+function contour(G,n,level,S){
+  let d='';const q=v=>(v/n*S).toFixed(1),qy=v=>(S-v/n*S).toFixed(1);
+  for(let j=0;j<n;j++)for(let i=0;i<n;i++){
+    const A=G[j*(n+1)+i]-level,B=G[j*(n+1)+i+1]-level,Cc=G[(j+1)*(n+1)+i+1]-level,D=G[(j+1)*(n+1)+i]-level,pts=[];
+    const e=(v1,v2,x1,y1,x2,y2)=>{if((v1>0)!==(v2>0)){const t=v1/(v1-v2);pts.push([x1+(x2-x1)*t,y1+(y2-y1)*t]);}};
+    e(A,B,i,j,i+1,j);e(B,Cc,i+1,j,i+1,j+1);e(Cc,D,i+1,j+1,i,j+1);e(D,A,i,j+1,i,j);
+    for(let k=0;k+1<pts.length;k+=2)d+=`M${q(pts[k][0])},${qy(pts[k][1])}L${q(pts[k+1][0])},${qy(pts[k+1][1])}`;}
+  return d;
+}
+const svm=(()=>{
+  const S=460,sx=x=>(x+5)/10*S,sy=y=>(1-(y+5)/10)*S,ix=X=>X/S*10-5,iy=Y=>(1-Y/S)*10-5;
+  let ds='blobs',pts=[],kernel='linear',model=null,trained=false,mode='move',group=1,showM=true,showSV=true,drag=-1,pend=false;
+  const cv=$('#svm-cv'),ctx=cv.getContext('2d'),svg=$('#svm-svg');
+  function load(name){ds=name;pts=DS[name].gen(rng(name.length*977+13));kernel=DS[name].k;setParam('C',DS[name].C,true);setParam('gam',DS[name].g,true);
+    trained=false;model=null;kUI();render();$('#svm-explain').textContent='먼저 SVM 학습을 눌러 경계를 찾아보세요. 또는 수식 속 C를 바로 끌어도 학습이 시작돼요.';$('#svm-state').textContent='데이터 준비 완료';}
+  function kUI(){$$('#svm-kern button').forEach(b=>b.classList.toggle('on',b.dataset.k===kernel));$('#svm-kline-lin').hidden=kernel!=='linear';$('#svm-kline-rbf').hidden=kernel!=='rbf';}
+  function train(){
+    const X=pts.map(p=>[p.x,p.y]),Y=pts.map(p=>p.c),n=X.length;
+    if(n<2||new Set(Y).size<2){model=null;return;}
+    const g=P.gam.v,lin=kernel==='linear';
+    const K=X.map(a=>X.map(b=>lin?a[0]*b[0]+a[1]*b[1]:Math.exp(-g*((a[0]-b[0])**2+(a[1]-b[1])**2))));
+    const {a,b}=smo(X,Y,K,P.C.v,rng(7));
+    const sv=[];for(let i=0;i<n;i++)if(a[i]>1e-6)sv.push(i);
+    let f;
+    if(lin){let w0=0,w1=0;sv.forEach(i=>{w0+=a[i]*Y[i]*X[i][0];w1+=a[i]*Y[i]*X[i][1];});f=(x,y)=>w0*x+w1*y+b;model={a,b,sv,f,w:[w0,w1],X,Y};}
+    else{const ax=sv.map(i=>a[i]*Y[i]),px=sv.map(i=>X[i][0]),py=sv.map(i=>X[i][1]);
+      f=(x,y)=>{let s=b;for(let k=0;k<ax.length;k++){const dx=x-px[k],dy=y-py[k];s+=ax[k]*Math.exp(-g*(dx*dx+dy*dy));}return s;};model={a,b,sv,f,X,Y};}
+    model.fi=X.map(([x,y])=>f(x,y));
+    trained=true;$('#svm-state').textContent=lin?'선형 커널 · 학습됨':'RBF 커널 · 학습됨';
+  }
+  function retrain(){if(pend)return;pend=true;requestAnimationFrame(()=>{pend=false;train();render();});}
+  function render(){
+    // regions
+    const R=230,img=ctx.createImageData(R,R);
+    if(model){for(let j=0;j<R;j++)for(let i=0;i<R;i++){const v=model.f(-5+(i+.5)/R*10,5-(j+.5)/R*10),o=(j*R+i)*4;
+        const A=v>0,m=Math.min(1,Math.abs(v)),al=showM&&Math.abs(v)<1?0.07:0.07+0.13*m;
+        const c=A?[79,120,216]:[227,155,61];img.data[o]=lerp(255,c[0],al);img.data[o+1]=lerp(255,c[1],al);img.data[o+2]=lerp(255,c[2],al);img.data[o+3]=255;}}
+    else for(let p=0;p<R*R;p++){img.data[p*4]=252;img.data[p*4+1]=252;img.data[p*4+2]=254;img.data[p*4+3]=255;}
+    ctx.putImageData(img,0,0);
+    let s='';
+    for(let v=-4;v<=4;v+=2){s+=`<line x1="${sx(v)}" y1="0" x2="${sx(v)}" y2="${S}" stroke="#202735" stroke-opacity="${v?0.06:0.18}"/><line x1="0" y1="${sy(v)}" x2="${S}" y2="${sy(v)}" stroke="#202735" stroke-opacity="${v?0.06:0.18}"/>`;
+      if(v)s+=`<text x="${sx(v)}" y="${S-6}" font-size="10" fill="#98a2b3" text-anchor="middle">${M(v)}</text><text x="6" y="${sy(v)+3}" font-size="10" fill="#98a2b3">${M(v)}</text>`;}
+    s+=`<text x="${S-8}" y="${sy(0)-6}" font-size="10.5" fill="#98a2b3" text-anchor="end">특성 1 →</text><text x="${sx(0)+6}" y="14" font-size="10.5" fill="#98a2b3">특성 2 ↑</text>`;
+    let nV=0,acc=0;
+    if(model){
+      const n=70,G=new Float64Array((n+1)*(n+1));for(let j=0;j<=n;j++)for(let i=0;i<=n;i++)G[j*(n+1)+i]=model.f(-5+i/n*10,-5+j/n*10);
+      if(showM)s+=`<path d="${contour(G,n,1,S)+contour(G,n,-1,S)}" fill="none" stroke="#667085" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+      s+=`<path d="${contour(G,n,0,S)}" fill="none" stroke="#202735" stroke-width="2.6" stroke-linecap="round"/>`;
+      if(kernel==='rbf'){const sig=1/Math.sqrt(2*P.gam.v)*S/10;model.sv.forEach(i=>{s+=`<circle class="lk lk-gam" cx="${sx(pts[i].x)}" cy="${sy(pts[i].y)}" r="${sig}" fill="#0f8a7a" fill-opacity=".05" stroke="#0f8a7a" stroke-dasharray="3 3" opacity="0"/>`;});}
+      if(kernel==='linear'&&model.w){const wn=Math.hypot(...model.w);if(wn>1e-9){const ux=model.w[0]/wn,uy=model.w[1]/wn,d0=-model.b/wn;
+        // margin arrow at point on boundary nearest the origin
+        const cx=ux*d0,cy=uy*d0,h=1/wn;
+        if(Math.abs(cx)<4.5&&Math.abs(cy)<4.5)s+=`<g class="lk lk-C" opacity=".0"><line x1="${sx(cx-ux*h)}" y1="${sy(cy-uy*h)}" x2="${sx(cx+ux*h)}" y2="${sy(cy+uy*h)}" stroke="#2f53b0" stroke-width="2"/><text x="${sx(cx)+8}" y="${sy(cy)-8}" font-size="12" fill="#2f53b0" font-weight="700">마진 ${(2/wn).toFixed(2)}</text></g>`;}}
+    }
+    pts.forEach((p,i)=>{const X=sx(p.x),Y=sy(p.y),isSV=model&&model.a[i]>1e-6,m=model?p.c*model.fi[i]:2;
+      if(model){if(m<1-1e-3)nV++;if(m>0)acc++;}
+      if(model&&m<1-1e-3)s+=`<circle class="lk lk-C" cx="${X}" cy="${Y}" r="12" fill="none" stroke="#d6455d" stroke-width="2.2" opacity="0"/>`;
+      if(isSV&&showSV)s+=`<circle cx="${X}" cy="${Y}" r="10.5" fill="none" stroke="#202735" stroke-width="2"/>`;
+      s+=p.c>0?`<circle cx="${X}" cy="${Y}" r="6.5" fill="#4f78d8" stroke="#fff" stroke-width="1.5"/>`:`<rect x="${X-6}" y="${Y-6}" width="12" height="12" rx="1.5" fill="#e39b3d" stroke="#fff" stroke-width="1.5"/>`;});
+    s+=`<text x="${S/2}" y="${S-22}" font-size="11.5" fill="#98a2b3" text-anchor="middle">${mode==='move'?'점을 끌어서 위치를 바꿔 보세요':mode==='add'?'클릭해서 '+(group>0?'A':'B')+'그룹 점 추가':'클릭해서 점 삭제'}</text>`;
+    svg.innerHTML=s;
+    $('#svm-n').textContent=pts.length+'개';
+    $('#svm-sv').textContent=model?model.sv.length+'개':'—개';
+    $('#svm-acc').textContent=model?Math.round(acc/pts.length*100)+'%':'—%';
+    $('#svm-vi').textContent=model?nV+'개':'—개';
+    live(nV,acc);
+  }
+  function live(nV,acc){
+    const L=$('#svm-live'),rg=$('#svm-regime'),C=P.C.v;
+    if(!model){L.innerHTML='SVM 학습을 누르거나 <b>C</b>를 끌면 학습합니다.';rg.textContent=C<0.3?'C가 작아요 → 넓은 마진을 더 중요하게 여겨요.':C>20?'C가 커요 → 오류(마진 위반)를 강하게 벌줘요.':'C가 중간이에요 → 마진과 오류 사이 균형.';return;}
+    if(kernel==='linear'){const [a,b]=model.w,wn=Math.hypot(a,b);
+      L.innerHTML=`f(x) = <b>${nf(a,2)}</b>x₁ ${b<0?'−':'+'} <b>${Math.abs(b).toFixed(2)}</b>x₂ ${model.b<0?'−':'+'} ${Math.abs(model.b).toFixed(2)}<br>‖w‖ = ${wn.toFixed(2)} → 마진 폭 2/‖w‖ = <b>${(2/Math.max(wn,1e-9)).toFixed(2)}</b>`;}
+    else L.innerHTML=`f(x) = Σ αᵢyᵢK(xᵢ, x) + b &nbsp;· 서포트 벡터 <b>${model.sv.length}</b>개<br>영향 반경 σ = 1/√(2γ) = <b>${(1/Math.sqrt(2*P.gam.v)).toFixed(2)}</b> (γ에 마우스를 올리면 원으로 보여요)`;
+    let t=C<0.3?`C = ${P.C.fmt(C)} (작음) → 넓은 마진 우선. 위반 점 ${nV}개를 감수해요.`:C>20?`C = ${P.C.fmt(C)} (큼) → 오류를 강하게 벌줘서 마진이 좁아져요. 위반 ${nV}개.`:`C = ${P.C.fmt(C)} → 마진과 오류 사이 균형. 위반 ${nV}개.`;
+    if(kernel==='rbf')t+=P.gam.v<0.2?' γ가 작아 경계가 완만해요.':P.gam.v>2?' γ가 커서 경계가 점마다 구불구불해요(과적합 주의).':'';
+    rg.textContent=t;
+    $('#svm-explain').textContent=DS[ds].ex+(kernel!==DS[ds].k?(kernel==='linear'?' (지금은 선형 커널이라 직선만 그릴 수 있어요. 정답률을 비교해 보세요.)':' (선형으로 충분한 데이터에 RBF를 쓰면 경계가 휘어질 수 있어요.)'):'');
+  }
+  const near=(X,Y)=>{let bi=-1,bd=1e9;pts.forEach((p,i)=>{const d=Math.hypot(sx(p.x)-X,sy(p.y)-Y);if(d<bd){bd=d;bi=i;}});return bd<16?bi:-1;};
+  const loc=e=>{const r=svg.getBoundingClientRect();return[(e.clientX-r.left)/r.width*S,(e.clientY-r.top)/r.height*S];};
+  svg.addEventListener('pointerdown',e=>{const [X,Y]=loc(e);
+    if(mode==='move'){drag=near(X,Y);if(drag>=0){svg.setPointerCapture(e.pointerId);svg.style.cursor='grabbing';}}
+    else if(mode==='add'){pts.push({x:clamp(ix(X),-4.8,4.8),y:clamp(iy(Y),-4.8,4.8),c:group});trained?retrain():render();}
+    else{const i=near(X,Y);if(i>=0){pts.splice(i,1);trained?retrain():render();}}});
+  svg.addEventListener('pointermove',e=>{const [X,Y]=loc(e);if(drag>=0){pts[drag].x=clamp(ix(X),-4.8,4.8);pts[drag].y=clamp(iy(Y),-4.8,4.8);trained?retrain():render();}else if(mode==='move')svg.style.cursor=near(X,Y)>=0?'grab':'default';});
+  svg.addEventListener('pointerup',()=>{drag=-1;svg.style.cursor='';});
+  segBind('svm-mode','m',m=>{mode=m;render();});segBind('svm-grp','g',g=>group=+g);
+  segBind('svm-kern','k',k=>{kernel=k;kUI();if(trained)retrain();else render();});
+  $('#svm-ds').onchange=e=>load(e.target.value);
+  $('#svm-train').onclick=()=>{train();render();};
+  $('#svm-resetds').onclick=()=>load(ds);
+  $('#svm-showm').onchange=e=>{showM=e.target.checked;render();};
+  $('#svm-showsv').onchange=e=>{showSV=e.target.checked;render();};
+  P.C.subs.push(()=>retrain());
+  P.gam.subs.push(()=>{if(kernel==='rbf')retrain();});
+  load('blobs');
+  return {render};
+})();
+
+/* ================= Lift ================= */
+const lift=(()=>{
+  const pts=DS.circles.gen(rng(4242));let p=0,target=0;
+  function render(){
+    const c=P.liftc.v,T=$('#lift-top'),Sd=$('#lift-side');
+    const K=270/8.4,tx=x=>180+x*K,ty=y=>150-y*K;
+    let s=`<rect x="45" y="15" width="270" height="270" fill="#fafbfd" stroke="#e6e8ee"/>`;
+    s+=`<circle class="lk lk-c" cx="${tx(0)}" cy="${ty(0)}" r="${Math.sqrt(c)*K}" fill="#4f78d8" fill-opacity="${0.06*p}" stroke="#4f78d8" stroke-width="2" stroke-dasharray="6 4" opacity="${p}"/>`;
+    let ok=0;
+    pts.forEach(q=>{const z=q.x*q.x+q.y*q.y,good=(z<c)===(q.c>0);if(good)ok++;const X=tx(q.x),Y=ty(q.y);
+      s+=(q.c>0?`<circle cx="${X}" cy="${Y}" r="5.5" fill="#4f78d8"/>`:`<rect x="${X-5}" y="${Y-5}" width="10" height="10" fill="#e39b3d"/>`)+(p>0.99&&!good?`<circle cx="${X}" cy="${Y}" r="10" fill="none" stroke="#d6455d" stroke-width="2"/>`:'');});
+    T.innerHTML=s;
+    const zx=x=>30+(x+4.2)/8.4*300,zy=z=>270-z/16*240;
+    let d=`<line x1="30" y1="270" x2="330" y2="270" stroke="#c9ced8"/><line x1="30" y1="30" x2="30" y2="270" stroke="#c9ced8"/><text x="36" y="40" font-size="11" fill="#98a2b3">새 높이 z ↑</text><text x="330" y="288" font-size="11" fill="#98a2b3" text-anchor="end">x →</text>`;
+    if(p<1)d+=`<path d="M30,270 ${Array.from({length:61},(_,i)=>{const x=-4.2+i*8.4/60;return`L${zx(x)},${zy(Math.min(16,x*x)*p)}`;}).join('')}" fill="none" stroke="#e6e8ee" opacity="${p}"/>`;
+    d+=`<line class="lk lk-c" x1="30" y1="${zy(c)}" x2="330" y2="${zy(c)}" stroke="#4f78d8" stroke-width="2" opacity="${p}"/><text x="326" y="${zy(c)-6}" font-size="11.5" fill="#2f53b0" text-anchor="end" opacity="${p}">z = c = ${c.toFixed(1)}</text>`;
+    pts.forEach(q=>{const z=(q.x*q.x+q.y*q.y)*p,X=zx(q.x),Y=zy(Math.min(z,16));d+=q.c>0?`<circle cx="${X}" cy="${Y}" r="5.5" fill="#4f78d8" fill-opacity=".85"/>`:`<rect x="${X-5}" y="${Y-5}" width="10" height="10" fill="#e39b3d" fill-opacity=".85"/>`;});
+    Sd.innerHTML=d;
+    $('#lift-live').innerHTML=p<0.99?`아직 평평해요 (z = 0). 점들을 올린 뒤 c를 끌어 보세요.`:`c = <b>${c.toFixed(1)}</b> → ${pts.length}개 중 <b>${ok}</b>개 정답 · 위에서 보면 반지름 √c = ${Math.sqrt(c).toFixed(2)}인 원`;
+    $('#ls1').classList.toggle('on',p<0.5);$('#ls2').classList.toggle('on',p>=0.5&&ok<pts.length);$('#ls3').classList.toggle('on',p>=0.99&&ok===pts.length);
+    $('#lift-msg').innerHTML=p<0.5?'평평할 때는, 직선으로 못 나눠요. 높이가 없을 때는 옆에서 보면 같은 줄에 겹쳐요.':ok===pts.length?'<b>완벽하게 나뉘었어요!</b> 옆에서 보면 평평한 평면(직선) 하나로, 위에서 보면 원 하나로 나뉩니다.':`안쪽 A는 아래, 바깥 B는 위로 올라갔어요. 이제 수식 속 <b>c</b>를 끌어 두 그룹 사이로 평면을 옮겨 보세요.`;
+    $('#lift-btn').textContent=target?'↺ 다시 평평하게':'점들을 위로 올리기 →';
+  }
+  function animate(){const t0=performance.now(),from=p;(function f(now){const t=Math.min(1,(now-t0)/900);p=lerp(from,target,1-Math.pow(1-t,3));render();if(t<1)requestAnimationFrame(f);})(t0);}
+  $('#lift-btn').onclick=()=>{target=target?0:1;animate();};
+  P.liftc.subs.push(render);
+  return {render};
+})();
+
+
+/* ================= Concepts ================= */
+const gdc=(()=>{
+  const W=420,H=220,ml=20,mr=20,mt=14,mb=26,R=5,Y=26;
+  const sx=v=>ml+(v+R)/(2*R)*(W-ml-mr),sy=v=>H-mb-v/Y*(H-mt-mb);
+  function render(){
+    const x=P.cx.v,g=2*x,L=x*x;
+    let d='';for(let i=0;i<=100;i++){const v=-R+2*R*i/100;d+=(i?'L':'M')+sx(v).toFixed(1)+','+sy(v*v).toFixed(1);}
+    let s=`<defs><marker id="ahc" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#6f5ce6"/></marker><clipPath id="cc"><rect x="${ml}" y="${mt}" width="${W-ml-mr}" height="${H-mt-mb}"/></clipPath></defs>`;
+    s+=`<line x1="${ml}" y1="${H-mb}" x2="${W-mr}" y2="${H-mb}" stroke="#e6e8ee"/><line x1="${sx(0)}" y1="${mt}" x2="${sx(0)}" y2="${H-mb}" stroke="#eef0f4"/>`;
+    s+=`<g clip-path="url(#cc)"><path d="${d}" fill="none" stroke="#7b6cf0" stroke-width="2.4"/>`;
+    const dx=1.8;s+=`<line class="lk lk-cx" x1="${sx(x-dx)}" y1="${sy(L-g*dx)}" x2="${sx(x+dx)}" y2="${sy(L+g*dx)}" stroke="#d6455d" stroke-width="2.2"/>`;
+    if(Math.abs(g)>0.05){
+      const up=g>0?1:-1;
+      s+=`<text x="${clamp(sx(x+up*dx*0.6),ml+28,W-mr-28)}" y="${Math.max(mt+12,sy(L+g*up*dx*0.6)-12)}" font-size="11" fill="#d6455d" text-anchor="middle" stroke="#fff" stroke-width="3" paint-order="stroke">오르막 ↑</text>`;
+      const X0=sx(x),X1=sx(x-up*1.6);
+      s+=`<line x1="${X0}" y1="${sy(L)+22}" x2="${X1}" y2="${sy(L)+22}" stroke="#6f5ce6" stroke-width="3" marker-end="url(#ahc)"/><text x="${(X0+X1)/2}" y="${sy(L)+38}" font-size="11" fill="#5a46d6" text-anchor="middle" stroke="#fff" stroke-width="3" paint-order="stroke">가야 할 방향 (−∇L)</text>`;
+    }
+    s+=`<circle cx="${sx(x)}" cy="${sy(L)}" r="8" fill="#6f5ce6" stroke="#fff" stroke-width="2"/></g>`;
+    s+=`<text x="${sx(0)}" y="${H-8}" font-size="10.5" fill="#98a2b3" text-anchor="middle">0 (바닥)</text><text x="${W-mr}" y="${H-8}" font-size="10.5" fill="#98a2b3" text-anchor="end">x →</text>`;
+    $('#gdc-svg').innerHTML=s;
+    $('#cx-val').textContent=nf(g,1);
+    $('#cx-say').innerHTML=Math.abs(g)<0.05?'<b>기울기 = 0</b> → 어느 쪽도 오르막이 아니에요. 바로 골짜기 바닥(최솟값)! 경사하강법은 여기서 멈춥니다.':
+      g>0?`<b>기울기 ${nf(g,1)} &gt; 0</b> → 오른쪽으로 갈수록 높아져요(오르막). 그러니 <b>왼쪽(−)</b>으로 가야 내려가요. 바닥에서 멀수록 기울기도 커져요.`:
+      `<b>기울기 ${nf(g,1)} &lt; 0</b> → 왼쪽으로 갈수록 높아져요(오르막). 그러니 <b>오른쪽(+)</b>으로 가야 내려가요. 바닥에서 멀수록 기울기도 커져요.`;
+  }
+  P.cx.subs.push(render);
+  return {render};
+})();
+const svmc=(()=>{
+  const A=[[-2.6,1.4],[-1.6,2.7],[-3.1,-0.1],[-1.0,0.9],[-2.2,3.0]],B=[[1.4,-0.6],[2.6,1.1],[1.1,-2.5],[3.0,-1.9],[2.2,-0.2]];
+  const W=420,H=300,K=H/8.4,cx=W/2,cy=H/2,sx=x=>cx+x*K,sy=y=>cy-y*K;
+  const gap=deg=>{const t=deg*Math.PI/180,w=[Math.cos(t),Math.sin(t)],pr=p=>p[0]*w[0]+p[1]*w[1];
+    const a=A.map(pr),b=B.map(pr);let lo,hi,sgn=1;
+    if(Math.min(...a)>Math.max(...b)){lo=Math.max(...b);hi=Math.min(...a);}else if(Math.max(...a)<Math.min(...b)){lo=Math.max(...a);hi=Math.min(...b);sgn=-1;}else return {ok:false,w};
+    return {ok:true,w,lo,hi,g:hi-lo,a,b,sgn};};
+  let best=0,bestDeg=0;for(let d=0;d<180;d+=0.25){const r=gap(d);if(r.ok&&r.g>best){best=r.g;bestDeg=d;}}
+  function render(){
+    const deg=P.sang.v,r=gap(deg);
+    let s=`<defs><clipPath id="sc"><rect width="${W}" height="${H}"/></clipPath></defs><rect width="${W}" height="${H}" fill="#fafbfd" rx="10"/><line x1="0" y1="${cy}" x2="${W}" y2="${cy}" stroke="#eef0f4"/><line x1="${cx}" y1="0" x2="${cx}" y2="${H}" stroke="#eef0f4"/><g clip-path="url(#sc)">`;
+    const t=deg*Math.PI/180,w=[Math.cos(t),Math.sin(t)],u=[-w[1],w[0]];
+    const line=(c,attrs)=>{const p0=[w[0]*c-u[0]*12,w[1]*c-u[1]*12],p1=[w[0]*c+u[0]*12,w[1]*c+u[1]*12];return `<line x1="${sx(p0[0])}" y1="${sy(p0[1])}" x2="${sx(p1[0])}" y2="${sy(p1[1])}" ${attrs}/>`;};
+    if(r.ok){const m=(r.lo+r.hi)/2;
+      const q=c=>[[w[0]*c-u[0]*12,w[1]*c-u[1]*12],[w[0]*c+u[0]*12,w[1]*c+u[1]*12]];
+      const [a0,a1]=q(r.lo),[b0,b1]=q(r.hi);
+      s+=`<path d="M${sx(a0[0])},${sy(a0[1])}L${sx(a1[0])},${sy(a1[1])}L${sx(b1[0])},${sy(b1[1])}L${sx(b0[0])},${sy(b0[1])}Z" fill="#4f78d8" fill-opacity="${0.06+0.12*r.g/best}"/>`;
+      s+=line(r.lo,'stroke="#667085" stroke-width="1.5" stroke-dasharray="5 4"')+line(r.hi,'stroke="#667085" stroke-width="1.5" stroke-dasharray="5 4"');
+      s+=line(m,'class="lk lk-sang" stroke="#202735" stroke-width="2.5"');
+    }else{
+      const m=0;s+=line(m,'class="lk lk-sang" stroke="#d6455d" stroke-width="2.5" stroke-dasharray="7 5"');
+    }
+    s+='</g>';
+    const isSV=(v,arr)=>r.ok&&(Math.abs(v-r.lo)<1e-9||Math.abs(v-r.hi)<1e-9);
+    A.forEach((p,i)=>{const X=sx(p[0]),Y=sy(p[1]);if(r.ok&&isSV(r.a[i]))s+=`<circle cx="${X}" cy="${Y}" r="12" fill="none" stroke="#202735" stroke-width="2"/>`;s+=`<circle cx="${X}" cy="${Y}" r="7" fill="#4f78d8" stroke="#fff" stroke-width="1.5"/>`;});
+    B.forEach((p,i)=>{const X=sx(p[0]),Y=sy(p[1]);if(r.ok&&isSV(r.b[i]))s+=`<circle cx="${X}" cy="${Y}" r="12" fill="none" stroke="#202735" stroke-width="2"/>`;s+=`<rect x="${X-6.5}" y="${Y-6.5}" width="13" height="13" rx="1.5" fill="#e39b3d" stroke="#fff" stroke-width="1.5"/>`;});
+    s+=`<text x="10" y="18" font-size="11" fill="#4f78d8">● A반</text><text x="${W-10}" y="${H-10}" font-size="11" fill="#c27a1c" text-anchor="end">■ B반</text>`;
+    $('#svmc-svg').innerHTML=s;
+    const pct=r.ok?Math.round(r.g/best*100):0;
+    $('#sang-w').textContent=r.ok?r.g.toFixed(2):'나눌 수 없음';
+    $('#sang-say').innerHTML=!r.ok?`<b style="color:var(--err)">이 각도로는 두 반을 나눌 수 없어요.</b> 어떤 위치에 선을 그어도 섞여 버려요. θ를 계속 끌어 보세요.`:
+      pct>=99?`<b>가장 넓은 길을 찾았어요! (폭 ${r.g.toFixed(2)})</b> 테두리 친 점들이 길 가장자리에 닿아 있죠? 이 점들이 서포트 벡터예요. 나머지 점은 조금 움직여도 길이 그대로예요.`:
+      `지금 길의 폭은 <b>${r.g.toFixed(2)}</b> — 가능한 최대(${best.toFixed(2)})의 <b>${pct}%</b>예요. 두 반을 나누긴 하지만, 더 넓은 길이 있어요. (힌트: 약 ${Math.round(bestDeg)}°)`;
+  }
+  P.sang.subs.push(render);
+  return {render};
+})();
+
+/* ================= Quiz & progress ================= */
+const done={gd:store.get('mlp-gd')==='1',svm:store.get('mlp-svm')==='1'};
+function prog(){$('#progN').textContent=(done.gd?1:0)+(done.svm?1:0);}
+function quiz(id,lab,qs){
+  const root=$('#'+id);let right=new Set();
+  root.innerHTML=qs.map((q,i)=>`<div class="card q"><h4><span style="font-family:var(--mono);color:var(--acc);font-size:12px">0${i+1}</span>&nbsp; ${q.q}</h4><div class="opts">${q.o.map((o,j)=>`<button data-q="${i}" data-o="${j}">${o}</button>`).join('')}</div><div class="fb" id="${id}-fb${i}"></div></div>`).join('');
+  $$('button',root).forEach(b=>b.onclick=()=>{const i=+b.dataset.q,j=+b.dataset.o,q=qs[i];
+    $$(`button[data-q="${i}"]`,root).forEach(x=>x.classList.remove('ok','no'));
+    if(j===q.a){b.classList.add('ok');right.add(i);$(`#${id}-fb${i}`).innerHTML='✓ 정답! '+q.e;}else{b.classList.add('no');right.delete(i);$(`#${id}-fb${i}`).textContent='다시 생각해 볼까요? 위 실험으로 확인해 보세요.';}
+    $(`#${id}-n`).textContent=right.size+' / 3';
+    if(right.size===3&&!done[lab]){done[lab]=true;store.set('mlp-'+lab,'1');prog();}});
+}
+quiz('qz-gd','gd',[
+  {q:'학습률 η가 너무 크면 어떤 일이 생길까요?',o:['항상 더 빨리 정답을 찾아요','최솟값을 지나치거나 발산할 수 있어요','손실값이 반드시 0이 돼요'],a:1,e:'x²에서는 η > 1이면 매 걸음 더 멀리 튕겨 나가요.'},
+  {q:'현재 위치의 기울기가 양수라면 어디로 움직일까요?',o:['왼쪽으로 움직여요','오른쪽으로 움직여요','기울기와 같은 방향으로 움직여요'],a:0,e:'−η·∇L이므로 기울기의 반대 방향(왼쪽)으로 움직여요.'},
+  {q:'경사하강법이 하는 일은 무엇인가요?',o:['데이터를 반드시 두 그룹으로 분류해요','모든 문제의 전역 최솟값을 보장해요','손실이 줄어들도록 값을 반복해서 수정해요'],a:2,e:'작은 수정을 반복해 손실을 줄이는 최적화 방법이에요.'}]);
+quiz('qz-svm','svm',[
+  {q:'결정 경계에 직접 영향을 주는 데이터는 무엇일까요?',o:['서포트 벡터','항상 가장 멀리 있는 점','데이터의 이름'],a:0,e:'αᵢ > 0인 서포트 벡터만 f(x)에 들어가요.'},
+  {q:'한 그룹이 다른 그룹을 둥글게 둘러싸고 있다면?',o:['직선 하나면 항상 분리할 수 있어요','RBF 커널로 곡선 경계를 학습할 수 있어요','SVM은 어떤 커널이든 직선만 사용해요'],a:1,e:'z = x² + y²처럼 정보를 더하면 원 경계가 생겨요.'},
+  {q:'SVM과 경사하강법의 관계로 알맞은 것은?',o:['둘은 이름만 다른 같은 알고리즘이에요','SVM은 반드시 경사하강법으로만 학습해요','SVM은 분류 모델, 경사하강법은 최적화 방법이에요'],a:2,e:'이 실험의 SVM도 경사하강법이 아닌 SMO로 학습했어요.'}]);
+prog();
+bindSyms();
+go();
+</script>
+</body>
+</html>
