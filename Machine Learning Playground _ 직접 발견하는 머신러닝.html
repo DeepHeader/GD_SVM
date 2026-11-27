@@ -1151,6 +1151,10 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     <div class="labgrid" id="svm-lab">
       <div class="stage">
         <div class="stage-h"><div class="t"><span class="dot" style="background:var(--a);box-shadow:0 0 0 4px rgba(79,120,216,.15)"></span>두 그룹 사이, 가장 좋은 경계</div><span class="chip" id="svm-state">데이터 준비 완료</span></div>
+        <div class="row" style="margin:10px 0">
+          <button type="button" class="btn pri" id="svm-train">두 그룹을 나누는 선 그리기</button>
+          <span class="muted" id="svm-task" role="status"></span>
+        </div>
         <div class="tools">
           <div class="seg" id="svm-mode"><button data-m="move" class="on">✥ 이동</button><button data-m="add">＋ 추가</button><button data-m="del">🗑 삭제</button></div>
           <div class="seg" id="svm-grp"><button data-g="1" class="on"><span style="color:var(--a)">●</span> A그룹</button><button data-g="-1"><span style="color:var(--b)">■</span> B그룹</button></div>
@@ -1183,12 +1187,12 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
           <div class="fl sm np" style="color:var(--mut)"><span class="mv">y<sub>i</sub></span> f(<span class="mv">x<sub>i</sub></span>) ≥ 1 − ξ<sub>i</sub>,&nbsp; ξ<sub>i</sub> ≥ 0</div>
           <div class="fl md" id="svm-kline-lin" style="padding-bottom:8px">K(<span class="mv">x</span>, <span class="mv">x′</span>) = <span class="mv">x</span> · <span class="mv">x′</span></div>
           <div class="fl md" id="svm-kline-rbf" hidden>K(<span class="mv">x</span>, <span class="mv">x′</span>) = exp(−<span class="sym" data-p="gam" style="--c:#0f8a7a"><span class="g">γ</span></span>‖<span class="mv">x</span> − <span class="mv">x′</span>‖²)</div>
-          <div class="live" id="svm-live">SVM 학습을 누르거나 C를 끌면 학습합니다.</div>
+          <div class="live" id="svm-live">C를 끌면 경계가 어떻게 달라지는지 볼 수 있어요.</div>
           <div class="regime" id="svm-regime" style="background:#eef3fe;color:#2f53b0"></div>
         </div>
         <div><label class="check"><input type="checkbox" id="svm-showm" checked> 마진 영역 보기</label><label class="check"><input type="checkbox" id="svm-showsv" checked> 서포트 벡터 강조</label></div>
-        <div class="row"><button class="btn pri" id="svm-train" style="flex:1">▶ SVM 학습</button><button class="btn sm" id="svm-resetds">데이터셋 초기화</button></div>
-        <div class="box" style="background:#f6f9ff;border-color:#dce6fb"><h4>지금 무슨 일이 일어났나요?</h4><p class="muted" id="svm-explain">먼저 SVM 학습을 눌러 두 무리를 나누는 직선을 찾아보세요.</p></div>
+        <div class="row"><button class="btn sm" id="svm-resetds">데이터셋 초기화</button></div>
+        <div class="box" style="background:#f6f9ff;border-color:#dce6fb"><h4>지금 무슨 일이 일어났나요?</h4><p class="muted" id="svm-explain">그래프 위 버튼을 눌러 두 무리 사이에 경계를 그려 보세요.</p></div>
       </aside>
     </div>
 
@@ -1833,7 +1837,7 @@ const svm=(()=>{
   let ds='blobs',pts=[],kernel='linear',model=null,trained=false,mode='move',group=1,showM=true,showSV=true,drag=-1,pend=false;
   const cv=$('#svm-cv'),ctx=cv.getContext('2d'),svg=$('#svm-svg');
   function load(name){$('#bowl-circle-link').hidden=name!=='circles';ds=name;pts=DS[name].gen(rng(name.length*977+13));kernel=DS[name].k;setParam('C',DS[name].C,true);setParam('gam',DS[name].g,true);
-    trained=false;model=null;kUI();render();$('#svm-explain').textContent='먼저 SVM 학습을 눌러 경계를 찾아보세요. 또는 수식 속 C를 바로 끌어도 학습이 시작돼요.';$('#svm-state').textContent='데이터 준비 완료';}
+    trained=false;model=null;kUI();render();}
   function kUI(){$$('#svm-kern button').forEach(b=>b.classList.toggle('on',b.dataset.k===kernel));$('#svm-kline-lin').hidden=kernel!=='linear';$('#svm-kline-rbf').hidden=kernel!=='rbf';}
   function train(){
     const X=pts.map(p=>[p.x,p.y]),Y=pts.map(p=>p.c),n=X.length;
@@ -1884,11 +1888,25 @@ const svm=(()=>{
     $('#svm-sv').textContent=model?model.sv.length+'개':'—개';
     $('#svm-acc').textContent=model?Math.round(acc/pts.length*100)+'%':'—%';
     $('#svm-vi').textContent=model?nV+'개':'—개';
+    const hasBothGroups=pts.some(p=>p.c===1)&&pts.some(p=>p.c===-1);
+    $('#svm-train').disabled=!hasBothGroups;
+    $('#svm-train').textContent=model?'경계 다시 그리기':'두 그룹을 나누는 선 그리기';
+    const task=!hasBothGroups?'A그룹과 B그룹의 점을 하나 이상씩 추가해 보세요.'
+      :model&&mode==='move'?'경계에 가까운 점 하나를 끌어 보세요. 선도 움직이나요?':'';
+    const taskEl=$('#svm-task');
+    if(taskEl.textContent!==task)taskEl.textContent=task;
+    if(!hasBothGroups){
+      $('#svm-state').textContent='두 그룹의 점이 필요해요';
+      $('#svm-explain').textContent=task;
+    }else if(!model){
+      $('#svm-state').textContent='데이터 준비 완료';
+      $('#svm-explain').textContent='그래프 위 버튼을 눌러 경계를 찾아보세요. 수식 속 C를 끌어도 경계가 그려져요.';
+    }
     live(nV,acc);
   }
   function live(nV,acc){
     const L=$('#svm-live'),rg=$('#svm-regime'),C=P.C.v;
-    if(!model){L.innerHTML='SVM 학습을 누르거나 <b>C</b>를 끌면 학습합니다.';rg.textContent=C<0.3?'C가 작아요 → 넓은 마진을 더 중요하게 여겨요.':C>20?'C가 커요 → 오류(마진 위반)를 강하게 벌줘요.':'C가 중간이에요 → 마진과 오류 사이 균형.';return;}
+    if(!model){L.innerHTML='<b>C</b>를 끌면 경계가 어떻게 달라지는지 볼 수 있어요.';rg.textContent=C<0.3?'C가 작아요 → 넓은 마진을 더 중요하게 여겨요.':C>20?'C가 커요 → 오류(마진 위반)를 강하게 벌줘요.':'C가 중간이에요 → 마진과 오류 사이 균형.';return;}
     if(kernel==='linear'){const [a,b]=model.w,wn=Math.hypot(a,b);
       L.innerHTML=`f(x) = <b>${nf(a,2)}</b>x₁ ${b<0?'−':'+'} <b>${Math.abs(b).toFixed(2)}</b>x₂ ${model.b<0?'−':'+'} ${Math.abs(model.b).toFixed(2)}<br>‖w‖ = ${wn.toFixed(2)} → 마진 폭 2/‖w‖ = <b>${(2/Math.max(wn,1e-9)).toFixed(2)}</b>`;}
     else L.innerHTML=`f(x) = Σ αᵢyᵢK(xᵢ, x) + b &nbsp;· 서포트 벡터 <b>${model.sv.length}</b>개<br>영향 반경 σ = 1/√(2γ) = <b>${(1/Math.sqrt(2*P.gam.v)).toFixed(2)}</b> (γ에 마우스를 올리면 원으로 보여요)`;
