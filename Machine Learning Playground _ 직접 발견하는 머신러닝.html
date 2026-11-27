@@ -1430,6 +1430,7 @@ function segBind(id,attr,fn){$$('#'+id+' button').forEach(b=>b.addEventListener(
 /* ================= GD 1D ================= */
 const gd1=(()=>{
   const W=640,H=380,ml=48,mr=14,mt=14,mb=34,MAX=20;
+  const stepDurationMs=1400, stepPauseMs=280;
   const L=x=>x*x,G=x=>2*x;
   let xs=[P.x0.v],anim=null,playing=false,speed=1,showTan=true,viewM=5,lastK=0;
   const svg=$('#gd1-svg'),loss=$('#gd1-loss');
@@ -1449,14 +1450,14 @@ const gd1=(()=>{
     if(anim)return;
     if(ended()){stop();explainEnd();return;}
     const a=xs.at(-1),b=a-P.eta1.v*G(a); xs.push(b);
-    anim={a,b,t0:performance.now(),dur:700/speed,t:0};
+    anim={a,b,t0:performance.now(),dur:stepDurationMs/speed,t:0};
     requestAnimationFrame(tick);
   }
   function tick(now){
     if(!anim)return;
     const t=Math.min(1,(now-anim.t0)/anim.dur); anim.t=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
     if(t>=1){anim=null;render();
-      if(ended()){stop();explainEnd();} else if(playing) setTimeout(()=>{if(playing)doStep();},140/speed);
+      if(ended()){stop();explainEnd();} else if(playing) setTimeout(()=>{if(playing)doStep();},stepPauseMs/speed);
       else explainStep();
       return;}
     render(); requestAnimationFrame(tick);
@@ -1558,6 +1559,7 @@ const TER={
 const hooks={};
 const gd2=(()=>{
   const N=250,X0=-2.4,X1=2.4,Y0=-1.6,Y1=1.6,W=600,H=400;
+  const stepsPerSecond=25;
   const px=x=>(x-X0)/(X1-X0)*W, py=y=>(1-(y-Y0)/(Y1-Y0))*H, ix=X=>X0+X/W*(X1-X0), iy=Y=>Y0+(1-Y/H)*(Y1-Y0);
   let terr='wells',tr=null,k=0,playing=false,speed=1,raf=0,last=0;
   const cv=$('#gd2-cv'),ctx=cv.getContext('2d'),svg=$('#gd2-svg'),lossv=$('#gd2-loss');
@@ -1633,7 +1635,7 @@ const gd2=(()=>{
       h=`<h4>${ki}단계 · 지금 가장 낮은 곳: ${best?nm[best]:'—'}</h4><p class="muted">`+['gd','mo','ad'].map(kd=>`${nm[kd]}: ${tr[kd].dead&&!isFinite(f(kd)[2])?'발산':t.st(f(kd)[0],f(kd)[1])}`).join('<br>')+`</p>`;}
     $('#gd2-explain').innerHTML=h;
   }
-  function loop(now){if(!playing)return;const dt=Math.min(0.05,(now-last)/1000);last=now;k=Math.min(N,k+dt*30*speed);render();if(k>=N){playing=false;render();return;}raf=requestAnimationFrame(loop);}
+  function loop(now){if(!playing)return;const dt=Math.min(0.05,(now-last)/1000);last=now;k=Math.min(N,k+dt*stepsPerSecond*speed);render();if(k>=N){playing=false;render();return;}raf=requestAnimationFrame(loop);}
   function play(){if(playing){playing=false;render();return;}if(k>=N)k=0;playing=true;last=performance.now();raf=requestAnimationFrame(loop);}
   function setTerr(t){terr=t;k=0;playing=false;setParam('sx',TER[t].s[0],true);setParam('sy',TER[t].s[1],true);$('#gd2-q').textContent=TER[t].q;$('#gd2-qd').textContent=TER[t].qd;sim();redraw();}
   ['eta2','beta','b1','b2','sx','sy'].forEach(n=>P[n].subs.push(()=>{sim();render();}));
