@@ -195,31 +195,36 @@ body[data-hl=gam] .lk-gam{opacity:.9!important}
 .svmplot svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 .tools{display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px;gap:8px;flex-wrap:wrap}
 select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;background:#fff}
-.bowl-lab{overflow:hidden;--plane:#097864}
+.bowl-lab{overflow:hidden}
+.bowl-views{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);grid-template-areas:"scene projections" "scene formula";align-items:center;gap:12px 18px;padding:16px}
+.bowl-projections{grid-area:projections;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.bowl-projections figure{margin:0;min-width:0}
+.bowl-projections svg{display:block;width:100%;height:auto}
+#bowl-formula{grid-area:formula;min-width:0}
+#lift-live{white-space:normal}
+@media(max-width:850px){.bowl-views{grid-template-columns:minmax(0,1fr);grid-template-areas:"formula" "scene" "projections";padding:10px}}
+@media(max-width:380px){#bowl-formula .fl{font-size:16px}}
 .bowl-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line)}
-.bowl-legend{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;font-size:13px;color:#505765}
+.bowl-legend{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;font-size:13px;color:var(--mut)}
 #bowl-next{min-width:142px;white-space:nowrap}
 #bowl-next[aria-disabled=true]{opacity:.7;cursor:default}
-.bowl-stage{background:linear-gradient(#fffaf5,#fffdf9 65%,#fff);padding:4px 14px}
+.bowl-stage{grid-area:scene;background:#fafbfd;border:1px solid var(--line);border-radius:12px;min-width:0;padding:4px}
 .bowl-legend span{display:inline-flex;align-items:center;gap:6px}
 .bowl-legend i{display:inline-block;width:9px;height:9px}
-.bowl-a{border-radius:50%;background:#355fbd}.bowl-b{background:#ba691e}
-.bowl-legend .bowl-plane{width:17px;height:8px;background:#c9e8df;border:1px solid var(--plane);transform:skewX(-24deg)}
+.bowl-a{border-radius:50%;background:var(--a)}.bowl-b{background:var(--b)}
+.bowl-legend .bowl-plane{width:17px;height:8px;background:color-mix(in srgb,var(--a) 12%,white);border:1px solid var(--a);transform:skewX(-24deg)}
 #bowl-scene{display:block;width:100%;height:clamp(280px,36vw,405px);touch-action:none;cursor:grab}
 #bowl-scene:active{cursor:grabbing}
 #bowl-scene:focus-visible{outline:2px solid var(--a);outline-offset:-3px;border-radius:8px}
 .bowl-caption{border-top:1px solid var(--line);padding:15px 20px 18px}
 .bowl-caption h3{font-size:18px;line-height:1.5}
-.bowl-caption p{margin:4px 0 0;font-size:14px;color:#4e586b;line-height:1.65;word-break:keep-all}
+.bowl-caption p{margin:4px 0 0;font-size:14px;color:var(--mut);line-height:1.65;word-break:keep-all}
 .bowl-options{margin-top:14px;font-size:13px}
-.bowl-options summary{color:#44647f;cursor:pointer;width:fit-content}
+.bowl-options summary{color:var(--mut);cursor:pointer;width:fit-content}
 .bowl-options .row{margin:10px 0}
-.bowl-options .fx{max-width:430px}
 #bowl-scene[data-rotate=false]{cursor:default;touch-action:pan-y}
-#bowl-cut-controls{padding:12px 14px}
-#bowl-cut-controls label{font-size:12.5px;color:var(--mut)}
-#bowl-height{display:block;width:100%;accent-color:var(--plane);min-height:22px;margin:3px 0}
-#bowl-score{font-size:13px;color:#176052}
+.bowl-options label{font-size:12.5px;color:var(--mut)}
+#bowl-height{display:block;width:min(100%,430px);accent-color:var(--a);min-height:22px;margin:3px 0}
 #bowl-circle-link{align-self:start}
 #bowl-circle-link[hidden],#bowl-plane-key[hidden]{display:none}
 @media(max-width:650px){
@@ -1197,19 +1202,38 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         <div class="bowl-legend"><span><i class="bowl-a"></i>안쪽 원 A</span><span><i class="bowl-b"></i>바깥 원 B</span><span id="bowl-plane-key" hidden><i class="bowl-plane"></i>분류 평면</span></div>
         <button class="btn pri" id="bowl-next" type="button">점 들어 올리기 ↑</button>
       </div>
-      <div class="bowl-stage"><canvas id="bowl-scene" data-rotate="false" role="img" aria-label="평면 위의 파란 원과 주황 원" aria-describedby="bowl-msg"></canvas></div>
+      <div class="bowl-views">
+        <div class="bowl-stage"><canvas id="bowl-scene" data-rotate="false" role="img" aria-label="평면 위의 파란 원과 주황 원" aria-describedby="bowl-msg"></canvas></div>
+        <div class="bowl-projections">
+          <figure><figcaption class="kt">위에서 본 두 원 · ● 안쪽 A · ■ 바깥쪽 B</figcaption>
+            <svg id="lift-top" viewBox="0 0 360 300" role="img" aria-label="위에서 본 동심원과 원형 결정 경계">
+              <rect x="45" y="15" width="270" height="270" fill="#fafbfd" stroke="var(--line)"/>
+              <circle id="lift-ring" cx="180" cy="150" fill="var(--a)" fill-opacity=".06" stroke="var(--a)" stroke-width="2" stroke-dasharray="6 4" opacity="0"/>
+              <g id="lift-top-points"></g>
+            </svg>
+          </figure>
+          <figure><figcaption class="kt">옆에서 보면 · 새 높이 z ↑</figcaption>
+            <svg id="lift-side" viewBox="0 0 360 300" role="img" aria-label="옆에서 본 각 점의 높이와 수평 결정 경계">
+              <path d="M30 30V270H330" fill="none" stroke="#c9ced8"/>
+              <g fill="var(--mut2)" font-size="13"><text x="36" y="40">새 높이 z ↑</text><text x="330" y="288" text-anchor="end">x →</text></g>
+              <g id="lift-side-cut" opacity="0"><line x1="30" x2="330" stroke="var(--a)" stroke-width="2"/><text x="326" y="-6" fill="#2f53b0" font-size="13" text-anchor="end"></text></g>
+              <g id="lift-side-points" fill-opacity=".85"></g>
+            </svg>
+          </figure>
+        </div>
+        <div class="fx blue" id="bowl-formula">
+          <div class="fx-h"><b>새 좌표를 하나 더하기</b><span>⇆ c를 끌어서 조절</span></div>
+          <div class="fl md"><span class="mv">z</span> = <span class="mv">x</span>² + <span class="mv">y</span>²,&nbsp;&nbsp; <span class="mv">z</span> &lt; <span class="sym" data-p="liftc" style="--c:var(--a)"><span class="g">c</span></span> 이면 A그룹</div>
+          <div class="live" id="lift-live"></div>
+        </div>
+      </div>
       <div class="bowl-caption">
         <div aria-live="polite"><h3 id="bowl-title"></h3><p id="bowl-msg"></p></div>
         <details class="bowl-options" id="bowl-options" hidden>
           <summary>시점과 평면 높이 조절</summary>
           <div class="row"><button type="button" class="btn sm" id="bowl-angle">비스듬히 보기</button><button type="button" class="btn sm" id="bowl-top">위에서 보기</button><span>드래그하거나 방향키로 회전</span></div>
-          <div class="fx blue" id="bowl-cut-controls">
-            <div class="fx-h"><b>분류 평면의 높이</b></div>
-            <div class="fl md"><i>z</i> = <span class="sym" data-p="liftc" style="--c:#097864"><span class="g">c</span></span></div>
-            <label for="bowl-height">평면 올리기 · 내리기</label>
-            <input id="bowl-height" type="range" min="0.5" max="16" step="0.1" value="5">
-            <p id="bowl-score"></p>
-          </div>
+          <label for="bowl-height">평면 올리기 · 내리기</label>
+          <input id="bowl-height" type="range" min="0.5" max="16" step="0.1" value="5">
         </details>
       </div>
     </section>
@@ -1904,28 +1928,56 @@ const lift = (() => {
   let stage = 'flat', animating = false, drag = null;
   const steps = {
     flat: ['점 들어 올리기 ↑', '평면에서는 주황 원이 파란 원을 둘러싸요', '직선 하나로는 두 그룹을 나눌 수 없어요. 두 원을 위로 들어 올려 보세요.'],
-    lift: ['구분선 그리기 →', '두 원 사이에 높이 차이가 생겼어요', '높이를 z = x² + y²로 정하면 중심에서 거리가 1인 파란 점은 높이 1로, 거리가 3인 주황 점은 높이 9로 올라가요.'],
-    cut: ['처음부터 다시 ↺', '두 원 사이로 수평면이 지나가요', '옆에서 보이는 초록 선은 3D에서는 분류 평면이에요. 평면 아래를 A, 평면에 닿거나 그보다 높은 점을 B로 분류해요.']
+    lift: ['구분선 그리기 →', '두 원 사이에 높이 차이가 생겼어요', '각 점의 높이는 중심까지 거리의 제곱이에요. 중심에 가까운 파란 점들보다 멀리 있는 주황 점들이 더 높이 올라가요.'],
+    cut: ['처음부터 다시 ↺', '두 원 사이로 수평면이 지나가요', '옆에서 보이는 파란 선은 3D에서는 분류 평면이에요. 평면 아래를 A, 평면에 닿거나 그보다 높은 점을 B로 분류해요.']
   };
-  // The rings use known radii, so learners can check both heights against the rule.
-  const points = [];
-  for(const [count,r,inner] of [[12,1,true],[24,3,false]]){
-    for(let i=0;i<count;i++){
-      const a = 2*Math.PI*i/count + (inner ? 0 : Math.PI/count);
-      points.push({x:r*Math.cos(a),y:r*Math.sin(a),z:r*r,inner});
+  const points=DS.circles.gen(rng(4242)).map(({x,y,c})=>({x,y,z:x*x+y*y,inner:c>0}));
+  const style=getComputedStyle(canvas);
+  const groupA=style.getPropertyValue('--a').trim(),groupB=style.getPropertyValue('--b').trim();
+  const errorColor=style.getPropertyValue('--err').trim();
+  const withOpacity=(hex,alpha)=>hex+Math.round(255*clamp(alpha,0,1)).toString(16).padStart(2,'0');
+  const topGroup=$('#lift-top-points'),sideGroup=$('#lift-side-points');
+  const ring=$('#lift-ring'),sideCut=$('#lift-side-cut');
+  const axisScale=270/8.4;
+  function svgMark(group,tag,attrs){
+    const mark=document.createElementNS('http://www.w3.org/2000/svg',tag);
+    for(const [key,val] of Object.entries(attrs)) mark.setAttribute(key,val);
+    group.appendChild(mark);
+    return mark;
+  }
+  const markers=points.map(q=>{
+    const x=180+q.x*axisScale,y=150-q.y*axisScale,sideX=30+(q.x+4.2)*300/8.4;
+    const shape=q.inner?'circle':'rect',fill=q.inner?groupA:groupB;
+    svgMark(topGroup,shape,q.inner?{cx:x,cy:y,r:5.5,fill}:{x:x-5,y:y-5,width:10,height:10,fill});
+    const halo=svgMark(topGroup,'circle',{cx:x,cy:y,r:10,fill:'none',stroke:errorColor,'stroke-width':2,opacity:0});
+    const side=svgMark(sideGroup,shape,q.inner?{cx:sideX,cy:270,r:5.5,fill}:{x:sideX-5,y:265,width:10,height:10,fill});
+    return {q,halo,side};
+  });
+  function updateProjections(){
+    const c=P.liftc.v;
+    ring.setAttribute('r',Math.sqrt(c)*axisScale);
+    ring.setAttribute('opacity',plane);
+    sideCut.setAttribute('opacity',plane);
+    sideCut.setAttribute('transform','translate(0,'+(270-15*c)+')');
+    sideCut.querySelector('line').setAttribute('x2',30+300*plane);
+    sideCut.querySelector('text').textContent='z = c = '+c.toFixed(1);
+    for(const {q,halo,side} of markers){
+      const y=270-15*q.z*height;
+      side.setAttribute(q.inner?'cy':'y',q.inner?y:y-5);
+      halo.setAttribute('opacity',plane===1&&(q.z<c)!==q.inner?1:0);
     }
   }
   const angles = Array.from({length:sides+1},(_,i)=>{
     const a = 2*Math.PI*i/sides;
     return [Math.cos(a),Math.sin(a)];
   });
-  const message = $('#bowl-msg'), result = $('#bowl-score');
+  const message = $('#bowl-msg'), result = $('#lift-live');
   function updatePanel(){
     const c = P.liftc.v;
     const correct = points.filter(q=>(q.z<c)===q.inner).length;
     const [action,defaultTitle,description] = steps[stage];
     const title = stage==='cut' && correct<points.length ? '평면의 높이를 바꾸면 분류도 달라져요' : defaultTitle;
-    nextButton.textContent = action;
+    if(!animating) nextButton.textContent = action;
     $('#bowl-title').textContent = title;
     message.textContent = description;
     options.hidden = $('#bowl-plane-key').hidden = stage!=='cut';
@@ -1933,14 +1985,15 @@ const lift = (() => {
     canvas.tabIndex = stage==='cut' ? 0 : -1;
     canvas.setAttribute('aria-label', title);
     range.value = c;
-    result.textContent = correct===points.length
-      ? '36개 모두 분리됐어요. 높이 1의 A는 아래, 높이 9의 B는 평면 위쪽이나 경계에 있어요.'
-      : correct+' / '+points.length+'개 정답 · '+(c<=1?'평면을 조금 더 올려 보세요.':'평면을 조금 내려 보세요.');
+    if(stage==='flat') result.textContent='아직 평평해요 (z = 0). 점들을 올린 뒤 c를 끌어 보세요.';
+    else if(stage==='lift') result.textContent='점들이 올라갔어요. c = '+c.toFixed(1)+'에서 구분선을 그려 보세요.';
+    else result.innerHTML='c = <b>'+c.toFixed(1)+'</b> → '+points.length+'개 중 <b>'+correct+'</b>개 정답 · 위에서 보면 반지름 √c = '+Math.sqrt(c).toFixed(2)+'인 원';
   }
 
   function render(){
     const width=canvas.clientWidth, viewHeight=canvas.clientHeight;
     if(!width||!viewHeight||!ctx) return;
+    updateProjections();
     const dpr=Math.min(window.devicePixelRatio||1,2);
     const pixelW=Math.round(width*dpr),pixelH=Math.round(viewHeight*dpr);
     if(canvas.width!==pixelW||canvas.height!==pixelH){canvas.width=pixelW;canvas.height=pixelH;}
@@ -1973,7 +2026,7 @@ const lift = (() => {
     }
     // The ground grid stays put as the two rings rise.
     for(let i=-4;i<=4;i++){
-      const grid=i===0?'#c4b9aa':'#e7dfd4';
+      const grid=i===0?'#c9ced8':'#e6e8ee';
       path([project(i,-4,0),project(i,4,0)],false,null,grid);
       path([project(-4,i,0),project(4,i,0)],false,null,grid);
     }
@@ -1983,21 +2036,19 @@ const lift = (() => {
         return angles.map(([x,y])=>project(r*x,r*y,height*r*r));
       });
       for(let j=1;j<=rings;j++){
-        const r=radius*j/rings;
         for(let k=0;k<sides;k++){
           const face=[mesh[j-1][k],mesh[j][k],mesh[j][k+1],mesh[j-1][k+1]];
           const lighting=.5+.5*(angles[k][0]*.6-angles[k][1]*.8);
-          const shade=72+13*lighting-7*r/radius;
-          const fill='hsla(24,52%,'+shade+'%,'+.27*height+')';
+          const fill=withOpacity('#c9ced8',(.13+.16*lighting)*height);
           add(face,()=>path(face,true,fill,null));
-          if(j%2===0||j===rings) line(face[1],face[2],'rgba(146,83,45,'+(j===rings?.72:.30)*height+')',j===rings?1.8:.85,.015);
-          if(k%4===0) line(face[0],face[1],'rgba(146,83,45,'+.32*height+')',.85,.015);
+          if(j%2===0||j===rings) line(face[1],face[2],withOpacity('#98a2b3',(j===rings?.78:.35)*height),j===rings?1.8:.85,.015);
+          if(k%4===0) line(face[0],face[1],withOpacity('#98a2b3',.36*height),.85,.015);
         }
       }
     }
     // Subdivide the transparent plane so its front and back occlude the bowl in depth order.
     if(plane>0.001){
-      const tiles=12, z=c*height, fill='rgba(54,178,150,'+.16*plane+')', edge='rgba(7,127,104,'+.73*plane+')';
+      const tiles=12, z=c*height, fill=withOpacity(groupA,.10*plane), edge=withOpacity(groupA,.72*plane);
       const spacing=2*planeEdge/tiles;
       for(let i=0;i<tiles;i++) for(let j=0;j<tiles;j++){
         const x=-planeEdge+i*spacing,y=-planeEdge+j*spacing;
@@ -2013,7 +2064,7 @@ const lift = (() => {
       const crossRadius=Math.sqrt(c);
       if(crossRadius<=radius && plane===1){
         const edgePoints=angles.map(([x,y])=>project(x*crossRadius,y*crossRadius,z));
-        for(let i=1;i<edgePoints.length;i++) line(edgePoints[i-1],edgePoints[i],'rgba(0,111,91,'+plane+')',2.8,.1);
+        for(let i=1;i<edgePoints.length;i++) line(edgePoints[i-1],edgePoints[i],withOpacity(groupA,plane),2.8,.1);
       }
     }
     for(const q of points){
@@ -2023,11 +2074,11 @@ const lift = (() => {
         ctx.beginPath();
         if(q.inner) ctx.arc(pos.x,pos.y,size,0,2*Math.PI);
         else ctx.rect(pos.x-size,pos.y-size,2*size,2*size);
-        ctx.fillStyle=q.inner?'#355fbd':'#ba691e';ctx.fill();
+        ctx.fillStyle=q.inner?groupA:groupB;ctx.fill();
         ctx.strokeStyle='#fff';ctx.lineWidth=1.3;ctx.stroke();
         if(plane>.99 && (q.z<c)!==q.inner){
           ctx.beginPath();ctx.arc(pos.x,pos.y,size+3,0,2*Math.PI);
-          ctx.strokeStyle='#a72a46';ctx.lineWidth=1.5;ctx.stroke();
+          ctx.strokeStyle=errorColor;ctx.lineWidth=1.5;ctx.stroke();
         }
       },.14);
     }
@@ -2038,7 +2089,7 @@ const lift = (() => {
       const a=project(-half*cs,half*sn,c), b=project(to*cs,-to*sn,c);
       const opacity=clamp((.70-pitch)/.35,0,1);
       path([a,b],false,null,'rgba(255,255,255,'+opacity+')',5.5);
-      path([a,b],false,null,'rgba(0,106,82,'+opacity+')',3.2);
+      path([a,b],false,null,withOpacity(groupA,opacity),3.2);
     }
   }
 
