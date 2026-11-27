@@ -80,7 +80,7 @@ section.block{padding:64px 0}
 .labhead h1{font-size:34px;font-weight:800;margin-top:6px}
 .labhead h1 small{font-size:16px;color:var(--mut2);font-weight:500;margin-left:10px}
 .labhead p{margin:10px 0 0;color:var(--mut)}
-.stepper{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:12px;padding:10px 14px;gap:8px}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;padding:10px 14px;gap:8px}
 .stepper button{border:0;background:none;display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mut);padding:4px 0}
 .stepper button b{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--mut2)}
 .stepper button.on{color:var(--ink);font-weight:700}
@@ -444,7 +444,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
   .hero{grid-template-columns:1fr;padding-top:40px}.hero h1{font-size:40px}
   .labgrid{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid var(--line)}
   .labs,.callout,.fxcards,.methods,.sum3{grid-template-columns:1fr}
-  .steps4{grid-template-columns:1fr 1fr}.stepper{grid-template-columns:repeat(3,1fr)}
+  .steps4{grid-template-columns:1fr 1fr}.stepper{grid-template-columns:repeat(2,1fr)}
   .nav{gap:16px}.hd-r span{display:none}
 }
 @media (max-width:560px){.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}.fl{font-size:19px}.wrap{padding:0 16px}}
@@ -706,11 +706,10 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     </div>
     <nav class="lesson-links" aria-label="경사하강법 관련 개념"><span>함께 볼 개념</span><a href="#loss">손실 함수</a><a href="#backprop">역전파</a></nav>
     <div class="stepper" data-for="gd">
-      <button data-go="gd-concept"><b>01</b>개념 이해</button>
-      <button data-go="gd-1d"><b>02</b>움직임 관찰</button>
-      <button data-go="gd-1d" class="on"><b>03</b>직접 실험</button>
-      <button data-go="opt-concept"><b>04</b>모멘텀 · Adam</button>
-      <button data-go="gd-sum"><b>05</b>핵심 정리</button>
+      <button data-go="gd-concept" class="on" aria-current="step"><b>01</b>개념 이해</button>
+      <button data-go="gd-1d"><b>02</b>기본 실험</button>
+      <button data-go="opt-concept"><b>03</b>모멘텀 · Adam</button>
+      <button data-go="gd-sum"><b>04</b>핵심 정리</button>
     </div>
 
     <section class="concept" id="gd-concept">
@@ -813,7 +812,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <button data-go="opt-concept">새로운 실험 · 3D / 모멘텀 / Adam ↓</button>
     </div>
 
-    <div class="gd1wrap">
+    <div class="gd1wrap" id="gd-1d">
     <div class="fbar" id="fbar">
       <div class="fb-eq">
         <span class="fb-s" style="color:var(--gd)"><span class="mv">x</span><sub>t+1</sub></span><span class="fb-n" id="fb-new">−2.800</span><span class="fb-l" style="color:var(--gd)">새 위치</span>
@@ -830,7 +829,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         <div class="regime" id="gd1-regime"></div>
       </div>
     </div>
-    <div class="labgrid" id="gd-1d">
+    <div class="labgrid">
       <div class="stage">
         <div class="stage-h">
           <div class="t"><span class="dot"></span>손실의 골짜기</div>
@@ -878,7 +877,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     </div>
 
     <section class="concept" id="opt-concept" style="margin-top:56px">
-      <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--gd)">STEP 04 · 개념 이해</span><h2>더 똑똑하게 내려가는 법: 모멘텀과 Adam</h2><p>기본 경사하강법의 약점과, 그걸 보완하는 두 방법을 먼저 살펴본 뒤 3D 실험으로 넘어가요. <span class="kbd">←</span> <span class="kbd">→</span> 키나 스와이프로 넘길 수 있어요.</p></div>
+      <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--gd)">STEP 03 · 모멘텀과 Adam</span><h2>더 똑똑하게 내려가는 법: 모멘텀과 Adam</h2><p>기본 경사하강법의 약점과, 그걸 보완하는 두 방법을 먼저 살펴본 뒤 3D 실험으로 넘어가요. <span class="kbd">←</span> <span class="kbd">→</span> 키나 스와이프로 넘길 수 있어요.</p></div>
       <div class="deck" data-next="gd-2d" data-nextlabel="3D 실험하러 가기 ↓">
         <div class="deck-top"><div class="l"><b>개념 슬라이드</b><span class="cur"></span></div><div class="r"><span class="cnt"></span><button class="fs" type="button">⤢ 크게 보기</button></div></div>
         <div class="slides"><div class="slide" data-t="왜 필요할까?"><span class="sl-k">01 · 왜 필요할까?</span><div class="sl-t sm">기본 경사하강법은 세 가지 상황에서 고전해요</div>
@@ -1029,7 +1028,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     </div>
     <div class="warnbox"><b>모멘텀과 Adam은 만능 탈출 버튼이 아니에요.</b><br>로컬 미니멈은 ‘가짜 값’이 아니라 실제로 주변보다 낮은 곳입니다. 모멘텀은 내려오며 쌓인 이동량으로 턱을 넘을 수 있지만, 이미 정지했거나 턱이 높으면 못 넘을 수 있어요. Adam도 전역 최솟값 도달이나 안장점 탈출을 보장하지 않습니다.</div>
 
-    <div id="gd-sum" class="sechead"><span class="eyebrow" style="color:var(--gd)">STEP 05 · 핵심 정리</span><h2>기울기로 가중치를 고치는 과정</h2></div>
+    <div id="gd-sum" class="sechead"><span class="eyebrow" style="color:var(--gd)">STEP 04 · 핵심 정리</span><h2>기울기로 가중치를 고치는 과정</h2></div>
     <div class="sum3">
       <div class="card"><b>01</b><h4>틀린 정도를 확인해요</h4><p>‘손실’은 얼마나 틀렸는지를 나타내는 값입니다. 이 실험에서는 x²로 단순화했어요.</p></div>
       <div class="card"><b>02</b><h4>기울기의 반대로 움직여요</h4><p>기울기는 그 자리에서 어느 쪽이 오르막인지 알려줘요. 반대쪽으로 움직이면 내리막을 찾을 수 있습니다.</p></div>
@@ -1050,16 +1049,15 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <h1>서포트 벡터 머신<small>Support Vector Machine</small></h1>
       <p>두 팀 사이에 길을 만든다면? SVM은 여유 공간을 확보하면서 두 그룹을 구분합니다.</p></div></div>
     <div class="stepper">
-      <button data-go="svm-concept"><b>01</b>개념 이해</button>
-      <button data-go="svm-lab"><b>02</b>움직임 관찰</button>
-      <button data-go="svm-lab" class="on"><b>03</b>직접 실험</button>
-      <button data-go="svm-lift"><b>04</b>동심원 3D</button>
-      <button data-go="svm-sum"><b>05</b>핵심 정리</button>
+      <button data-go="svm-concept" class="on" aria-current="step"><b>01</b>개념 이해</button>
+      <button data-go="svm-lab"><b>02</b>기본 실험</button>
+      <button data-go="svm-lift"><b>03</b>동심원 3D</button>
+      <button data-go="svm-sum"><b>04</b>핵심 정리</button>
     </div>
 
     <section class="concept" id="svm-concept">
       <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--a)">STEP 01 · 개념 이해</span><h2>두 팀 사이에 가장 넓은 길 내기</h2><p>왜 필요한지 → 비유 → 수식 순서로, 한 장씩 넘겨 보세요. <span class="kbd">←</span> <span class="kbd">→</span> 키나 화면 스와이프로도 넘길 수 있어요.</p></div>
-      <div class="deck blue" data-next="svm-lab-head" data-nextlabel="직접 실험하러 가기 ↓">
+      <div class="deck blue" data-next="svm-lab" data-nextlabel="직접 실험하러 가기 ↓">
         <div class="deck-top"><div class="l"><b>개념 슬라이드</b><span class="cur"></span></div><div class="r"><span class="cnt"></span><button class="fs" type="button">⤢ 크게 보기</button></div></div>
         <div class="slides"><div class="slide" data-t="어떤 문제를 풀까?"><div class="sl-2"><div><span class="sl-k">01 · 어떤 문제를 풀까?</span><div class="sl-t">‘이건 A일까, B일까?’<br>— 분류</div>
 <p class="sl-p">정답이 붙은 예시들을 보고 <b>두 그룹을 가르는 기준(경계)</b>을 배운 뒤, 처음 보는 데이터가 어느 쪽인지 판단하는 문제예요.</p>
@@ -1147,8 +1145,8 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     </section>
     <div class="subnav"><button class="on" data-go="svm-lab">데이터 실험</button><button data-go="svm-lift">동심원 · 3D 그릇 실험 ↓</button></div>
 
-    <div class="sechead" id="svm-lab-head" style="margin-top:6px"><span class="eyebrow" style="color:var(--a)">직접 실험하기</span><h2>먼저, 직선 하나로 나눠 볼까요?</h2><p>두 무리를 나누는 직선과 마진부터 관찰하세요. 그다음 직선으로 나눌 수 없는 데이터에서 <b>γ</b>를 끌어 보세요.</p></div>
-    <div class="labgrid" id="svm-lab">
+    <div class="sechead" id="svm-lab" style="margin-top:6px"><span class="eyebrow" style="color:var(--a)">STEP 02 · 기본 실험</span><h2>먼저, 직선 하나로 나눠 볼까요?</h2><p>두 무리를 나누는 직선과 마진부터 관찰하세요. 그다음 직선으로 나눌 수 없는 데이터에서 <b>γ</b>를 끌어 보세요.</p></div>
+    <div class="labgrid">
       <div class="stage">
         <div class="stage-h"><div class="t"><span class="dot" style="background:var(--a);box-shadow:0 0 0 4px rgba(79,120,216,.15)"></span>두 그룹 사이, 가장 좋은 경계</div><span class="chip" id="svm-state">데이터 준비 완료</span></div>
         <div class="row" style="margin:10px 0">
@@ -1197,7 +1195,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     </div>
 
     <div id="svm-lift" class="sechead">
-      <span class="eyebrow" style="color:var(--a)">동심원 · 3D 차원 확장</span>
+      <span class="eyebrow" style="color:var(--a)">STEP 03 · 동심원 3D</span>
       <h2>두 원을 그릇 위에 올리면?</h2>
       <p>점에 높이를 더하면, 안쪽 원과 바깥쪽 원을 어떻게 나눌 수 있을까요?</p>
     </div>
@@ -1242,7 +1240,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       </div>
     </section>
 
-    <div id="svm-sum" class="sechead"><span class="eyebrow" style="color:var(--a)">STEP 05 · 핵심 정리</span><h2>점을 구분하는 세 가지 단서</h2></div>
+    <div id="svm-sum" class="sechead"><span class="eyebrow" style="color:var(--a)">STEP 04 · 핵심 정리</span><h2>점을 구분하는 세 가지 단서</h2></div>
     <div class="sum3">
       <div class="card"><b>결정 경계</b><h4>f(x) = 0</h4><p>두 그룹을 구분하는 기준이에요. 선형 커널은 직선, RBF 커널은 데이터에 맞는 곡선 경계를 학습할 수 있어요.</p></div>
       <div class="card"><b>마진 · C</b><h4>여유 공간 vs 오류</h4><p>소프트 마진 SVM은 일부 점의 마진 침범을 허용합니다. C가 작으면 넓은 마진을, 크면 적은 오류를 더 중요하게 봐요.</p></div>
@@ -1429,6 +1427,7 @@ function go(){
   if(v==='gd'){gdc.render();optc.render();gd1.render();gd2.redraw();}
   if(v==='svm'){svmc.render();svm.render();lift.render();}
   if(h==='gd-practice') $('#fbar').parentElement.scrollIntoView({behavior:'instant'});
+  syncLabNavigation();
   if((v==='gd'||v==='svm')&&!coachDone) setTimeout(placeCoach,80);
 }
 function placeCoach(){
@@ -1442,8 +1441,34 @@ function placeCoach(){
   const br=box.getBoundingClientRect(), er=el.getBoundingClientRect();
   c.style.left=Math.max(4,er.left-br.left-12)+'px'; c.style.top=(er.top-br.top-34)+'px';
 }
+function syncLabNavigation(){
+  const view=$('.view:not([hidden])');
+  if(!view)return;
+  const steps=$$('.stepper button',view);
+  if(!steps.length)return;
+  // Use the same top offset as section jumps, including fractional scroll positions.
+  let active=steps[0];
+  for(const button of steps){
+    if(document.getElementById(button.dataset.go).getBoundingClientRect().top<=82)active=button;
+  }
+  for(const button of steps){
+    button.classList.toggle('on',button===active);
+    if(button===active)button.setAttribute('aria-current','step');
+    else button.removeAttribute('aria-current');
+  }
+  for(const button of $$('.subnav button',view)){
+    button.classList.toggle('on',button.dataset.go===active.dataset.go);
+  }
+}
+let navFrame=0;
+function scheduleLabNavigation(){
+  if(navFrame)return;
+  navFrame=requestAnimationFrame(()=>{navFrame=0;syncLabNavigation();});
+}
+window.addEventListener('scroll',scheduleLabNavigation,{passive:true});
+window.addEventListener('resize',scheduleLabNavigation);
 window.addEventListener('hashchange',go);
-$$('[data-go]').forEach(b=>b.addEventListener('click',()=>{const t=document.getElementById(b.dataset.go);const dk=t&&t.querySelector('.deck');if(dk&&dk.goTo)dk.goTo(0); if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:'smooth'});}));
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>{const t=document.getElementById(b.dataset.go);const dk=t&&t.querySelector('.deck');if(dk&&dk.goTo)dk.goTo(0); if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}));
 function segBind(id,attr,fn){$$('#'+id+' button').forEach(b=>b.addEventListener('click',()=>{$$('#'+id+' button').forEach(x=>x.classList.toggle('on',x===b));fn(b.dataset[attr]);}));}
 
 /* ================= GD 1D ================= */
@@ -2289,7 +2314,7 @@ function initDeck(d){
     pv.disabled=k===0;nx.textContent=k===n-1?d.dataset.nextlabel:'다음 →';hideTip();}
   function full(on){d.classList.toggle('full',on);document.body.style.overflow=on?'hidden':'';fs.textContent=on?'✕ 닫기 (Esc)':'⤢ 크게 보기';}
   pv.onclick=()=>show(i-1);
-  nx.onclick=()=>{if(i<n-1)show(i+1);else{full(false);const t=document.getElementById(d.dataset.next);if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:'smooth'});}};
+  nx.onclick=()=>{if(i<n-1)show(i+1);else{full(false);const t=document.getElementById(d.dataset.next);if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}};
   db.forEach((b,k)=>b.onclick=()=>show(k));
   fs.onclick=()=>full(!d.classList.contains('full'));
   document.addEventListener('keydown',e=>{
