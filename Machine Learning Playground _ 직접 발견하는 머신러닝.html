@@ -824,7 +824,10 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         <span class="fb-s hlk grad-hl" id="gd1-gradterm" style="color:var(--err)">∇L(<span class="mv">x</span><sub>t</sub>)</span><span class="fb-n" id="fb-g">(−8.000)</span><span class="fb-l" style="color:var(--err)">오르막 방향 (기울기)</span>
       </div>
       <div class="fb-side">
-        <div class="hint">⇆ 식 속 <b>η</b>를 클릭한 채 좌우로 끌어 보세요. 아래 숫자는 공이 한 걸음 갈 때마다 바뀝니다.</div>
+        <div class="row">
+          <span class="hint">학습률 η를 좌우로 끌어 한 걸음의 크기를 바꿔 보세요.</span>
+          <button type="button" class="btn sm" id="gd1-step">한 단계 움직이기</button>
+        </div>
         <div class="row" style="gap:14px"><div class="fl md" style="padding:0"><span class="mv">L</span>(<span class="mv">x</span>) = <span class="mv">x</span>²,&nbsp; ∇L = 2<span class="mv">x</span></div><span class="x0chip">출발 <span class="sym" data-p="x0"><span class="g">x<sub>0</sub></span></span></span></div>
         <div class="regime" id="gd1-regime"></div>
       </div>
@@ -856,21 +859,20 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <aside class="side">
         <div><span class="eyebrow" style="color:var(--gd)">직접 실험하기</span><h3>한 걸음의 크기를 바꾸면?</h3>
         <p class="muted" style="margin:4px 0 0;font-size:13px">위쪽 큰 식의 <b style="color:var(--gd)">η</b>를 끌거나, 아래 빠른 설정을 눌러 보세요.</p></div>
-        <div><span class="lbl">빠른 설정 (η)</span>
+        <div><span class="lbl">학습률 η · 한 걸음의 크기</span>
           <div class="presets" id="gd1-presets">
-            <button data-eta="0.03">작게<small>천천히</small></button>
+            <button data-eta="0.03">작게<small>짧은 걸음</small></button>
             <button data-eta="0.15">적절하게<small>안정적</small></button>
             <button data-eta="0.85">크게<small>넘나들며</small></button>
             <button data-eta="1.05">너무 크게<small>발산</small></button>
           </div></div>
-        <div><span class="lbl">애니메이션 속도</span>
+        <div><span class="lbl">재생 배속 · 같은 경로를 보는 속도</span>
           <div class="seg" id="gd1-speed"><button data-s="0.5">0.5배속</button><button data-s="1" class="on">1배속</button><button data-s="2">2배속</button><button data-s="3">3배속</button></div></div>
         <div class="row">
           <button class="btn gdc" id="gd1-play" style="flex:1">▶ 학습 시작</button>
-          <button class="btn sm" id="gd1-step">한 단계</button>
           <button class="btn sm" id="gd1-reset">처음부터</button>
         </div>
-        <div class="box"><h4>이렇게 실험해 보세요</h4><p class="muted">① <b>η</b>를 끌면서 화살표 길이 변화 보기<br>② ‘적절하게’로 학습 시작<br>③ 학습 중에 <b>η</b>를 크게 끌어 보기 — 공이 바로 반응해요</p></div>
+        <div class="box"><h4>이렇게 실험해 보세요</h4><p class="muted">① <b>η</b>를 바꾸고 ‘한 단계 움직이기’를 눌러 보세요.<br>② ‘처음부터’를 눌러 같은 위치에서 다른 걸음 크기를 비교해 보세요.</p></div>
         <div class="box" style="background:#f8f7ff;border-color:#e5e0fd"><h4>지금 무슨 일이 일어났나요?</h4><p id="gd1-explain" class="muted">학습 시작을 눌러 보세요. 공이 기울기의 반대 방향으로 한 걸음씩 움직입니다.</p></div>
       </aside>
     </div>
@@ -1333,11 +1335,6 @@ function bindSyms(){
   });
   Object.keys(P).forEach(syncSym);
 }
-function tweenParam(name,to,ms=380){
-  const from=P[name].v,t0=performance.now();
-  (function f(now){const t=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-t,3); setParam(name,lerp(from,to,e)); if(t<1)requestAnimationFrame(f);})(t0);
-}
-
 defParam('eta1',{v:0.15,min:0.01,max:1.1,step:0.01,sym:'η',label:'학습률 (한 걸음의 크기)',lo:'작은 걸음',hi:'큰 걸음'});
 defParam('x0',{v:-4,min:-4.5,max:4.5,step:0.1,sym:'x₀',label:'시작 위치',lo:'왼쪽 −4.5',hi:'오른쪽 +4.5',fmt:v=>M(v.toFixed(1))});
 defParam('eta2',{v:0.05,min:0.005,max:0.2,step:0.001,sym:'η',label:'공통 학습률',lo:'작게',hi:'크게',fmt:v=>v.toFixed(3)});
@@ -1511,7 +1508,7 @@ const gd1=(()=>{
   function reset(){stop();anim=null;xs=[P.x0.v];render();explain('학습 시작을 눌러 보세요. 공이 기울기의 반대 방향으로 한 걸음씩 움직입니다.');}
   function updBtn(){$('#gd1-play').textContent=playing?'❚❚ 일시정지':(ended()&&xs.length>1?'↻ 다시 학습':'▶ 학습 시작');}
   function explain(h){$('#gd1-explain').innerHTML=h;}
-  function explainStep(){const k=done(),x=xs[k],p=xs[k-1];explain(`${k}단계: 기울기 ${nf(G(p))}의 반대 방향으로 ${nf(-P.eta1.v*G(p))}만큼 이동해 x = ${nf(x)}가 됐어요. 손실 ${nf(L(p))} → ${nf(L(x))}.`);}
+  function explainStep(){const k=done(),x=xs[k],p=xs[k-1];explain(`${k}단계: 기울기 ${nf(G(p))}의 반대 방향으로 ${nf(x-p)}만큼 이동해 x = ${nf(x)}가 됐어요. 손실 ${nf(L(p))} → ${nf(L(x))}.`);}
   function explainEnd(){
     const x=xs.at(-1),k=xs.length-1;
     if(Math.abs(x)>1e4||(Math.abs(x)>Math.abs(xs[0])&&P.eta1.v>1))explain(`<b style="color:var(--err)">발산!</b> η = ${P.eta1.v.toFixed(2)}는 너무 커서 매 걸음 최솟값을 더 크게 넘어가요. 손실이 오히려 커졌어요. η를 1보다 작게 끌어 보세요.`);
@@ -1577,7 +1574,7 @@ const gd1=(()=>{
   P.x0.subs.push(()=>reset());
   $('#gd1-play').onclick=play; $('#gd1-step').onclick=()=>{stop();doStep();}; $('#gd1-reset').onclick=reset;
   $('#gd1-tan').onchange=e=>{showTan=e.target.checked;render();};
-  $$('#gd1-presets button').forEach(b=>b.onclick=()=>{hideCoach();tweenParam('eta1',+b.dataset.eta);});
+  $$('#gd1-presets button').forEach(b=>b.onclick=()=>{hideCoach();setParam('eta1',+b.dataset.eta);});
   segBind('gd1-speed','s',v=>speed=+v);
   const gt=$('#gd1-gradterm');
   gt.addEventListener('mouseenter',()=>{const l=$('#gd1-tan-l');if(l)l.setAttribute('stroke-width','4');});
