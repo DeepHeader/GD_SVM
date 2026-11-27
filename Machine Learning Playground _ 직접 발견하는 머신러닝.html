@@ -126,9 +126,12 @@ svg text{font-family:'Noto Sans KR',Arial,sans-serif}
 .mv{font-style:italic}
 .fl sub{font-size:.62em}
 .fl sup{font-size:.62em}
-.sym{--c:var(--gd);position:relative;display:inline-block;cursor:ew-resize;padding:0 3px;margin:0 1px;border-radius:6px;color:var(--c);touch-action:none;user-select:none;-webkit-user-select:none;outline:none;transition:background .12s}
+.sym{--c:var(--gd);position:relative;display:inline-block;cursor:ew-resize;padding:0 .24em;margin:0 1px;border-radius:6px;color:var(--c);touch-action:none;user-select:none;-webkit-user-select:none;outline:none;transition:background .12s}
 .sym.wide{margin:0 12px}
 .sym .g{font-style:italic;font-weight:600;border-bottom:2px dashed currentColor;line-height:1.05}
+.sym .g,.weight-symbol{display:inline-block;transform:scale(var(--symbol-scale,1));transform-origin:center 85%}
+.fl:has(.sym){padding-top:.45em}
+@media(max-width:560px){.fbar .fb-eq{padding-top:8px}}
 .sym .v{position:absolute;left:50%;top:calc(100% + 3px);transform:translateX(-50%);font:600 10.5px/1 var(--mono);font-style:normal;padding:3px 6px;border-radius:999px;background:color-mix(in srgb,var(--c) 13%,#fff);white-space:nowrap;pointer-events:none}
 .sym:hover,.sym:focus-visible,.sym.drag{background:color-mix(in srgb,var(--c) 11%,transparent)}
 .sym.drag .v,.sym:hover .v{background:var(--c);color:#fff}
@@ -432,6 +435,9 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 .lesson-controls p,.bp-stage p,.lesson-note p{font-size:15px;margin:8px 0}
 .weight-label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:28px 0 9px;font-size:14px;font-weight:700}
 .weight-label strong{color:#5844bc;font-size:20px}
+.weight-label .weight-reading{white-space:nowrap;font-variant-numeric:tabular-nums}
+.weight-reading output{display:inline-block;min-width:3.6ch;text-align:right}
+.weight-symbol{margin:0 .18em;font:italic 600 1.1em/1 var(--math);color:#5844bc}
 .lesson-controls input{width:100%;height:22px;accent-color:var(--gd);margin:0;display:block;cursor:pointer}
 .range-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--mut)}
 .price-values{margin:22px 0 0;font-size:14px}
@@ -576,8 +582,8 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     <section class="card lesson-workbench" aria-labelledby="loss-example">
       <div class="lesson-controls">
         <h2 id="loss-example">사과 한 개의 가격을 바꿔 보세요</h2>
-        <p>모델은 사과 한 개의 가격 <i>w</i>를 추정해요. 두 개를 사면 예측 가격은 <b>2 × w</b>예요.</p>
-        <label class="weight-label" for="loss-weight">한 개의 예상 가격 <strong><output for="loss-weight" data-price></output>천 원</strong></label>
+        <p>모델은 사과 한 개의 가격 <i>w</i>를 추정해요. 두 개를 사면 예측 가격은 <b>2 × <i class="weight-symbol">w</i></b>예요.</p>
+        <label class="weight-label" for="loss-weight">한 개의 예상 가격 <strong class="weight-reading"><i class="weight-symbol">w</i> = <output for="loss-weight" data-price></output>천 원</strong></label>
         <input id="loss-weight" data-weight type="range" min="1" max="5" step="0.25" value="2">
         <div class="range-ends" aria-hidden="true"><span>1천 원</span><span>5천 원</span></div>
         <dl class="price-values">
@@ -619,7 +625,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <div class="lesson-controls">
         <h2 id="bp-example">예측 한 번을 따라가 보세요</h2>
         <p>사과 두 개의 실제 가격은 6천 원이에요. 한 개의 예상 가격 <i>w</i>를 정하고, 세 단계를 차례로 눌러 보세요.</p>
-        <label class="weight-label" for="bp-weight">처음 한 개의 예상 가격 <strong><output for="bp-weight" data-price></output>천 원</strong></label>
+        <label class="weight-label" for="bp-weight">처음 한 개의 예상 가격 <strong class="weight-reading"><i class="weight-symbol">w</i> = <output for="bp-weight" data-price></output>천 원</strong></label>
         <input id="bp-weight" data-weight type="range" min="1" max="5" step="0.25" value="2">
         <div class="range-ends" aria-hidden="true"><span>1천 원</span><span>5천 원</span></div>
         <dl class="price-values"><div><dt>두 개의 실제 가격</dt><dd>6천 원</dd></div><div><dt>처음 예측한 가격</dt><dd><span data-prediction></span>천 원</dd></div></dl>
@@ -1198,6 +1204,9 @@ const P={};
 function defParam(name,o){P[name]=Object.assign({subs:[],fmt:v=>v.toFixed(2)},o);}
 function frac(p,v){return p.log?Math.log(v/p.min)/Math.log(p.max/p.min):(v-p.min)/(p.max-p.min)}
 function unfrac(p,f){return p.log?p.min*Math.pow(p.max/p.min,f):p.min+f*(p.max-p.min)}
+function symbolScale(fraction){
+  return lerp(0.78, 1.50, clamp(fraction, 0, 1));
+}
 function setParam(name,v,silent){
   const p=P[name]; v=clamp(v,p.min,p.max);
   if(p.step) v=Math.round(v/p.step)*p.step;
@@ -1207,7 +1216,14 @@ function setParam(name,v,silent){
 }
 function syncSym(name){
   const p=P[name];
-  $$(`.sym[data-p="${name}"]`).forEach(el=>{const t=el.querySelector('.v'); if(t)t.textContent=p.fmt(p.v); el.setAttribute('aria-valuenow',p.v); el.setAttribute('aria-valuetext',p.fmt(p.v));});
+  const scale = symbolScale(frac(p,p.v));
+  $$(`.sym[data-p="${name}"]`).forEach(el=>{
+    const label = el.querySelector('.v');
+    if(label) label.textContent = p.fmt(p.v);
+    el.style.setProperty('--symbol-scale', scale);
+    el.setAttribute('aria-valuenow',p.v);
+    el.setAttribute('aria-valuetext',p.fmt(p.v));
+  });
   if(tipFor===name) updateTip();
 }
 const tip=$('#tip'); let tipFor=null,tipEl=null;
@@ -1297,6 +1313,8 @@ function initPriceLessons(){
     for(const slider of sliders){
       slider.value = weight;
       slider.setAttribute('aria-valuetext', format(weight) + '천 원');
+      const fraction = (weight - Number(slider.min)) / (Number(slider.max) - Number(slider.min));
+      slider.closest('.lesson-controls').style.setProperty('--symbol-scale', symbolScale(fraction));
     }
     $$('[data-price]').forEach(el => el.value = format(weight));
     $$('[data-prediction]').forEach(el => el.textContent = format(prediction));
