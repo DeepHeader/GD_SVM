@@ -80,7 +80,7 @@ section.block{padding:64px 0}
 .labhead h1{font-size:34px;font-weight:800;margin-top:6px}
 .labhead h1 small{font-size:16px;color:var(--mut2);font-weight:500;margin-left:10px}
 .labhead p{margin:10px 0 0;color:var(--mut)}
-.stepper{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:12px;padding:10px 14px;gap:8px}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;padding:10px 14px;gap:8px}
 .stepper button{border:0;background:none;display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mut);padding:4px 0}
 .stepper button b{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--mut2)}
 .stepper button.on{color:var(--ink);font-weight:700}
@@ -444,7 +444,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
   .hero{grid-template-columns:1fr;padding-top:40px}.hero h1{font-size:40px}
   .labgrid{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid var(--line)}
   .labs,.callout,.fxcards,.methods,.sum3{grid-template-columns:1fr}
-  .steps4{grid-template-columns:1fr 1fr}.stepper{grid-template-columns:repeat(3,1fr)}
+  .steps4{grid-template-columns:1fr 1fr}.stepper{grid-template-columns:repeat(2,1fr)}
   .nav{gap:16px}.hd-r span{display:none}
 }
 @media (max-width:560px){.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}.fl{font-size:19px}.wrap{padding:0 16px}}
@@ -706,11 +706,10 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     </div>
     <nav class="lesson-links" aria-label="경사하강법 관련 개념"><span>함께 볼 개념</span><a href="#loss">손실 함수</a><a href="#backprop">역전파</a></nav>
     <div class="stepper" data-for="gd">
-      <button data-go="gd-concept"><b>01</b>개념 이해</button>
-      <button data-go="gd-1d"><b>02</b>움직임 관찰</button>
-      <button data-go="gd-1d" class="on"><b>03</b>직접 실험</button>
-      <button data-go="opt-concept"><b>04</b>모멘텀 · Adam</button>
-      <button data-go="gd-sum"><b>05</b>핵심 정리</button>
+      <button data-go="gd-concept" class="on" aria-current="step"><b>01</b>개념 이해</button>
+      <button data-go="gd-1d"><b>02</b>기본 실험</button>
+      <button data-go="opt-concept"><b>03</b>모멘텀 · Adam</button>
+      <button data-go="gd-sum"><b>04</b>핵심 정리</button>
     </div>
 
     <section class="concept" id="gd-concept">
@@ -813,7 +812,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <button data-go="opt-concept">새로운 실험 · 3D / 모멘텀 / Adam ↓</button>
     </div>
 
-    <div class="gd1wrap">
+    <div class="gd1wrap" id="gd-1d">
     <div class="fbar" id="fbar">
       <div class="fb-eq">
         <span class="fb-s" style="color:var(--gd)"><span class="mv">x</span><sub>t+1</sub></span><span class="fb-n" id="fb-new">−2.800</span><span class="fb-l" style="color:var(--gd)">새 위치</span>
@@ -825,12 +824,15 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         <span class="fb-s hlk grad-hl" id="gd1-gradterm" style="color:var(--err)">∇L(<span class="mv">x</span><sub>t</sub>)</span><span class="fb-n" id="fb-g">(−8.000)</span><span class="fb-l" style="color:var(--err)">오르막 방향 (기울기)</span>
       </div>
       <div class="fb-side">
-        <div class="hint">⇆ 식 속 <b>η</b>를 클릭한 채 좌우로 끌어 보세요. 아래 숫자는 공이 한 걸음 갈 때마다 바뀝니다.</div>
+        <div class="row">
+          <span class="hint">학습률 η를 좌우로 끌어 한 걸음의 크기를 바꿔 보세요.</span>
+          <button type="button" class="btn sm" id="gd1-step">한 단계 움직이기</button>
+        </div>
         <div class="row" style="gap:14px"><div class="fl md" style="padding:0"><span class="mv">L</span>(<span class="mv">x</span>) = <span class="mv">x</span>²,&nbsp; ∇L = 2<span class="mv">x</span></div><span class="x0chip">출발 <span class="sym" data-p="x0"><span class="g">x<sub>0</sub></span></span></span></div>
         <div class="regime" id="gd1-regime"></div>
       </div>
     </div>
-    <div class="labgrid" id="gd-1d">
+    <div class="labgrid">
       <div class="stage">
         <div class="stage-h">
           <div class="t"><span class="dot"></span>손실의 골짜기</div>
@@ -857,28 +859,27 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <aside class="side">
         <div><span class="eyebrow" style="color:var(--gd)">직접 실험하기</span><h3>한 걸음의 크기를 바꾸면?</h3>
         <p class="muted" style="margin:4px 0 0;font-size:13px">위쪽 큰 식의 <b style="color:var(--gd)">η</b>를 끌거나, 아래 빠른 설정을 눌러 보세요.</p></div>
-        <div><span class="lbl">빠른 설정 (η)</span>
+        <div><span class="lbl">학습률 η · 한 걸음의 크기</span>
           <div class="presets" id="gd1-presets">
-            <button data-eta="0.03">작게<small>천천히</small></button>
+            <button data-eta="0.03">작게<small>짧은 걸음</small></button>
             <button data-eta="0.15">적절하게<small>안정적</small></button>
             <button data-eta="0.85">크게<small>넘나들며</small></button>
             <button data-eta="1.05">너무 크게<small>발산</small></button>
           </div></div>
-        <div><span class="lbl">애니메이션 속도</span>
+        <div><span class="lbl">재생 배속 · 같은 경로를 보는 속도</span>
           <div class="seg" id="gd1-speed"><button data-s="0.5">0.5배속</button><button data-s="1" class="on">1배속</button><button data-s="2">2배속</button><button data-s="3">3배속</button></div></div>
         <div class="row">
           <button class="btn gdc" id="gd1-play" style="flex:1">▶ 학습 시작</button>
-          <button class="btn sm" id="gd1-step">한 단계</button>
           <button class="btn sm" id="gd1-reset">처음부터</button>
         </div>
-        <div class="box"><h4>이렇게 실험해 보세요</h4><p class="muted">① <b>η</b>를 끌면서 화살표 길이 변화 보기<br>② ‘적절하게’로 학습 시작<br>③ 학습 중에 <b>η</b>를 크게 끌어 보기 — 공이 바로 반응해요</p></div>
+        <div class="box"><h4>이렇게 실험해 보세요</h4><p class="muted">① <b>η</b>를 바꾸고 ‘한 단계 움직이기’를 눌러 보세요.<br>② ‘처음부터’를 눌러 같은 위치에서 다른 걸음 크기를 비교해 보세요.</p></div>
         <div class="box" style="background:#f8f7ff;border-color:#e5e0fd"><h4>지금 무슨 일이 일어났나요?</h4><p id="gd1-explain" class="muted">학습 시작을 눌러 보세요. 공이 기울기의 반대 방향으로 한 걸음씩 움직입니다.</p></div>
       </aside>
     </div>
     </div>
 
     <section class="concept" id="opt-concept" style="margin-top:56px">
-      <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--gd)">STEP 04 · 개념 이해</span><h2>더 똑똑하게 내려가는 법: 모멘텀과 Adam</h2><p>기본 경사하강법의 약점과, 그걸 보완하는 두 방법을 먼저 살펴본 뒤 3D 실험으로 넘어가요. <span class="kbd">←</span> <span class="kbd">→</span> 키나 스와이프로 넘길 수 있어요.</p></div>
+      <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--gd)">STEP 03 · 모멘텀과 Adam</span><h2>더 똑똑하게 내려가는 법: 모멘텀과 Adam</h2><p>기본 경사하강법의 약점과, 그걸 보완하는 두 방법을 먼저 살펴본 뒤 3D 실험으로 넘어가요. <span class="kbd">←</span> <span class="kbd">→</span> 키나 스와이프로 넘길 수 있어요.</p></div>
       <div class="deck" data-next="gd-2d" data-nextlabel="3D 실험하러 가기 ↓">
         <div class="deck-top"><div class="l"><b>개념 슬라이드</b><span class="cur"></span></div><div class="r"><span class="cnt"></span><button class="fs" type="button">⤢ 크게 보기</button></div></div>
         <div class="slides"><div class="slide" data-t="왜 필요할까?"><span class="sl-k">01 · 왜 필요할까?</span><div class="sl-t sm">기본 경사하강법은 세 가지 상황에서 고전해요</div>
@@ -982,6 +983,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         </div>
         <div class="row" style="justify-content:space-between;margin-top:10px">
           <div class="legend"><span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#6f5ce6"/></svg>기본 경사하강법</span><span><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" fill="#e0704f"/></svg>모멘텀</span><span><svg width="12" height="12"><path d="M6,0L12,6L6,12L0,6z" fill="#1f9e8f"/></svg>Adam</span></div>
+          <label class="check"><input type="checkbox" id="gd2-preview"> 예상 경로 보기</label>
           <span class="kt">계산 단계 <span id="gd2-k" style="font-family:var(--mono)">0 / 250</span></span>
         </div>
         <div class="row" style="margin-top:10px">
@@ -1029,7 +1031,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     </div>
     <div class="warnbox"><b>모멘텀과 Adam은 만능 탈출 버튼이 아니에요.</b><br>로컬 미니멈은 ‘가짜 값’이 아니라 실제로 주변보다 낮은 곳입니다. 모멘텀은 내려오며 쌓인 이동량으로 턱을 넘을 수 있지만, 이미 정지했거나 턱이 높으면 못 넘을 수 있어요. Adam도 전역 최솟값 도달이나 안장점 탈출을 보장하지 않습니다.</div>
 
-    <div id="gd-sum" class="sechead"><span class="eyebrow" style="color:var(--gd)">STEP 05 · 핵심 정리</span><h2>기울기로 가중치를 고치는 과정</h2></div>
+    <div id="gd-sum" class="sechead"><span class="eyebrow" style="color:var(--gd)">STEP 04 · 핵심 정리</span><h2>기울기로 가중치를 고치는 과정</h2></div>
     <div class="sum3">
       <div class="card"><b>01</b><h4>틀린 정도를 확인해요</h4><p>‘손실’은 얼마나 틀렸는지를 나타내는 값입니다. 이 실험에서는 x²로 단순화했어요.</p></div>
       <div class="card"><b>02</b><h4>기울기의 반대로 움직여요</h4><p>기울기는 그 자리에서 어느 쪽이 오르막인지 알려줘요. 반대쪽으로 움직이면 내리막을 찾을 수 있습니다.</p></div>
@@ -1050,16 +1052,15 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <h1>서포트 벡터 머신<small>Support Vector Machine</small></h1>
       <p>두 팀 사이에 길을 만든다면? SVM은 여유 공간을 확보하면서 두 그룹을 구분합니다.</p></div></div>
     <div class="stepper">
-      <button data-go="svm-concept"><b>01</b>개념 이해</button>
-      <button data-go="svm-lab"><b>02</b>움직임 관찰</button>
-      <button data-go="svm-lab" class="on"><b>03</b>직접 실험</button>
-      <button data-go="svm-lift"><b>04</b>동심원 3D</button>
-      <button data-go="svm-sum"><b>05</b>핵심 정리</button>
+      <button data-go="svm-concept" class="on" aria-current="step"><b>01</b>개념 이해</button>
+      <button data-go="svm-lab"><b>02</b>기본 실험</button>
+      <button data-go="svm-lift"><b>03</b>동심원 3D</button>
+      <button data-go="svm-sum"><b>04</b>핵심 정리</button>
     </div>
 
     <section class="concept" id="svm-concept">
       <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--a)">STEP 01 · 개념 이해</span><h2>두 팀 사이에 가장 넓은 길 내기</h2><p>왜 필요한지 → 비유 → 수식 순서로, 한 장씩 넘겨 보세요. <span class="kbd">←</span> <span class="kbd">→</span> 키나 화면 스와이프로도 넘길 수 있어요.</p></div>
-      <div class="deck blue" data-next="svm-lab-head" data-nextlabel="직접 실험하러 가기 ↓">
+      <div class="deck blue" data-next="svm-lab" data-nextlabel="직접 실험하러 가기 ↓">
         <div class="deck-top"><div class="l"><b>개념 슬라이드</b><span class="cur"></span></div><div class="r"><span class="cnt"></span><button class="fs" type="button">⤢ 크게 보기</button></div></div>
         <div class="slides"><div class="slide" data-t="어떤 문제를 풀까?"><div class="sl-2"><div><span class="sl-k">01 · 어떤 문제를 풀까?</span><div class="sl-t">‘이건 A일까, B일까?’<br>— 분류</div>
 <p class="sl-p">정답이 붙은 예시들을 보고 <b>두 그룹을 가르는 기준(경계)</b>을 배운 뒤, 처음 보는 데이터가 어느 쪽인지 판단하는 문제예요.</p>
@@ -1147,10 +1148,14 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     </section>
     <div class="subnav"><button class="on" data-go="svm-lab">데이터 실험</button><button data-go="svm-lift">동심원 · 3D 그릇 실험 ↓</button></div>
 
-    <div class="sechead" id="svm-lab-head" style="margin-top:6px"><span class="eyebrow" style="color:var(--a)">직접 실험하기</span><h2>먼저, 직선 하나로 나눠 볼까요?</h2><p>두 무리를 나누는 직선과 마진부터 관찰하세요. 그다음 직선으로 나눌 수 없는 데이터에서 <b>γ</b>를 끌어 보세요.</p></div>
-    <div class="labgrid" id="svm-lab">
+    <div class="sechead" id="svm-lab" style="margin-top:6px"><span class="eyebrow" style="color:var(--a)">STEP 02 · 기본 실험</span><h2>먼저, 직선 하나로 나눠 볼까요?</h2><p>두 무리를 나누는 직선과 마진부터 관찰하세요. 그다음 직선으로 나눌 수 없는 데이터에서 <b>γ</b>를 끌어 보세요.</p></div>
+    <div class="labgrid">
       <div class="stage">
         <div class="stage-h"><div class="t"><span class="dot" style="background:var(--a);box-shadow:0 0 0 4px rgba(79,120,216,.15)"></span>두 그룹 사이, 가장 좋은 경계</div><span class="chip" id="svm-state">데이터 준비 완료</span></div>
+        <div class="row" style="margin:10px 0">
+          <button type="button" class="btn pri" id="svm-train">두 그룹을 나누는 선 그리기</button>
+          <span class="muted" id="svm-task" role="status"></span>
+        </div>
         <div class="tools">
           <div class="seg" id="svm-mode"><button data-m="move" class="on">✥ 이동</button><button data-m="add">＋ 추가</button><button data-m="del">🗑 삭제</button></div>
           <div class="seg" id="svm-grp"><button data-g="1" class="on"><span style="color:var(--a)">●</span> A그룹</button><button data-g="-1"><span style="color:var(--b)">■</span> B그룹</button></div>
@@ -1183,17 +1188,17 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
           <div class="fl sm np" style="color:var(--mut)"><span class="mv">y<sub>i</sub></span> f(<span class="mv">x<sub>i</sub></span>) ≥ 1 − ξ<sub>i</sub>,&nbsp; ξ<sub>i</sub> ≥ 0</div>
           <div class="fl md" id="svm-kline-lin" style="padding-bottom:8px">K(<span class="mv">x</span>, <span class="mv">x′</span>) = <span class="mv">x</span> · <span class="mv">x′</span></div>
           <div class="fl md" id="svm-kline-rbf" hidden>K(<span class="mv">x</span>, <span class="mv">x′</span>) = exp(−<span class="sym" data-p="gam" style="--c:#0f8a7a"><span class="g">γ</span></span>‖<span class="mv">x</span> − <span class="mv">x′</span>‖²)</div>
-          <div class="live" id="svm-live">SVM 학습을 누르거나 C를 끌면 학습합니다.</div>
+          <div class="live" id="svm-live">C를 끌면 경계가 어떻게 달라지는지 볼 수 있어요.</div>
           <div class="regime" id="svm-regime" style="background:#eef3fe;color:#2f53b0"></div>
         </div>
         <div><label class="check"><input type="checkbox" id="svm-showm" checked> 마진 영역 보기</label><label class="check"><input type="checkbox" id="svm-showsv" checked> 서포트 벡터 강조</label></div>
-        <div class="row"><button class="btn pri" id="svm-train" style="flex:1">▶ SVM 학습</button><button class="btn sm" id="svm-resetds">데이터셋 초기화</button></div>
-        <div class="box" style="background:#f6f9ff;border-color:#dce6fb"><h4>지금 무슨 일이 일어났나요?</h4><p class="muted" id="svm-explain">먼저 SVM 학습을 눌러 두 무리를 나누는 직선을 찾아보세요.</p></div>
+        <div class="row"><button class="btn sm" id="svm-resetds">데이터셋 초기화</button></div>
+        <div class="box" style="background:#f6f9ff;border-color:#dce6fb"><h4>지금 무슨 일이 일어났나요?</h4><p class="muted" id="svm-explain">그래프 위 버튼을 눌러 두 무리 사이에 경계를 그려 보세요.</p></div>
       </aside>
     </div>
 
     <div id="svm-lift" class="sechead">
-      <span class="eyebrow" style="color:var(--a)">동심원 · 3D 차원 확장</span>
+      <span class="eyebrow" style="color:var(--a)">STEP 03 · 동심원 3D</span>
       <h2>두 원을 그릇 위에 올리면?</h2>
       <p>점에 높이를 더하면, 안쪽 원과 바깥쪽 원을 어떻게 나눌 수 있을까요?</p>
     </div>
@@ -1238,7 +1243,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       </div>
     </section>
 
-    <div id="svm-sum" class="sechead"><span class="eyebrow" style="color:var(--a)">STEP 05 · 핵심 정리</span><h2>점을 구분하는 세 가지 단서</h2></div>
+    <div id="svm-sum" class="sechead"><span class="eyebrow" style="color:var(--a)">STEP 04 · 핵심 정리</span><h2>점을 구분하는 세 가지 단서</h2></div>
     <div class="sum3">
       <div class="card"><b>결정 경계</b><h4>f(x) = 0</h4><p>두 그룹을 구분하는 기준이에요. 선형 커널은 직선, RBF 커널은 데이터에 맞는 곡선 경계를 학습할 수 있어요.</p></div>
       <div class="card"><b>마진 · C</b><h4>여유 공간 vs 오류</h4><p>소프트 마진 SVM은 일부 점의 마진 침범을 허용합니다. C가 작으면 넓은 마진을, 크면 적은 오류를 더 중요하게 봐요.</p></div>
@@ -1331,11 +1336,6 @@ function bindSyms(){
   });
   Object.keys(P).forEach(syncSym);
 }
-function tweenParam(name,to,ms=380){
-  const from=P[name].v,t0=performance.now();
-  (function f(now){const t=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-t,3); setParam(name,lerp(from,to,e)); if(t<1)requestAnimationFrame(f);})(t0);
-}
-
 defParam('eta1',{v:0.15,min:0.01,max:1.1,step:0.01,sym:'η',label:'학습률 (한 걸음의 크기)',lo:'작은 걸음',hi:'큰 걸음'});
 defParam('x0',{v:-4,min:-4.5,max:4.5,step:0.1,sym:'x₀',label:'시작 위치',lo:'왼쪽 −4.5',hi:'오른쪽 +4.5',fmt:v=>M(v.toFixed(1))});
 defParam('eta2',{v:0.05,min:0.005,max:0.2,step:0.001,sym:'η',label:'공통 학습률',lo:'작게',hi:'크게',fmt:v=>v.toFixed(3)});
@@ -1425,6 +1425,7 @@ function go(){
   if(v==='gd'){gdc.render();optc.render();gd1.render();gd2.redraw();}
   if(v==='svm'){svmc.render();svm.render();lift.render();}
   if(h==='gd-practice') $('#fbar').parentElement.scrollIntoView({behavior:'instant'});
+  syncLabNavigation();
   if((v==='gd'||v==='svm')&&!coachDone) setTimeout(placeCoach,80);
 }
 function placeCoach(){
@@ -1438,8 +1439,34 @@ function placeCoach(){
   const br=box.getBoundingClientRect(), er=el.getBoundingClientRect();
   c.style.left=Math.max(4,er.left-br.left-12)+'px'; c.style.top=(er.top-br.top-34)+'px';
 }
+function syncLabNavigation(){
+  const view=$('.view:not([hidden])');
+  if(!view)return;
+  const steps=$$('.stepper button',view);
+  if(!steps.length)return;
+  // Use the same top offset as section jumps, including fractional scroll positions.
+  let active=steps[0];
+  for(const button of steps){
+    if(document.getElementById(button.dataset.go).getBoundingClientRect().top<=82)active=button;
+  }
+  for(const button of steps){
+    button.classList.toggle('on',button===active);
+    if(button===active)button.setAttribute('aria-current','step');
+    else button.removeAttribute('aria-current');
+  }
+  for(const button of $$('.subnav button',view)){
+    button.classList.toggle('on',button.dataset.go===active.dataset.go);
+  }
+}
+let navFrame=0;
+function scheduleLabNavigation(){
+  if(navFrame)return;
+  navFrame=requestAnimationFrame(()=>{navFrame=0;syncLabNavigation();});
+}
+window.addEventListener('scroll',scheduleLabNavigation,{passive:true});
+window.addEventListener('resize',scheduleLabNavigation);
 window.addEventListener('hashchange',go);
-$$('[data-go]').forEach(b=>b.addEventListener('click',()=>{const t=document.getElementById(b.dataset.go);const dk=t&&t.querySelector('.deck');if(dk&&dk.goTo)dk.goTo(0); if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:'smooth'});}));
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>{const t=document.getElementById(b.dataset.go);const dk=t&&t.querySelector('.deck');if(dk&&dk.goTo)dk.goTo(0); if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}));
 function segBind(id,attr,fn){$$('#'+id+' button').forEach(b=>b.addEventListener('click',()=>{$$('#'+id+' button').forEach(x=>x.classList.toggle('on',x===b));fn(b.dataset[attr]);}));}
 
 /* ================= GD 1D ================= */
@@ -1482,7 +1509,7 @@ const gd1=(()=>{
   function reset(){stop();anim=null;xs=[P.x0.v];render();explain('학습 시작을 눌러 보세요. 공이 기울기의 반대 방향으로 한 걸음씩 움직입니다.');}
   function updBtn(){$('#gd1-play').textContent=playing?'❚❚ 일시정지':(ended()&&xs.length>1?'↻ 다시 학습':'▶ 학습 시작');}
   function explain(h){$('#gd1-explain').innerHTML=h;}
-  function explainStep(){const k=done(),x=xs[k],p=xs[k-1];explain(`${k}단계: 기울기 ${nf(G(p))}의 반대 방향으로 ${nf(-P.eta1.v*G(p))}만큼 이동해 x = ${nf(x)}가 됐어요. 손실 ${nf(L(p))} → ${nf(L(x))}.`);}
+  function explainStep(){const k=done(),x=xs[k],p=xs[k-1];explain(`${k}단계: 기울기 ${nf(G(p))}의 반대 방향으로 ${nf(x-p)}만큼 이동해 x = ${nf(x)}가 됐어요. 손실 ${nf(L(p))} → ${nf(L(x))}.`);}
   function explainEnd(){
     const x=xs.at(-1),k=xs.length-1;
     if(Math.abs(x)>1e4||(Math.abs(x)>Math.abs(xs[0])&&P.eta1.v>1))explain(`<b style="color:var(--err)">발산!</b> η = ${P.eta1.v.toFixed(2)}는 너무 커서 매 걸음 최솟값을 더 크게 넘어가요. 손실이 오히려 커졌어요. η를 1보다 작게 끌어 보세요.`);
@@ -1548,7 +1575,7 @@ const gd1=(()=>{
   P.x0.subs.push(()=>reset());
   $('#gd1-play').onclick=play; $('#gd1-step').onclick=()=>{stop();doStep();}; $('#gd1-reset').onclick=reset;
   $('#gd1-tan').onchange=e=>{showTan=e.target.checked;render();};
-  $$('#gd1-presets button').forEach(b=>b.onclick=()=>{hideCoach();tweenParam('eta1',+b.dataset.eta);});
+  $$('#gd1-presets button').forEach(b=>b.onclick=()=>{hideCoach();setParam('eta1',+b.dataset.eta);});
   segBind('gd1-speed','s',v=>speed=+v);
   const gt=$('#gd1-gradterm');
   gt.addEventListener('mouseenter',()=>{const l=$('#gd1-tan-l');if(l)l.setAttribute('stroke-width','4');});
@@ -1605,6 +1632,8 @@ const gd2=(()=>{
       return {pts:out,dead};};
     tr={gd:run('gd'),mo:run('mo'),ad:run('ad')};
   }
+  const preview=$('#gd2-preview');
+  preview.addEventListener('change',render);
   function at(kind,kk){const p=tr[kind].pts,i=Math.floor(kk),f=kk-i,a=p[i],b=p[Math.min(N,i+1)];return[lerp(a[0],b[0],f),lerp(a[1],b[1],f)];}
   function redraw(){heat();hooks.terrain&&hooks.terrain();render();}
   function render(){
@@ -1613,9 +1642,11 @@ const gd2=(()=>{
     t.marks.forEach(([x,y,l])=>{s+=`<g opacity=".85"><circle cx="${px(x)}" cy="${py(y)}" r="3" fill="#fff"/><text x="${px(x)}" y="${py(y)+(l==='넘어야 할 턱'?-10:18)}" font-size="11" fill="#fff" text-anchor="middle" stroke="#2b2160" stroke-width="3" paint-order="stroke">${l}</text></g>`;});
     for(const kd of ['gd','mo','ad']){
       const p=tr[kd].pts;let full='',past='';
-      p.forEach((q,i)=>{const c=`${px(q[0]).toFixed(1)},${py(q[1]).toFixed(1)}`;full+=(i?'L':'M')+c;if(i<=ki)past+=(i?'L':'M')+c;});
+      p.forEach((q,i)=>{const c=`${px(q[0]).toFixed(1)},${py(q[1]).toFixed(1)}`;if(preview.checked)full+=(i?'L':'M')+c;if(i<=ki)past+=(i?'L':'M')+c;});
       const [bx,by]=at(kd,k);past+=`L${px(bx)},${py(by)}`;
-      s+=`<g class="m-${kd} lk"><path d="${full}" fill="none" stroke="${COL[kd]}" stroke-width="1.5" stroke-opacity=".35" stroke-dasharray="3 3"/><path d="${past}" fill="none" stroke="${COL[kd]}" stroke-width="2.6" stroke-linejoin="round"/>`;
+      s+=`<g class="m-${kd} lk">`;
+      if(preview.checked)s+=`<path d="${full}" fill="none" stroke="${COL[kd]}" stroke-width="1.5" stroke-opacity=".35" stroke-dasharray="3 3"/>`;
+      s+=`<path d="${past}" fill="none" stroke="${COL[kd]}" stroke-width="2.6" stroke-linejoin="round"/>`;
       const X=px(bx),Y=py(by);
       if(kd==='gd')s+=`<circle class="ball2" cx="${X}" cy="${Y}" r="8" fill="${COL[kd]}" stroke="#fff" stroke-width="2"/>`;
       else if(kd==='mo')s+=`<rect class="ball2" x="${X-7}" y="${Y-7}" width="14" height="14" rx="2" fill="${COL[kd]}" stroke="#fff" stroke-width="2"/>`;
@@ -1633,8 +1664,10 @@ const gd2=(()=>{
     const mn=Math.min(...all),mx=Math.max(...all),rg=Math.max(mx-mn,1e-6);
     const lx=i=>lm+i/N*(lw-lm-10),ly=v=>isFinite(v)?lh-22-(v-mn)/rg*(lh-34):8;
     let ls=`<line x1="${lm}" y1="${lh-22}" x2="${lw-10}" y2="${lh-22}" stroke="#e6e8ee"/><text x="${lm-6}" y="${lh-18}" font-size="10.5" fill="#98a2b3" text-anchor="end">${mn.toFixed(2)}</text><text x="${lm-6}" y="16" font-size="10.5" fill="#98a2b3" text-anchor="end">${mx.toFixed(2)}</text><text x="${lw-10}" y="${lh-4}" font-size="10.5" fill="#98a2b3" text-anchor="end">${N}단계 →</text>`;
-    for(const kd of ['gd','mo','ad']){let d='',d2='';tr[kd].pts.forEach((q,i)=>{const c=lx(i).toFixed(1)+','+ly(q[2]).toFixed(1);d+=(i?'L':'M')+c;if(i<=ki)d2+=(i?'L':'M')+c;});
-      ls+=`<g class="m-${kd} lk"><path d="${d}" fill="none" stroke="${COL[kd]}" stroke-opacity=".25" stroke-width="1.5"/><path d="${d2}" fill="none" stroke="${COL[kd]}" stroke-width="2.2"/></g>`;}
+    for(const kd of ['gd','mo','ad']){let d='',d2='';tr[kd].pts.forEach((q,i)=>{const c=lx(i).toFixed(1)+','+ly(q[2]).toFixed(1);if(preview.checked)d+=(i?'L':'M')+c;if(i<=ki)d2+=(i?'L':'M')+c;});
+      ls+=`<g class="m-${kd} lk">`;
+      if(preview.checked)ls+=`<path d="${d}" fill="none" stroke="${COL[kd]}" stroke-opacity=".4" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+      ls+=`<path d="${d2}" fill="none" stroke="${COL[kd]}" stroke-width="2.2"/></g>`;}
     ls+=`<line x1="${lx(k)}" y1="6" x2="${lx(k)}" y2="${lh-22}" stroke="#202735" stroke-dasharray="3 3"/>`;
     lossv.innerHTML=ls;
     hooks.sync&&hooks.sync();
@@ -1644,7 +1677,9 @@ const gd2=(()=>{
   function explain(){
     const ki=Math.floor(k),f=kd=>tr[kd].pts[ki],t=TER[terr];
     let h;
-    if(ki===0)h=`<h4>무엇을 볼까요?</h4><p class="muted">점선은 <b>지금 설정으로 250단계 동안 갈 경로</b>예요. 재생하지 않아도 <b>η · β · β₁ · β₂</b>를 끌면 점선이 바로 바뀝니다.</p>`;
+    if(ki===0)h=preview.checked
+      ? '<h4>예상 경로</h4><p class="muted">점선은 지금 설정으로 250단계 동안 갈 경로예요. 재생하면 실제로 이동한 구간에 실선이 생겨요.</p>'
+      : '<h4>무엇을 볼까요?</h4><p class="muted">세 방법은 같은 곳에서 출발해요. 한 단계씩 움직여 어느 쪽으로 얼마나 가는지 비교해 보세요.</p>';
     else{const best=['gd','mo','ad'].filter(kd=>isFinite(f(kd)[2])).sort((a,b)=>f(a)[2]-f(b)[2])[0];
       const nm={gd:'기본 경사하강법',mo:'모멘텀',ad:'Adam'};
       h=`<h4>${ki}단계 · 지금 가장 낮은 곳: ${best?nm[best]:'—'}</h4><p class="muted">`+['gd','mo','ad'].map(kd=>`${nm[kd]}: ${tr[kd].dead&&!isFinite(f(kd)[2])?'발산':t.st(f(kd)[0],f(kd)[1])}`).join('<br>')+`</p>`;}
@@ -1664,7 +1699,7 @@ const gd2=(()=>{
   svg.addEventListener('pointermove',e=>{if(!dragging)return;const [x,y]=toXY(e);setParam('sx',x,true);setParam('sy',y);});
   svg.addEventListener('pointerup',()=>dragging=false);
   setTerr('wells');
-  return {redraw,render,state:()=>({tr,k,terr,N,at}),stop:()=>{playing=false;}};
+  return {redraw,render,state:()=>({tr,k,terr,N,at,showPreview:preview.checked}),stop:()=>{playing=false;}};
 })();
 
 
@@ -1728,9 +1763,16 @@ const gd3=(()=>{
     if(!surf)return;const st=gd2.state(),t=TER[st.terr],ki=Math.floor(st.k);
     for(const kd of ['gd','mo','ad']){
       const pts=st.tr[kd].pts,fa=full[kd].geometry.attributes.position,pa=past[kd].geometry.attributes.position;
-      pts.forEach((q,i)=>{const v=W3(q[0],q[1],t.f(q[0],q[1]),0.025);fa.setXYZ(i,v.x,v.y,v.z);if(i<=ki)pa.setXYZ(i,v.x,v.y,v.z);});
+      full[kd].visible=st.showPreview;
+      const lastPoint=st.showPreview?st.N:ki;
+      for(let i=0;i<=lastPoint;i++){
+        const q=pts[i],v=W3(q[0],q[1],q[2],0.025);
+        if(st.showPreview)fa.setXYZ(i,v.x,v.y,v.z);
+        if(i<=ki)pa.setXYZ(i,v.x,v.y,v.z);
+      }
       const [bx,by]=st.at(kd,st.k),bv=W3(bx,by,t.f(bx,by),0);pa.setXYZ(ki+1,bv.x,bv.y+0.025,bv.z);
-      fa.needsUpdate=true;pa.needsUpdate=true;full[kd].computeLineDistances();past[kd].geometry.setDrawRange(0,ki+2);
+      if(st.showPreview){fa.needsUpdate=true;full[kd].computeLineDistances();}
+      pa.needsUpdate=true;past[kd].geometry.setDrawRange(0,ki+2);
       const r=kd==='gd'?0.11:kd==='mo'?0.1:0.14;balls[kd].position.set(bv.x,bv.y+r,bv.z);
       if(kd==='mo')balls[kd].rotation.y=st.k*0.08;if(kd==='ad')balls[kd].rotation.y=st.k*0.06;
       const hl=document.body.dataset.hl,dim=(hl==='beta'&&kd!=='mo')||((hl==='b1'||hl==='b2')&&kd!=='ad');
@@ -1833,7 +1875,7 @@ const svm=(()=>{
   let ds='blobs',pts=[],kernel='linear',model=null,trained=false,mode='move',group=1,showM=true,showSV=true,drag=-1,pend=false;
   const cv=$('#svm-cv'),ctx=cv.getContext('2d'),svg=$('#svm-svg');
   function load(name){$('#bowl-circle-link').hidden=name!=='circles';ds=name;pts=DS[name].gen(rng(name.length*977+13));kernel=DS[name].k;setParam('C',DS[name].C,true);setParam('gam',DS[name].g,true);
-    trained=false;model=null;kUI();render();$('#svm-explain').textContent='먼저 SVM 학습을 눌러 경계를 찾아보세요. 또는 수식 속 C를 바로 끌어도 학습이 시작돼요.';$('#svm-state').textContent='데이터 준비 완료';}
+    trained=false;model=null;kUI();render();}
   function kUI(){$$('#svm-kern button').forEach(b=>b.classList.toggle('on',b.dataset.k===kernel));$('#svm-kline-lin').hidden=kernel!=='linear';$('#svm-kline-rbf').hidden=kernel!=='rbf';}
   function train(){
     const X=pts.map(p=>[p.x,p.y]),Y=pts.map(p=>p.c),n=X.length;
@@ -1884,11 +1926,25 @@ const svm=(()=>{
     $('#svm-sv').textContent=model?model.sv.length+'개':'—개';
     $('#svm-acc').textContent=model?Math.round(acc/pts.length*100)+'%':'—%';
     $('#svm-vi').textContent=model?nV+'개':'—개';
+    const hasBothGroups=pts.some(p=>p.c===1)&&pts.some(p=>p.c===-1);
+    $('#svm-train').disabled=!hasBothGroups;
+    $('#svm-train').textContent=model?'경계 다시 그리기':'두 그룹을 나누는 선 그리기';
+    const task=!hasBothGroups?'A그룹과 B그룹의 점을 하나 이상씩 추가해 보세요.'
+      :model&&mode==='move'?'경계에 가까운 점 하나를 끌어 보세요. 선도 움직이나요?':'';
+    const taskEl=$('#svm-task');
+    if(taskEl.textContent!==task)taskEl.textContent=task;
+    if(!hasBothGroups){
+      $('#svm-state').textContent='두 그룹의 점이 필요해요';
+      $('#svm-explain').textContent=task;
+    }else if(!model){
+      $('#svm-state').textContent='데이터 준비 완료';
+      $('#svm-explain').textContent='그래프 위 버튼을 눌러 경계를 찾아보세요. 수식 속 C를 끌어도 경계가 그려져요.';
+    }
     live(nV,acc);
   }
   function live(nV,acc){
     const L=$('#svm-live'),rg=$('#svm-regime'),C=P.C.v;
-    if(!model){L.innerHTML='SVM 학습을 누르거나 <b>C</b>를 끌면 학습합니다.';rg.textContent=C<0.3?'C가 작아요 → 넓은 마진을 더 중요하게 여겨요.':C>20?'C가 커요 → 오류(마진 위반)를 강하게 벌줘요.':'C가 중간이에요 → 마진과 오류 사이 균형.';return;}
+    if(!model){L.innerHTML='<b>C</b>를 끌면 경계가 어떻게 달라지는지 볼 수 있어요.';rg.textContent=C<0.3?'C가 작아요 → 넓은 마진을 더 중요하게 여겨요.':C>20?'C가 커요 → 오류(마진 위반)를 강하게 벌줘요.':'C가 중간이에요 → 마진과 오류 사이 균형.';return;}
     if(kernel==='linear'){const [a,b]=model.w,wn=Math.hypot(a,b);
       L.innerHTML=`f(x) = <b>${nf(a,2)}</b>x₁ ${b<0?'−':'+'} <b>${Math.abs(b).toFixed(2)}</b>x₂ ${model.b<0?'−':'+'} ${Math.abs(model.b).toFixed(2)}<br>‖w‖ = ${wn.toFixed(2)} → 마진 폭 2/‖w‖ = <b>${(2/Math.max(wn,1e-9)).toFixed(2)}</b>`;}
     else L.innerHTML=`f(x) = Σ αᵢyᵢK(xᵢ, x) + b &nbsp;· 서포트 벡터 <b>${model.sv.length}</b>개<br>영향 반경 σ = 1/√(2γ) = <b>${(1/Math.sqrt(2*P.gam.v)).toFixed(2)}</b> (γ에 마우스를 올리면 원으로 보여요)`;
@@ -2271,7 +2327,7 @@ function initDeck(d){
     pv.disabled=k===0;nx.textContent=k===n-1?d.dataset.nextlabel:'다음 →';hideTip();}
   function full(on){d.classList.toggle('full',on);document.body.style.overflow=on?'hidden':'';fs.textContent=on?'✕ 닫기 (Esc)':'⤢ 크게 보기';}
   pv.onclick=()=>show(i-1);
-  nx.onclick=()=>{if(i<n-1)show(i+1);else{full(false);const t=document.getElementById(d.dataset.next);if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:'smooth'});}};
+  nx.onclick=()=>{if(i<n-1)show(i+1);else{full(false);const t=document.getElementById(d.dataset.next);if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-80,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}};
   db.forEach((b,k)=>b.onclick=()=>show(k));
   fs.onclick=()=>full(!d.classList.contains('full'));
   document.addEventListener('keydown',e=>{
