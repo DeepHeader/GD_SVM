@@ -140,7 +140,7 @@ svg text{font-family:'Noto Sans KR',Arial,sans-serif}
 .hlk{border-radius:5px;transition:background .15s}
 .live{font-family:var(--mono);font-size:12px;color:var(--mut);background:var(--soft);border-radius:8px;padding:8px 10px;line-height:1.6;overflow-x:auto;white-space:nowrap}
 .live b{color:var(--ink)}
-#svm-live,#lift-live{white-space:normal}
+#svm-live{white-space:normal}
 .regime{font-size:12.5px;margin-top:8px;padding:9px 11px;border-radius:9px;background:#f3f1fe;color:#4b3cb8}
 .regime.warn{background:#fff3e8;color:#b05a12}
 .regime.bad{background:#fdecef;color:#b42340}
@@ -168,7 +168,6 @@ body[data-hl=b1] .m-gd,body[data-hl=b1] .m-mo,body[data-hl=b2] .m-gd,body[data-h
 body[data-hl=sx] .lk-start,body[data-hl=sy] .lk-start{stroke-width:4}
 body[data-hl=C] .lk-C{opacity:1!important}
 body[data-hl=gam] .lk-gam{opacity:.9!important}
-body[data-hl=liftc] .lk-c{stroke-width:3.5}
 .grad-hl:hover{background:rgba(214,69,93,.1)}
 
 /* 2D */
@@ -196,10 +195,42 @@ body[data-hl=liftc] .lk-c{stroke-width:3.5}
 .svmplot svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 .tools{display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px;gap:8px;flex-wrap:wrap}
 select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;background:#fff}
-.liftgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.liftsteps{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mut);margin:14px 0}
-.liftsteps span{border:1px solid var(--line);border-radius:999px;padding:3px 12px}
-.liftsteps span.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.bowl-lab{overflow:hidden;--plane:#097864}
+.bowl-steps{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line)}
+.bowl-steps button{border:1px solid transparent;border-radius:8px;background:transparent;padding:8px 12px;font:inherit;font-size:14px;font-weight:600;color:var(--mut);cursor:pointer}
+.bowl-steps button[aria-pressed=true]{background:#eef3fe;color:#3156a6;border-color:#c9d7f4}
+.bowl-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,30%)}
+.bowl-stage{min-width:0;background:linear-gradient(#fffaf5,#fffcf8 60%,#fff);padding:14px 18px 12px}
+.bowl-legend,.bowl-viewbar{display:flex;align-items:center;justify-content:space-between;gap:8px 18px;flex-wrap:wrap}
+.bowl-legend{justify-content:flex-start;font-size:13px;color:#505765}
+.bowl-legend span{display:inline-flex;align-items:center;gap:6px}
+.bowl-legend i{display:inline-block;width:9px;height:9px}
+.bowl-a{border-radius:50%;background:#355fbd}.bowl-b{background:#ba691e}
+.bowl-legend .bowl-plane{width:17px;height:8px;background:#c9e8df;border:1px solid var(--plane);transform:skewX(-24deg)}
+#bowl-scene{display:block;width:100%;height:clamp(280px,36vw,405px);touch-action:none;cursor:grab}
+#bowl-scene:active{cursor:grabbing}
+#bowl-scene:focus-visible{outline:2px solid var(--a);outline-offset:-3px;border-radius:8px}
+.bowl-viewbar{font-size:12px;color:var(--mut)}
+.bowl-viewbar .row{gap:5px}
+.bowl-side{display:flex;flex-direction:column;gap:18px;border-left:1px solid var(--line);padding:22px;background:#fbfcfd}
+.bowl-side h3{font-size:20px;line-height:1.4}
+.bowl-side p{margin:6px 0 0;color:#4e586b;font-size:14px;line-height:1.7;word-break:keep-all}
+#bowl-cut-controls{padding:12px 14px}
+#bowl-cut-controls label{font-size:12.5px;color:var(--mut)}
+#bowl-height{display:block;width:100%;accent-color:var(--plane);min-height:22px;margin:3px 0}
+#bowl-score{font-size:13px;color:#176052}
+.bowl-rule b{font-size:13px}
+.bowl-equation{font:600 25px/1.5 var(--math)}
+#bowl-circle-link{align-self:start}
+#bowl-circle-link[hidden],#bowl-plane-key[hidden]{display:none}
+@media(max-width:780px){
+  .bowl-layout{grid-template-columns:1fr}
+  .bowl-side{border-left:0;border-top:1px solid var(--line)}
+  .bowl-stage{padding:12px}
+  .bowl-steps{gap:2px;padding:8px}
+  .bowl-steps button{flex:1;font-size:13px;padding:7px 3px;word-break:keep-all}
+}
+
 
 /* summary + quiz */
 .sum3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
@@ -409,7 +440,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 @media (max-width:960px){
   .hero{grid-template-columns:1fr;padding-top:40px}.hero h1{font-size:40px}
   .labgrid{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid var(--line)}
-  .labs,.callout,.fxcards,.methods,.sum3,.liftgrid{grid-template-columns:1fr}
+  .labs,.callout,.fxcards,.methods,.sum3{grid-template-columns:1fr}
   .steps4{grid-template-columns:1fr 1fr}.stepper{grid-template-columns:repeat(3,1fr)}
   .nav{gap:16px}.hd-r span{display:none}
 }
@@ -1019,7 +1050,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <button data-go="svm-concept"><b>01</b>개념 이해</button>
       <button data-go="svm-lab"><b>02</b>움직임 관찰</button>
       <button data-go="svm-lab" class="on"><b>03</b>직접 실험</button>
-      <button data-go="svm-lift"><b>04</b>결과 해석</button>
+      <button data-go="svm-lift"><b>04</b>동심원 3D</button>
       <button data-go="svm-sum"><b>05</b>핵심 정리</button>
     </div>
 
@@ -1111,7 +1142,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         <div class="deck-nav"><button class="btn pv" type="button">← 이전</button><div class="dots"></div><button class="btn nx" type="button">다음 →</button></div>
       </div>
     </section>
-    <div class="subnav"><button class="on" data-go="svm-lab">데이터 실험</button><button data-go="svm-lift">2D → 3D 차원 확장 ↓</button></div>
+    <div class="subnav"><button class="on" data-go="svm-lab">데이터 실험</button><button data-go="svm-lift">동심원 · 3D 그릇 실험 ↓</button></div>
 
     <div class="sechead" id="svm-lab-head" style="margin-top:6px"><span class="eyebrow" style="color:var(--a)">직접 실험하기</span><h2>먼저, 직선 하나로 나눠 볼까요?</h2><p>두 무리를 나누는 직선과 마진부터 관찰하세요. 그다음 직선으로 나눌 수 없는 데이터에서 <b>γ</b>를 끌어 보세요.</p></div>
     <div class="labgrid" id="svm-lab">
@@ -1142,6 +1173,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
             <option value="moons">두 초승달 · 휘어진 경계</option>
             <option value="spirals">두 나선 · 복잡한 경계</option>
           </select></div>
+        <button hidden type="button" class="btn sm" id="bowl-circle-link" data-go="svm-lift">동심원의 3D 원리 보기 ↓</button>
         <div class="fx blue" id="svm-fx">
           <div class="fx-h"><b>SVM이 푸는 문제</b><div class="seg" id="svm-kern"><button data-k="linear" class="on">선형</button><button data-k="rbf">RBF</button></div></div>
           <div class="fl md">min&nbsp; ½‖<span class="mv">w</span>‖² + <span class="sym" data-p="C" style="--c:var(--a)"><span class="g">C</span></span> Σ ξ<sub>i</sub></div>
@@ -1157,26 +1189,39 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       </aside>
     </div>
 
-    <div id="svm-lift" class="sechead"><span class="eyebrow" style="color:var(--a)">먼저 눈으로 이해하기 / 동심원</span><h2>둘러싸인 점들, 위로 올리면?</h2><p>작은 원은 아래에, 큰 원은 위에. 새로 만든 ‘높이’가 두 그룹을 나누는 단서가 됩니다. 수식 속 <b>c</b>를 끌어 자르는 높이를 바꿔 보세요.</p></div>
-    <div class="card" style="padding:22px">
-      <div class="liftsteps"><span id="ls1" class="on">01 원래 점 보기</span>→<span id="ls2">02 그릇처럼 들어 올리기</span>→<span id="ls3">03 가운데로 나누기 ✓</span></div>
-      <div class="liftgrid">
-        <div><div class="kt">위에서 본 두 원 · ● 안쪽 A · ■ 바깥쪽 B</div><svg id="lift-top" class="plot" viewBox="0 0 360 300"></svg></div>
-        <div><div class="kt">옆에서 보면 · 새 높이 z ↑</div><svg id="lift-side" class="plot" viewBox="0 0 360 300"></svg></div>
-      </div>
-      <div class="row" style="margin-top:12px;align-items:flex-start;gap:18px">
-        <div class="fx blue" style="flex:1;min-width:280px">
-          <div class="fx-h"><b>새 좌표를 하나 더하기</b><span>⇆ c를 끌어서 조절</span></div>
-          <div class="fl md"><span class="mv">z</span> = <span class="mv">x</span>² + <span class="mv">y</span>²,&nbsp;&nbsp; <span class="mv">z</span> &lt; <span class="sym" data-p="liftc" style="--c:var(--a)"><span class="g">c</span></span> 이면 A그룹</div>
-          <div class="live" id="lift-live"></div>
-        </div>
-        <div style="flex:1;min-width:240px">
-          <p class="muted" style="margin:0 0 10px;font-size:13.5px" id="lift-msg">평평할 때는, 직선으로 못 나눠요. 높이가 없을 때는 옆에서 보면 같은 줄에 겹쳐요.</p>
-          <button class="btn pri" id="lift-btn">점들을 위로 올리기 →</button>
-          <p class="note">축을 돌리는 것이 아니라 정보를 하나 추가하는 거예요. 위에서 보면 “z = c” 평면은 반지름 √c인 원 경계가 됩니다 — RBF 커널이 곡선 경계를 그리는 직관이에요.</p>
-        </div>
-      </div>
+    <div id="svm-lift" class="sechead">
+      <span class="eyebrow" style="color:var(--a)">동심원 · 3D 차원 확장</span>
+      <h2>두 원을 그릇 위에 올리면?</h2>
+      <p>각 점의 가로·세로 위치는 그대로 두고, 중심에서 멀수록 더 높이 올려 보세요. 작은 원은 바닥에, 큰 원은 그릇 위쪽에 모여요.</p>
     </div>
+    <section class="card bowl-lab" aria-label="동심원의 3D 그릇 실험">
+      <div class="bowl-steps" role="group" aria-label="차원 확장 단계">
+        <button type="button" data-bowl-step="flat" aria-pressed="false">1. 평면의 두 원</button>
+        <button type="button" data-bowl-step="lift" aria-pressed="false">2. 그릇으로 올리기</button>
+        <button type="button" data-bowl-step="cut" aria-pressed="true">3. 평면으로 나누기</button>
+      </div>
+      <div class="bowl-layout">
+        <div class="bowl-stage">
+          <div class="bowl-legend"><span><i class="bowl-a"></i>안쪽 원 A</span><span><i class="bowl-b"></i>바깥 원 B</span><span id="bowl-plane-key"><i class="bowl-plane"></i>분류 평면</span></div>
+          <canvas id="bowl-scene" tabindex="0" role="img" aria-label="회전할 수 있는 3D 그릇 위의 두 원" aria-describedby="bowl-view-hint bowl-msg"></canvas>
+          <div class="bowl-viewbar">
+            <span id="bowl-view-hint">드래그하거나 방향키로 회전</span>
+            <div class="row"><button class="btn sm" id="bowl-angle" type="button">비스듬히 보기</button><button class="btn sm" id="bowl-top" type="button">위에서 보기</button></div>
+          </div>
+        </div>
+        <aside class="bowl-side">
+          <div aria-live="polite"><h3 id="bowl-title"></h3><p id="bowl-msg"></p></div>
+          <div class="fx blue" id="bowl-cut-controls">
+            <div class="fx-h"><b>분류 평면의 높이</b></div>
+            <div class="fl md"><i>z</i> = <span class="sym" data-p="liftc" style="--c:#097864"><span class="g">c</span></span></div>
+            <label for="bowl-height">평면 올리기 · 내리기</label>
+            <input id="bowl-height" type="range" min="0.5" max="16" step="0.1" value="5">
+            <p id="bowl-score"></p>
+          </div>
+          <div class="bowl-rule"><b>높이를 만드는 규칙</b><div class="bowl-equation"><i>z</i> = <i>x</i>² + <i>y</i>²</div><p>중심에서 거리가 1이면 높이는 1, 거리가 3이면 높이는 9예요.</p></div>
+        </aside>
+      </div>
+    </section>
 
     <div id="svm-sum" class="sechead"><span class="eyebrow" style="color:var(--a)">STEP 05 · 핵심 정리</span><h2>점을 구분하는 세 가지 단서</h2></div>
     <div class="sum3">
@@ -1770,7 +1815,7 @@ const svm=(()=>{
   const S=460,sx=x=>(x+5)/10*S,sy=y=>(1-(y+5)/10)*S,ix=X=>X/S*10-5,iy=Y=>(1-Y/S)*10-5;
   let ds='blobs',pts=[],kernel='linear',model=null,trained=false,mode='move',group=1,showM=true,showSV=true,drag=-1,pend=false;
   const cv=$('#svm-cv'),ctx=cv.getContext('2d'),svg=$('#svm-svg');
-  function load(name){ds=name;pts=DS[name].gen(rng(name.length*977+13));kernel=DS[name].k;setParam('C',DS[name].C,true);setParam('gam',DS[name].g,true);
+  function load(name){$('#bowl-circle-link').hidden=name!=='circles';ds=name;pts=DS[name].gen(rng(name.length*977+13));kernel=DS[name].k;setParam('C',DS[name].C,true);setParam('gam',DS[name].g,true);
     trained=false;model=null;kUI();render();$('#svm-explain').textContent='먼저 SVM 학습을 눌러 경계를 찾아보세요. 또는 수식 속 C를 바로 끌어도 학습이 시작돼요.';$('#svm-state').textContent='데이터 준비 완료';}
   function kUI(){$$('#svm-kern button').forEach(b=>b.classList.toggle('on',b.dataset.k===kernel));$('#svm-kline-lin').hidden=kernel!=='linear';$('#svm-kline-rbf').hidden=kernel!=='rbf';}
   function train(){
@@ -1856,35 +1901,189 @@ const svm=(()=>{
   return {render};
 })();
 
-/* ================= Lift ================= */
-const lift=(()=>{
-  const pts=DS.circles.gen(rng(4242));let p=0,target=0;
-  function render(){
-    const c=P.liftc.v,T=$('#lift-top'),Sd=$('#lift-side');
-    const K=270/8.4,tx=x=>180+x*K,ty=y=>150-y*K;
-    let s=`<rect x="45" y="15" width="270" height="270" fill="#fafbfd" stroke="#e6e8ee"/>`;
-    s+=`<circle class="lk lk-c" cx="${tx(0)}" cy="${ty(0)}" r="${Math.sqrt(c)*K}" fill="#4f78d8" fill-opacity="${0.06*p}" stroke="#4f78d8" stroke-width="2" stroke-dasharray="6 4" opacity="${p}"/>`;
-    let ok=0;
-    pts.forEach(q=>{const z=q.x*q.x+q.y*q.y,good=(z<c)===(q.c>0);if(good)ok++;const X=tx(q.x),Y=ty(q.y);
-      s+=(q.c>0?`<circle cx="${X}" cy="${Y}" r="5.5" fill="#4f78d8"/>`:`<rect x="${X-5}" y="${Y-5}" width="10" height="10" fill="#e39b3d"/>`)+(p>0.99&&!good?`<circle cx="${X}" cy="${Y}" r="10" fill="none" stroke="#d6455d" stroke-width="2"/>`:'');});
-    T.innerHTML=s;
-    const zx=x=>30+(x+4.2)/8.4*300,zy=z=>270-z/16*240;
-    let d=`<line x1="30" y1="270" x2="330" y2="270" stroke="#c9ced8"/><line x1="30" y1="30" x2="30" y2="270" stroke="#c9ced8"/><text x="36" y="40" font-size="11" fill="#98a2b3">새 높이 z ↑</text><text x="330" y="288" font-size="11" fill="#98a2b3" text-anchor="end">x →</text>`;
-    if(p<1)d+=`<path d="M30,270 ${Array.from({length:61},(_,i)=>{const x=-4.2+i*8.4/60;return`L${zx(x)},${zy(Math.min(16,x*x)*p)}`;}).join('')}" fill="none" stroke="#e6e8ee" opacity="${p}"/>`;
-    d+=`<line class="lk lk-c" x1="30" y1="${zy(c)}" x2="330" y2="${zy(c)}" stroke="#4f78d8" stroke-width="2" opacity="${p}"/><text x="326" y="${zy(c)-6}" font-size="11.5" fill="#2f53b0" text-anchor="end" opacity="${p}">z = c = ${c.toFixed(1)}</text>`;
-    pts.forEach(q=>{const z=(q.x*q.x+q.y*q.y)*p,X=zx(q.x),Y=zy(Math.min(z,16));d+=q.c>0?`<circle cx="${X}" cy="${Y}" r="5.5" fill="#4f78d8" fill-opacity=".85"/>`:`<rect x="${X-5}" y="${Y-5}" width="10" height="10" fill="#e39b3d" fill-opacity=".85"/>`;});
-    Sd.innerHTML=d;
-    $('#lift-live').innerHTML=p<0.99?`아직 평평해요 (z = 0). 점들을 올린 뒤 c를 끌어 보세요.`:`c = <b>${c.toFixed(1)}</b> → ${pts.length}개 중 <b>${ok}</b>개 정답 · 위에서 보면 반지름 √c = ${Math.sqrt(c).toFixed(2)}인 원`;
-    $('#ls1').classList.toggle('on',p<0.5);$('#ls2').classList.toggle('on',p>=0.5&&ok<pts.length);$('#ls3').classList.toggle('on',p>=0.99&&ok===pts.length);
-    $('#lift-msg').innerHTML=p<0.5?'평평할 때는, 직선으로 못 나눠요. 높이가 없을 때는 옆에서 보면 같은 줄에 겹쳐요.':ok===pts.length?'<b>완벽하게 나뉘었어요!</b> 옆에서 보면 평평한 평면(직선) 하나로, 위에서 보면 원 하나로 나뉩니다.':`안쪽 A는 아래, 바깥 B는 위로 올라갔어요. 이제 수식 속 <b>c</b>를 끌어 두 그룹 사이로 평면을 옮겨 보세요.`;
-    $('#lift-btn').textContent=target?'↺ 다시 평평하게':'점들을 위로 올리기 →';
+/* Explicit feature map (x, y) -> (x, y, x²+y²), displayed with an orbit camera. */
+const lift = (() => {
+  const canvas = $('#bowl-scene'), ctx = canvas.getContext('2d');
+  const range = $('#bowl-height'), buttons = $$('[data-bowl-step]');
+  const sides = 48, rings = 12, radius = 4, planeEdge = 4.05;
+  const initialYaw = 0.42, initialPitch = 0.30;
+  let yaw = initialYaw, pitch = initialPitch, height = 1, plane = 1;
+  let stage = 'cut', animation = 0, drag = null;
+  const steps = {
+    flat: ['평면에서는 한 원이 다른 원을 둘러싸요', '파란 점 주위를 주황 점이 둘러싸고 있어요. 이 배치에서는 어디에 직선을 그어도 두 그룹을 한쪽씩 나눌 수 없어요.'],
+    lift: ['바깥 원이 더 높이 올라가요', '점마다 중심까지 거리의 제곱을 높이로 더했어요. 옆으로 돌려 보면 파란 원과 주황 원 사이에 빈 높이 구간이 보여요.'],
+    cut: ['두 원 사이에 평면을 놓아 보세요', '초록 평면 아래는 A, 평면 위와 경계는 B로 분류해요. 위에서 보면 그릇과 평면이 만나는 초록 선이 원형 경계가 돼요.']
+  };
+  // The rings use known radii, so learners can check both heights against the rule.
+  const points = [];
+  for(const [count,r,inner] of [[12,1,true],[24,3,false]]){
+    for(let i=0;i<count;i++){
+      const a = 2*Math.PI*i/count + (inner ? 0 : Math.PI/count);
+      points.push({x:r*Math.cos(a),y:r*Math.sin(a),z:r*r,inner});
+    }
   }
-  function animate(){const t0=performance.now(),from=p;(function f(now){const t=Math.min(1,(now-t0)/900);p=lerp(from,target,1-Math.pow(1-t,3));render();if(t<1)requestAnimationFrame(f);})(t0);}
-  $('#lift-btn').onclick=()=>{target=target?0:1;animate();};
-  P.liftc.subs.push(render);
+  const angles = Array.from({length:sides+1},(_,i)=>{
+    const a = 2*Math.PI*i/sides;
+    return [Math.cos(a),Math.sin(a)];
+  });
+  const message = $('#bowl-msg'), result = $('#bowl-score');
+  function updatePanel(){
+    $('#bowl-title').textContent = steps[stage][0];
+    message.textContent = steps[stage][1];
+    buttons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.bowlStep===stage)));
+    $('#bowl-cut-controls').hidden = $('#bowl-plane-key').hidden = stage!=='cut';
+    const c = P.liftc.v;
+    range.value = c;
+    const correct = points.filter(q=>(q.z<c)===q.inner).length;
+    result.textContent = correct===points.length
+      ? '36개 모두 분리됐어요. 높이 1의 A는 아래, 높이 9의 B는 평면 위쪽이나 경계에 있어요.'
+      : correct+' / '+points.length+'개 정답 · '+(c<=1?'평면을 조금 더 올려 보세요.':'평면을 조금 내려 보세요.');
+  }
+
+  function render(){
+    const width=canvas.clientWidth, viewHeight=canvas.clientHeight;
+    if(!width||!viewHeight||!ctx) return;
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    const pixelW=Math.round(width*dpr),pixelH=Math.round(viewHeight*dpr);
+    if(canvas.width!==pixelW||canvas.height!==pixelH){canvas.width=pixelW;canvas.height=pixelH;}
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,width,viewHeight);
+    const cs=Math.cos(yaw),sn=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);
+    const extent=planeEdge*(Math.abs(cs)+Math.abs(sn));
+    const rise=0.36, c=P.liftc.v;
+    const bottom=-extent*sp;
+    const top=extent*sp+16*height*rise*cp;
+    const scale=Math.min((width-32)/(2*extent),(viewHeight-30)/(top-bottom));
+    const centerY=(viewHeight+(top+bottom)*scale)/2;
+    function project(x,y,z){
+      const horizontal=x*cs-y*sn, near=x*sn+y*cs;
+      return {x:width/2+horizontal*scale,y:centerY-(z*rise*cp-near*sp)*scale,depth:near*cp+z*rise*sp};
+    }
+    function path(vertices,close,fill,stroke,lineWidth=1){
+      ctx.beginPath();
+      vertices.forEach((v,i)=>i?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y));
+      if(close) ctx.closePath();
+      if(fill){ctx.fillStyle=fill;ctx.fill();}
+      if(stroke){ctx.lineWidth=lineWidth;ctx.strokeStyle=stroke;ctx.stroke();}
+    }
+    const marks=[];
+    function add(vertices,paint,bias=0){
+      marks.push({depth:vertices.reduce((sum,v)=>sum+v.depth,0)/vertices.length+bias,paint});
+    }
+    function line(a,b,color,weight,bias=0){
+      add([a,b],()=>path([a,b],false,null,color,weight),bias);
+    }
+    // The ground grid stays put as the two rings rise.
+    for(let i=-4;i<=4;i++){
+      const grid=i===0?'#c4b9aa':'#e7dfd4';
+      path([project(i,-4,0),project(i,4,0)],false,null,grid);
+      path([project(-4,i,0),project(4,i,0)],false,null,grid);
+    }
+    if(height>0.001){
+      const mesh=Array.from({length:rings+1},(_,j)=>{
+        const r=radius*j/rings;
+        return angles.map(([x,y])=>project(r*x,r*y,height*r*r));
+      });
+      for(let j=1;j<=rings;j++){
+        const r=radius*j/rings;
+        for(let k=0;k<sides;k++){
+          const face=[mesh[j-1][k],mesh[j][k],mesh[j][k+1],mesh[j-1][k+1]];
+          const lighting=.5+.5*(angles[k][0]*.6-angles[k][1]*.8);
+          const shade=72+13*lighting-7*r/radius;
+          const fill='hsla(24,52%,'+shade+'%,'+.46*height+')';
+          add(face,()=>path(face,true,fill,null));
+          if(j%2===0||j===rings) line(face[1],face[2],'rgba(146,83,45,'+(j===rings?.72:.30)*height+')',j===rings?1.8:.85,.015);
+          if(k%4===0) line(face[0],face[1],'rgba(146,83,45,'+.32*height+')',.85,.015);
+        }
+      }
+    }
+    // Subdivide the transparent plane so its front and back occlude the bowl in depth order.
+    if(plane>0.001){
+      const tiles=12, z=c*height, fill='rgba(54,178,150,'+.16*plane+')', edge='rgba(7,127,104,'+.73*plane+')';
+      const spacing=2*planeEdge/tiles;
+      for(let i=0;i<tiles;i++) for(let j=0;j<tiles;j++){
+        const x=-planeEdge+i*spacing,y=-planeEdge+j*spacing;
+        const face=[project(x,y,z),project(x+spacing,y,z),project(x+spacing,y+spacing,z),project(x,y+spacing,z)];
+        add(face,()=>path(face,true,fill,null));
+        if(i===0) line(face[0],face[3],edge,1.15,.02);
+        if(i===tiles-1) line(face[1],face[2],edge,1.15,.02);
+        if(j===0) line(face[0],face[1],edge,1.15,.02);
+        if(j===tiles-1) line(face[3],face[2],edge,1.15,.02);
+      }
+      const crossRadius=Math.sqrt(c);
+      if(crossRadius<=radius){
+        const edgePoints=angles.map(([x,y])=>project(x*crossRadius,y*crossRadius,z));
+        for(let i=1;i<edgePoints.length;i++) line(edgePoints[i-1],edgePoints[i],'rgba(0,111,91,'+plane+')',2.8,.1);
+      }
+    }
+    for(const q of points){
+      const pos=project(q.x,q.y,height*q.z);
+      const size=clamp(scale*.095,3.8,6.5);
+      add([pos],()=>{
+        ctx.beginPath();
+        if(q.inner) ctx.arc(pos.x,pos.y,size,0,2*Math.PI);
+        else ctx.rect(pos.x-size,pos.y-size,2*size,2*size);
+        ctx.fillStyle=q.inner?'#355fbd':'#ba691e';ctx.fill();
+        ctx.strokeStyle='#fff';ctx.lineWidth=1.3;ctx.stroke();
+        if(plane>.99 && (q.z<c)!==q.inner){
+          ctx.beginPath();ctx.arc(pos.x,pos.y,size+3,0,2*Math.PI);
+          ctx.strokeStyle='#a72a46';ctx.lineWidth=1.5;ctx.stroke();
+        }
+      },.14);
+    }
+    marks.sort((a,b)=>a.depth-b.depth).forEach(mark=>mark.paint());
+  }
+
+  function moveTo(next){
+    cancelAnimationFrame(animation);
+    const previous=stage;
+    stage=next;
+    updatePanel();
+    const start=performance.now(),fromHeight=height,fromPlane=plane,fromPitch=pitch;
+    const toHeight=next==='flat'?0:1,toPlane=next==='cut'?1:0;
+    const toPitch=next==='flat'?Math.PI/2:previous==='flat'?initialPitch:pitch;
+    const duration=window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:760;
+    function frame(now){
+      const t=duration?clamp((now-start)/duration,0,1):1;
+      const e=t*t*(3-2*t);
+      height=lerp(fromHeight,toHeight,e);plane=lerp(fromPlane,toPlane,e);pitch=lerp(fromPitch,toPitch,e);
+      render();
+      if(t<1) animation=requestAnimationFrame(frame);
+    }
+    animation=requestAnimationFrame(frame);
+  }
+  function finishTransition(){
+    cancelAnimationFrame(animation);
+    height=stage==='flat'?0:1;
+    plane=stage==='cut'?1:0;
+  }
+  buttons.forEach(button=>button.onclick=()=>moveTo(button.dataset.bowlStep));
+  $('#bowl-angle').onclick=()=>{finishTransition();yaw=initialYaw;pitch=initialPitch;render();};
+  $('#bowl-top').onclick=()=>{finishTransition();yaw=0;pitch=Math.PI/2;render();};
+  range.addEventListener('input',()=>setParam('liftc',range.valueAsNumber));
+  P.liftc.subs.push(()=>{updatePanel();render();});
+  canvas.addEventListener('pointerdown',e=>{
+    if(e.button!==0||drag) return;
+    finishTransition();canvas.setPointerCapture(e.pointerId);canvas.focus({preventScroll:true});
+    drag={id:e.pointerId,x:e.clientX,y:e.clientY,yaw,pitch};
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(!drag||drag.id!==e.pointerId) return;
+    yaw=drag.yaw+(e.clientX-drag.x)*.009;
+    pitch=clamp(drag.pitch+(e.clientY-drag.y)*.008,.08,Math.PI/2);
+    render();
+  });
+  canvas.addEventListener('lostpointercapture',()=>{drag=null;});
+  canvas.addEventListener('keydown',e=>{
+    const directions={ArrowLeft:[-.12,0],ArrowRight:[.12,0],ArrowUp:[0,.085],ArrowDown:[0,-.085]};
+    const delta=directions[e.key];if(!delta) return;
+    e.preventDefault();finishTransition();
+    yaw+=delta[0];pitch=clamp(pitch+delta[1],.08,Math.PI/2);render();
+  });
+  new ResizeObserver(render).observe(canvas);
+  updatePanel();
   return {render};
 })();
-
 
 /* ================= Concepts ================= */
 const gdc=(()=>{
