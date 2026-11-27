@@ -196,13 +196,11 @@ body[data-hl=gam] .lk-gam{opacity:.9!important}
 .tools{display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px;gap:8px;flex-wrap:wrap}
 select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;background:#fff}
 .bowl-lab{overflow:hidden;--plane:#097864}
-.bowl-steps{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line)}
-.bowl-steps button{border:1px solid transparent;border-radius:8px;background:transparent;padding:8px 12px;font:inherit;font-size:14px;font-weight:600;color:var(--mut);cursor:pointer}
-.bowl-steps button[aria-pressed=true]{background:#eef3fe;color:#3156a6;border-color:#c9d7f4}
-.bowl-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,30%)}
-.bowl-stage{min-width:0;background:linear-gradient(#fffaf5,#fffcf8 60%,#fff);padding:14px 18px 12px}
-.bowl-legend,.bowl-viewbar{display:flex;align-items:center;justify-content:space-between;gap:8px 18px;flex-wrap:wrap}
-.bowl-legend{justify-content:flex-start;font-size:13px;color:#505765}
+.bowl-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.bowl-legend{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;font-size:13px;color:#505765}
+#bowl-next{min-width:142px;white-space:nowrap}
+#bowl-next[aria-disabled=true]{opacity:.7;cursor:default}
+.bowl-stage{background:linear-gradient(#fffaf5,#fffdf9 65%,#fff);padding:4px 14px}
 .bowl-legend span{display:inline-flex;align-items:center;gap:6px}
 .bowl-legend i{display:inline-block;width:9px;height:9px}
 .bowl-a{border-radius:50%;background:#355fbd}.bowl-b{background:#ba691e}
@@ -210,25 +208,25 @@ select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10
 #bowl-scene{display:block;width:100%;height:clamp(280px,36vw,405px);touch-action:none;cursor:grab}
 #bowl-scene:active{cursor:grabbing}
 #bowl-scene:focus-visible{outline:2px solid var(--a);outline-offset:-3px;border-radius:8px}
-.bowl-viewbar{font-size:12px;color:var(--mut)}
-.bowl-viewbar .row{gap:5px}
-.bowl-side{display:flex;flex-direction:column;gap:18px;border-left:1px solid var(--line);padding:22px;background:#fbfcfd}
-.bowl-side h3{font-size:20px;line-height:1.4}
-.bowl-side p{margin:6px 0 0;color:#4e586b;font-size:14px;line-height:1.7;word-break:keep-all}
+.bowl-caption{border-top:1px solid var(--line);padding:15px 20px 18px}
+.bowl-caption h3{font-size:18px;line-height:1.5}
+.bowl-caption p{margin:4px 0 0;font-size:14px;color:#4e586b;line-height:1.65;word-break:keep-all}
+.bowl-options{margin-top:14px;font-size:13px}
+.bowl-options summary{color:#44647f;cursor:pointer;width:fit-content}
+.bowl-options .row{margin:10px 0}
+.bowl-options .fx{max-width:430px}
+#bowl-scene[data-rotate=false]{cursor:default;touch-action:pan-y}
 #bowl-cut-controls{padding:12px 14px}
 #bowl-cut-controls label{font-size:12.5px;color:var(--mut)}
 #bowl-height{display:block;width:100%;accent-color:var(--plane);min-height:22px;margin:3px 0}
 #bowl-score{font-size:13px;color:#176052}
-.bowl-rule b{font-size:13px}
-.bowl-equation{font:600 25px/1.5 var(--math)}
 #bowl-circle-link{align-self:start}
 #bowl-circle-link[hidden],#bowl-plane-key[hidden]{display:none}
-@media(max-width:780px){
-  .bowl-layout{grid-template-columns:1fr}
-  .bowl-side{border-left:0;border-top:1px solid var(--line)}
-  .bowl-stage{padding:12px}
-  .bowl-steps{gap:2px;padding:8px}
-  .bowl-steps button{flex:1;font-size:13px;padding:7px 3px;word-break:keep-all}
+@media(max-width:650px){
+  .bowl-toolbar,.bowl-caption{padding:12px}
+  .bowl-legend{gap:3px 10px;font-size:12px}
+  .bowl-stage{padding:0 4px}
+  #bowl-next{min-width:122px;padding:9px 10px}
 }
 
 
@@ -1192,25 +1190,19 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     <div id="svm-lift" class="sechead">
       <span class="eyebrow" style="color:var(--a)">동심원 · 3D 차원 확장</span>
       <h2>두 원을 그릇 위에 올리면?</h2>
-      <p>각 점의 가로·세로 위치는 그대로 두고, 중심에서 멀수록 더 높이 올려 보세요. 작은 원은 바닥에, 큰 원은 그릇 위쪽에 모여요.</p>
+      <p>점에 높이를 더하면, 안쪽 원과 바깥쪽 원을 어떻게 나눌 수 있을까요?</p>
     </div>
     <section class="card bowl-lab" aria-label="동심원의 3D 그릇 실험">
-      <div class="bowl-steps" role="group" aria-label="차원 확장 단계">
-        <button type="button" data-bowl-step="flat" aria-pressed="false">1. 평면의 두 원</button>
-        <button type="button" data-bowl-step="lift" aria-pressed="false">2. 그릇으로 올리기</button>
-        <button type="button" data-bowl-step="cut" aria-pressed="true">3. 평면으로 나누기</button>
+      <div class="bowl-toolbar">
+        <div class="bowl-legend"><span><i class="bowl-a"></i>안쪽 원 A</span><span><i class="bowl-b"></i>바깥 원 B</span><span id="bowl-plane-key" hidden><i class="bowl-plane"></i>분류 평면</span></div>
+        <button class="btn pri" id="bowl-next" type="button">점 들어 올리기 ↑</button>
       </div>
-      <div class="bowl-layout">
-        <div class="bowl-stage">
-          <div class="bowl-legend"><span><i class="bowl-a"></i>안쪽 원 A</span><span><i class="bowl-b"></i>바깥 원 B</span><span id="bowl-plane-key"><i class="bowl-plane"></i>분류 평면</span></div>
-          <canvas id="bowl-scene" tabindex="0" role="img" aria-label="회전할 수 있는 3D 그릇 위의 두 원" aria-describedby="bowl-view-hint bowl-msg"></canvas>
-          <div class="bowl-viewbar">
-            <span id="bowl-view-hint">드래그하거나 방향키로 회전</span>
-            <div class="row"><button class="btn sm" id="bowl-angle" type="button">비스듬히 보기</button><button class="btn sm" id="bowl-top" type="button">위에서 보기</button></div>
-          </div>
-        </div>
-        <aside class="bowl-side">
-          <div aria-live="polite"><h3 id="bowl-title"></h3><p id="bowl-msg"></p></div>
+      <div class="bowl-stage"><canvas id="bowl-scene" data-rotate="false" role="img" aria-label="평면 위의 파란 원과 주황 원" aria-describedby="bowl-msg"></canvas></div>
+      <div class="bowl-caption">
+        <div aria-live="polite"><h3 id="bowl-title"></h3><p id="bowl-msg"></p></div>
+        <details class="bowl-options" id="bowl-options" hidden>
+          <summary>시점과 평면 높이 조절</summary>
+          <div class="row"><button type="button" class="btn sm" id="bowl-angle">비스듬히 보기</button><button type="button" class="btn sm" id="bowl-top">위에서 보기</button><span>드래그하거나 방향키로 회전</span></div>
           <div class="fx blue" id="bowl-cut-controls">
             <div class="fx-h"><b>분류 평면의 높이</b></div>
             <div class="fl md"><i>z</i> = <span class="sym" data-p="liftc" style="--c:#097864"><span class="g">c</span></span></div>
@@ -1218,8 +1210,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
             <input id="bowl-height" type="range" min="0.5" max="16" step="0.1" value="5">
             <p id="bowl-score"></p>
           </div>
-          <div class="bowl-rule"><b>높이를 만드는 규칙</b><div class="bowl-equation"><i>z</i> = <i>x</i>² + <i>y</i>²</div><p>중심에서 거리가 1이면 높이는 1, 거리가 3이면 높이는 9예요.</p></div>
-        </aside>
+        </details>
       </div>
     </section>
 
@@ -1906,15 +1897,15 @@ const svm=(()=>{
 /* Explicit feature map (x, y) -> (x, y, x²+y²), displayed with an orbit camera. */
 const lift = (() => {
   const canvas = $('#bowl-scene'), ctx = canvas.getContext('2d');
-  const range = $('#bowl-height'), buttons = $$('[data-bowl-step]');
+  const range = $('#bowl-height'), nextButton = $('#bowl-next'), options = $('#bowl-options');
   const sides = 48, rings = 12, radius = 4, planeEdge = 4.05;
-  const initialYaw = 0.42, initialPitch = 0.30;
-  let yaw = initialYaw, pitch = initialPitch, height = 1, plane = 1;
-  let stage = 'cut', animation = 0, drag = null;
+  const initialYaw = 0.32, initialPitch = 0.16;
+  let yaw = 0, pitch = Math.PI/2, height = 0, plane = 0;
+  let stage = 'flat', animating = false, drag = null;
   const steps = {
-    flat: ['평면에서는 한 원이 다른 원을 둘러싸요', '파란 점 주위를 주황 점이 둘러싸고 있어요. 이 배치에서는 어디에 직선을 그어도 두 그룹을 한쪽씩 나눌 수 없어요.'],
-    lift: ['바깥 원이 더 높이 올라가요', '점마다 중심까지 거리의 제곱을 높이로 더했어요. 옆으로 돌려 보면 파란 원과 주황 원 사이에 빈 높이 구간이 보여요.'],
-    cut: ['두 원 사이에 평면을 놓아 보세요', '초록 평면 아래는 A, 평면 위와 경계는 B로 분류해요. 위에서 보면 그릇과 평면이 만나는 초록 선이 원형 경계가 돼요.']
+    flat: ['점 들어 올리기 ↑', '평면에서는 주황 원이 파란 원을 둘러싸요', '직선 하나로는 두 그룹을 나눌 수 없어요. 두 원을 위로 들어 올려 보세요.'],
+    lift: ['구분선 그리기 →', '두 원 사이에 높이 차이가 생겼어요', '높이를 z = x² + y²로 정하면 중심에서 거리가 1인 파란 점은 높이 1로, 거리가 3인 주황 점은 높이 9로 올라가요.'],
+    cut: ['처음부터 다시 ↺', '두 원 사이로 수평면이 지나가요', '옆에서 보이는 초록 선은 3D에서는 분류 평면이에요. 평면 아래를 A, 평면에 닿거나 그보다 높은 점을 B로 분류해요.']
   };
   // The rings use known radii, so learners can check both heights against the rule.
   const points = [];
@@ -1930,13 +1921,18 @@ const lift = (() => {
   });
   const message = $('#bowl-msg'), result = $('#bowl-score');
   function updatePanel(){
-    $('#bowl-title').textContent = steps[stage][0];
-    message.textContent = steps[stage][1];
-    buttons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.bowlStep===stage)));
-    $('#bowl-cut-controls').hidden = $('#bowl-plane-key').hidden = stage!=='cut';
     const c = P.liftc.v;
-    range.value = c;
     const correct = points.filter(q=>(q.z<c)===q.inner).length;
+    const [action,defaultTitle,description] = steps[stage];
+    const title = stage==='cut' && correct<points.length ? '평면의 높이를 바꾸면 분류도 달라져요' : defaultTitle;
+    nextButton.textContent = action;
+    $('#bowl-title').textContent = title;
+    message.textContent = description;
+    options.hidden = $('#bowl-plane-key').hidden = stage!=='cut';
+    canvas.dataset.rotate = String(stage==='cut');
+    canvas.tabIndex = stage==='cut' ? 0 : -1;
+    canvas.setAttribute('aria-label', title);
+    range.value = c;
     result.textContent = correct===points.length
       ? '36개 모두 분리됐어요. 높이 1의 A는 아래, 높이 9의 B는 평면 위쪽이나 경계에 있어요.'
       : correct+' / '+points.length+'개 정답 · '+(c<=1?'평면을 조금 더 올려 보세요.':'평면을 조금 내려 보세요.');
@@ -1954,7 +1950,7 @@ const lift = (() => {
     const extent=planeEdge*(Math.abs(cs)+Math.abs(sn));
     const rise=0.36, c=P.liftc.v;
     const bottom=-extent*sp;
-    const top=extent*sp+16*height*rise*cp;
+    const top=extent*sp+16*rise*cp;
     const scale=Math.min((width-32)/(2*extent),(viewHeight-30)/(top-bottom));
     const centerY=(viewHeight+(top+bottom)*scale)/2;
     function project(x,y,z){
@@ -1992,7 +1988,7 @@ const lift = (() => {
           const face=[mesh[j-1][k],mesh[j][k],mesh[j][k+1],mesh[j-1][k+1]];
           const lighting=.5+.5*(angles[k][0]*.6-angles[k][1]*.8);
           const shade=72+13*lighting-7*r/radius;
-          const fill='hsla(24,52%,'+shade+'%,'+.46*height+')';
+          const fill='hsla(24,52%,'+shade+'%,'+.27*height+')';
           add(face,()=>path(face,true,fill,null));
           if(j%2===0||j===rings) line(face[1],face[2],'rgba(146,83,45,'+(j===rings?.72:.30)*height+')',j===rings?1.8:.85,.015);
           if(k%4===0) line(face[0],face[1],'rgba(146,83,45,'+.32*height+')',.85,.015);
@@ -2005,6 +2001,8 @@ const lift = (() => {
       const spacing=2*planeEdge/tiles;
       for(let i=0;i<tiles;i++) for(let j=0;j<tiles;j++){
         const x=-planeEdge+i*spacing,y=-planeEdge+j*spacing;
+        const tileCenter=(x+spacing/2)*cs-(y+spacing/2)*sn;
+        if(tileCenter > (2*plane-1)*extent) continue;
         const face=[project(x,y,z),project(x+spacing,y,z),project(x+spacing,y+spacing,z),project(x,y+spacing,z)];
         add(face,()=>path(face,true,fill,null));
         if(i===0) line(face[0],face[3],edge,1.15,.02);
@@ -2013,14 +2011,14 @@ const lift = (() => {
         if(j===tiles-1) line(face[3],face[2],edge,1.15,.02);
       }
       const crossRadius=Math.sqrt(c);
-      if(crossRadius<=radius){
+      if(crossRadius<=radius && plane===1){
         const edgePoints=angles.map(([x,y])=>project(x*crossRadius,y*crossRadius,z));
         for(let i=1;i<edgePoints.length;i++) line(edgePoints[i-1],edgePoints[i],'rgba(0,111,91,'+plane+')',2.8,.1);
       }
     }
     for(const q of points){
       const pos=project(q.x,q.y,height*q.z);
-      const size=clamp(scale*.095,3.8,6.5);
+      const size=clamp(scale*.105,4.1,7);
       add([pos],()=>{
         ctx.beginPath();
         if(q.inner) ctx.arc(pos.x,pos.y,size,0,2*Math.PI);
@@ -2034,39 +2032,67 @@ const lift = (() => {
       },.14);
     }
     marks.sort((a,b)=>a.depth-b.depth).forEach(mark=>mark.paint());
+    if(plane>0 && pitch<0.70){
+      const half=planeEdge/Math.max(Math.abs(cs),Math.abs(sn));
+      const to=lerp(-half,half,plane);
+      const a=project(-half*cs,half*sn,c), b=project(to*cs,-to*sn,c);
+      const opacity=clamp((.70-pitch)/.35,0,1);
+      path([a,b],false,null,'rgba(255,255,255,'+opacity+')',5.5);
+      path([a,b],false,null,'rgba(0,106,82,'+opacity+')',3.2);
+    }
   }
 
-  function moveTo(next){
-    cancelAnimationFrame(animation);
-    const previous=stage;
-    stage=next;
-    updatePanel();
-    const start=performance.now(),fromHeight=height,fromPlane=plane,fromPitch=pitch;
-    const toHeight=next==='flat'?0:1,toPlane=next==='cut'?1:0;
-    const toPitch=next==='flat'?Math.PI/2:previous==='flat'?initialPitch:pitch;
-    const duration=window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:760;
-    function frame(now){
-      const t=duration?clamp((now-start)/duration,0,1):1;
-      const e=t*t*(3-2*t);
-      height=lerp(fromHeight,toHeight,e);plane=lerp(fromPlane,toPlane,e);pitch=lerp(fromPitch,toPitch,e);
+  function advance(){
+    if(animating) return;
+    if(stage==='cut'){
+      stage='flat';
+      drag=null;
+      height=plane=yaw=0;
+      pitch=Math.PI/2;
+      options.open=false;
+      setParam('liftc',5,true);
+      updatePanel();
       render();
-      if(t<1) animation=requestAnimationFrame(frame);
+      return;
     }
-    animation=requestAnimationFrame(frame);
+    const lifting=stage==='flat';
+    const duration=lifting?1280:300;
+    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const start=performance.now();
+    animating=true;
+    nextButton.setAttribute('aria-disabled','true');
+    nextButton.textContent=lifting?'올라가는 중…':'그리는 중…';
+    const smooth=t=>t*t*(3-2*t);
+    function frame(now){
+      const t=reduced?1:clamp((now-start)/duration,0,1);
+      if(lifting){
+        const tilt=smooth(Math.min(t/.35,1));
+        yaw=initialYaw*tilt;
+        pitch=lerp(Math.PI/2,initialPitch,tilt);
+        height=smooth(clamp((t-.20)/.80,0,1));
+      }else{
+        plane=1-(1-t)**2;
+      }
+      render();
+      if(t<1){
+        requestAnimationFrame(frame);
+      }else{
+        stage=lifting?'lift':'cut';
+        animating=false;
+        nextButton.removeAttribute('aria-disabled');
+        updatePanel();
+      }
+    }
+    frame(start);
   }
-  function finishTransition(){
-    cancelAnimationFrame(animation);
-    height=stage==='flat'?0:1;
-    plane=stage==='cut'?1:0;
-  }
-  buttons.forEach(button=>button.onclick=()=>moveTo(button.dataset.bowlStep));
-  $('#bowl-angle').onclick=()=>{finishTransition();yaw=initialYaw;pitch=initialPitch;render();};
-  $('#bowl-top').onclick=()=>{finishTransition();yaw=0;pitch=Math.PI/2;render();};
+  nextButton.onclick=advance;
+  $('#bowl-angle').onclick=()=>{yaw=initialYaw;pitch=initialPitch;render();};
+  $('#bowl-top').onclick=()=>{yaw=0;pitch=Math.PI/2;render();};
   range.addEventListener('input',()=>setParam('liftc',range.valueAsNumber));
   P.liftc.subs.push(()=>{updatePanel();render();});
   canvas.addEventListener('pointerdown',e=>{
-    if(e.button!==0||drag) return;
-    finishTransition();canvas.setPointerCapture(e.pointerId);canvas.focus({preventScroll:true});
+    if(stage!=='cut'||animating||e.button!==0||drag) return;
+    canvas.setPointerCapture(e.pointerId);canvas.focus({preventScroll:true});
     drag={id:e.pointerId,x:e.clientX,y:e.clientY,yaw,pitch};
   });
   canvas.addEventListener('pointermove',e=>{
@@ -2079,7 +2105,8 @@ const lift = (() => {
   canvas.addEventListener('keydown',e=>{
     const directions={ArrowLeft:[-.12,0],ArrowRight:[.12,0],ArrowUp:[0,.085],ArrowDown:[0,-.085]};
     const delta=directions[e.key];if(!delta) return;
-    e.preventDefault();finishTransition();
+    if(stage!=='cut'||animating) return;
+    e.preventDefault();
     yaw+=delta[0];pitch=clamp(pitch+delta[1],.08,Math.PI/2);render();
   });
   new ResizeObserver(render).observe(canvas);
