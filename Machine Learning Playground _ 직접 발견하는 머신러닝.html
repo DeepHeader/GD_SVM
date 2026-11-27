@@ -983,6 +983,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         </div>
         <div class="row" style="justify-content:space-between;margin-top:10px">
           <div class="legend"><span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#6f5ce6"/></svg>기본 경사하강법</span><span><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" fill="#e0704f"/></svg>모멘텀</span><span><svg width="12" height="12"><path d="M6,0L12,6L6,12L0,6z" fill="#1f9e8f"/></svg>Adam</span></div>
+          <label class="check"><input type="checkbox" id="gd2-preview"> 예상 경로 보기</label>
           <span class="kt">계산 단계 <span id="gd2-k" style="font-family:var(--mono)">0 / 250</span></span>
         </div>
         <div class="row" style="margin-top:10px">
@@ -1631,6 +1632,8 @@ const gd2=(()=>{
       return {pts:out,dead};};
     tr={gd:run('gd'),mo:run('mo'),ad:run('ad')};
   }
+  const preview=$('#gd2-preview');
+  preview.addEventListener('change',render);
   function at(kind,kk){const p=tr[kind].pts,i=Math.floor(kk),f=kk-i,a=p[i],b=p[Math.min(N,i+1)];return[lerp(a[0],b[0],f),lerp(a[1],b[1],f)];}
   function redraw(){heat();hooks.terrain&&hooks.terrain();render();}
   function render(){
@@ -1639,9 +1642,11 @@ const gd2=(()=>{
     t.marks.forEach(([x,y,l])=>{s+=`<g opacity=".85"><circle cx="${px(x)}" cy="${py(y)}" r="3" fill="#fff"/><text x="${px(x)}" y="${py(y)+(l==='넘어야 할 턱'?-10:18)}" font-size="11" fill="#fff" text-anchor="middle" stroke="#2b2160" stroke-width="3" paint-order="stroke">${l}</text></g>`;});
     for(const kd of ['gd','mo','ad']){
       const p=tr[kd].pts;let full='',past='';
-      p.forEach((q,i)=>{const c=`${px(q[0]).toFixed(1)},${py(q[1]).toFixed(1)}`;full+=(i?'L':'M')+c;if(i<=ki)past+=(i?'L':'M')+c;});
+      p.forEach((q,i)=>{const c=`${px(q[0]).toFixed(1)},${py(q[1]).toFixed(1)}`;if(preview.checked)full+=(i?'L':'M')+c;if(i<=ki)past+=(i?'L':'M')+c;});
       const [bx,by]=at(kd,k);past+=`L${px(bx)},${py(by)}`;
-      s+=`<g class="m-${kd} lk"><path d="${full}" fill="none" stroke="${COL[kd]}" stroke-width="1.5" stroke-opacity=".35" stroke-dasharray="3 3"/><path d="${past}" fill="none" stroke="${COL[kd]}" stroke-width="2.6" stroke-linejoin="round"/>`;
+      s+=`<g class="m-${kd} lk">`;
+      if(preview.checked)s+=`<path d="${full}" fill="none" stroke="${COL[kd]}" stroke-width="1.5" stroke-opacity=".35" stroke-dasharray="3 3"/>`;
+      s+=`<path d="${past}" fill="none" stroke="${COL[kd]}" stroke-width="2.6" stroke-linejoin="round"/>`;
       const X=px(bx),Y=py(by);
       if(kd==='gd')s+=`<circle class="ball2" cx="${X}" cy="${Y}" r="8" fill="${COL[kd]}" stroke="#fff" stroke-width="2"/>`;
       else if(kd==='mo')s+=`<rect class="ball2" x="${X-7}" y="${Y-7}" width="14" height="14" rx="2" fill="${COL[kd]}" stroke="#fff" stroke-width="2"/>`;
@@ -1659,8 +1664,10 @@ const gd2=(()=>{
     const mn=Math.min(...all),mx=Math.max(...all),rg=Math.max(mx-mn,1e-6);
     const lx=i=>lm+i/N*(lw-lm-10),ly=v=>isFinite(v)?lh-22-(v-mn)/rg*(lh-34):8;
     let ls=`<line x1="${lm}" y1="${lh-22}" x2="${lw-10}" y2="${lh-22}" stroke="#e6e8ee"/><text x="${lm-6}" y="${lh-18}" font-size="10.5" fill="#98a2b3" text-anchor="end">${mn.toFixed(2)}</text><text x="${lm-6}" y="16" font-size="10.5" fill="#98a2b3" text-anchor="end">${mx.toFixed(2)}</text><text x="${lw-10}" y="${lh-4}" font-size="10.5" fill="#98a2b3" text-anchor="end">${N}단계 →</text>`;
-    for(const kd of ['gd','mo','ad']){let d='',d2='';tr[kd].pts.forEach((q,i)=>{const c=lx(i).toFixed(1)+','+ly(q[2]).toFixed(1);d+=(i?'L':'M')+c;if(i<=ki)d2+=(i?'L':'M')+c;});
-      ls+=`<g class="m-${kd} lk"><path d="${d}" fill="none" stroke="${COL[kd]}" stroke-opacity=".25" stroke-width="1.5"/><path d="${d2}" fill="none" stroke="${COL[kd]}" stroke-width="2.2"/></g>`;}
+    for(const kd of ['gd','mo','ad']){let d='',d2='';tr[kd].pts.forEach((q,i)=>{const c=lx(i).toFixed(1)+','+ly(q[2]).toFixed(1);if(preview.checked)d+=(i?'L':'M')+c;if(i<=ki)d2+=(i?'L':'M')+c;});
+      ls+=`<g class="m-${kd} lk">`;
+      if(preview.checked)ls+=`<path d="${d}" fill="none" stroke="${COL[kd]}" stroke-opacity=".4" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+      ls+=`<path d="${d2}" fill="none" stroke="${COL[kd]}" stroke-width="2.2"/></g>`;}
     ls+=`<line x1="${lx(k)}" y1="6" x2="${lx(k)}" y2="${lh-22}" stroke="#202735" stroke-dasharray="3 3"/>`;
     lossv.innerHTML=ls;
     hooks.sync&&hooks.sync();
@@ -1670,7 +1677,9 @@ const gd2=(()=>{
   function explain(){
     const ki=Math.floor(k),f=kd=>tr[kd].pts[ki],t=TER[terr];
     let h;
-    if(ki===0)h=`<h4>무엇을 볼까요?</h4><p class="muted">점선은 <b>지금 설정으로 250단계 동안 갈 경로</b>예요. 재생하지 않아도 <b>η · β · β₁ · β₂</b>를 끌면 점선이 바로 바뀝니다.</p>`;
+    if(ki===0)h=preview.checked
+      ? '<h4>예상 경로</h4><p class="muted">점선은 지금 설정으로 250단계 동안 갈 경로예요. 재생하면 실제로 이동한 구간에 실선이 생겨요.</p>'
+      : '<h4>무엇을 볼까요?</h4><p class="muted">세 방법은 같은 곳에서 출발해요. 한 단계씩 움직여 어느 쪽으로 얼마나 가는지 비교해 보세요.</p>';
     else{const best=['gd','mo','ad'].filter(kd=>isFinite(f(kd)[2])).sort((a,b)=>f(a)[2]-f(b)[2])[0];
       const nm={gd:'기본 경사하강법',mo:'모멘텀',ad:'Adam'};
       h=`<h4>${ki}단계 · 지금 가장 낮은 곳: ${best?nm[best]:'—'}</h4><p class="muted">`+['gd','mo','ad'].map(kd=>`${nm[kd]}: ${tr[kd].dead&&!isFinite(f(kd)[2])?'발산':t.st(f(kd)[0],f(kd)[1])}`).join('<br>')+`</p>`;}
@@ -1690,7 +1699,7 @@ const gd2=(()=>{
   svg.addEventListener('pointermove',e=>{if(!dragging)return;const [x,y]=toXY(e);setParam('sx',x,true);setParam('sy',y);});
   svg.addEventListener('pointerup',()=>dragging=false);
   setTerr('wells');
-  return {redraw,render,state:()=>({tr,k,terr,N,at}),stop:()=>{playing=false;}};
+  return {redraw,render,state:()=>({tr,k,terr,N,at,showPreview:preview.checked}),stop:()=>{playing=false;}};
 })();
 
 
@@ -1754,9 +1763,16 @@ const gd3=(()=>{
     if(!surf)return;const st=gd2.state(),t=TER[st.terr],ki=Math.floor(st.k);
     for(const kd of ['gd','mo','ad']){
       const pts=st.tr[kd].pts,fa=full[kd].geometry.attributes.position,pa=past[kd].geometry.attributes.position;
-      pts.forEach((q,i)=>{const v=W3(q[0],q[1],t.f(q[0],q[1]),0.025);fa.setXYZ(i,v.x,v.y,v.z);if(i<=ki)pa.setXYZ(i,v.x,v.y,v.z);});
+      full[kd].visible=st.showPreview;
+      const lastPoint=st.showPreview?st.N:ki;
+      for(let i=0;i<=lastPoint;i++){
+        const q=pts[i],v=W3(q[0],q[1],q[2],0.025);
+        if(st.showPreview)fa.setXYZ(i,v.x,v.y,v.z);
+        if(i<=ki)pa.setXYZ(i,v.x,v.y,v.z);
+      }
       const [bx,by]=st.at(kd,st.k),bv=W3(bx,by,t.f(bx,by),0);pa.setXYZ(ki+1,bv.x,bv.y+0.025,bv.z);
-      fa.needsUpdate=true;pa.needsUpdate=true;full[kd].computeLineDistances();past[kd].geometry.setDrawRange(0,ki+2);
+      if(st.showPreview){fa.needsUpdate=true;full[kd].computeLineDistances();}
+      pa.needsUpdate=true;past[kd].geometry.setDrawRange(0,ki+2);
       const r=kd==='gd'?0.11:kd==='mo'?0.1:0.14;balls[kd].position.set(bv.x,bv.y+r,bv.z);
       if(kd==='mo')balls[kd].rotation.y=st.k*0.08;if(kd==='ad')balls[kd].rotation.y=st.k*0.06;
       const hl=document.body.dataset.hl,dim=(hl==='beta'&&kd!=='mo')||((hl==='b1'||hl==='b2')&&kd!=='ad');
