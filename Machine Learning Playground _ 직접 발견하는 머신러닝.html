@@ -129,7 +129,7 @@ svg text{font-family:'Noto Sans KR',Arial,sans-serif}
 .sym{--c:var(--gd);position:relative;display:inline-block;cursor:ew-resize;padding:0 .24em;margin:0 1px;border-radius:6px;color:var(--c);touch-action:none;user-select:none;-webkit-user-select:none;outline:none;transition:background .12s}
 .sym.wide{margin:0 12px}
 .sym .g{font-style:italic;font-weight:600;border-bottom:2px dashed currentColor;line-height:1.05}
-.sym .g,.weight-symbol{display:inline-block;transform:scale(var(--symbol-scale,1));transform-origin:center 85%}
+.sym .g{display:inline-block;transform:scale(var(--symbol-scale,1));transform-origin:center 85%}
 .fl:has(.sym){padding-top:.45em}
 @media(max-width:560px){.fbar .fb-eq{padding-top:8px}}
 .sym .v{position:absolute;left:50%;top:calc(100% + 3px);transform:translateX(-50%);font:600 10.5px/1 var(--mono);font-style:normal;padding:3px 6px;border-radius:999px;background:color-mix(in srgb,var(--c) 13%,#fff);white-space:nowrap;pointer-events:none}
@@ -450,63 +450,11 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 @media (max-width:560px){.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}.fl{font-size:19px}.wrap{padding:0 16px}}
 /* Supporting lessons in the gradient descent lab */
 .gd1wrap{scroll-margin-top:70px}
-.lesson-links,.lesson-footer{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lesson-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .lesson-links{padding:0 0 22px;font-size:14px}
 .lesson-links>span{color:var(--mut);font-size:13px}
 .lesson-links a,.lesson-term{color:#5844bc;text-underline-offset:3px;font-weight:700}
 .lab a.chip{text-decoration:underline;text-underline-offset:3px;color:#5844bc}
-.lesson-wrap{max-width:1080px;padding-bottom:52px}
-.lesson-page .crumb{display:flex;align-items:center;gap:8px}
-.lesson-head{padding:20px 0 26px}
-.lesson-head h1{font-size:clamp(32px,4vw,44px);line-height:1.2}
-.lesson-head h1:focus:not(:focus-visible){outline:none}
-.lesson-head small{font:500 17px var(--math);color:var(--mut);margin-left:5px}
-.lesson-head p,.lesson-controls p,.bp-stage p,.lesson-note p{color:#4a5365;line-height:1.75;word-break:keep-all;overflow-wrap:break-word}
-.lesson-head p{font-size:16px;margin:12px 0 0}
-.lesson-workbench{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);overflow:hidden}
-.lesson-controls,.loss-figure,.bp-demo{padding:clamp(18px,3vw,32px)}
-.lesson-controls h2,.lesson-note h2{font-size:20px;letter-spacing:-.025em}
-.lesson-controls p,.bp-stage p,.lesson-note p{font-size:15px;margin:8px 0}
-.weight-label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:28px 0 9px;font-size:14px;font-weight:700}
-.weight-label strong{color:#5844bc;font-size:20px}
-.weight-label .weight-reading{white-space:nowrap;font-variant-numeric:tabular-nums}
-.weight-reading output{display:inline-block;min-width:3.6ch;text-align:right}
-.weight-symbol{margin:0 .18em;font:italic 600 1.1em/1 var(--math);color:#5844bc}
-.lesson-controls input{width:100%;height:22px;accent-color:var(--gd);margin:0;display:block;cursor:pointer}
-.range-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--mut)}
-.price-values{margin:22px 0 0;font-size:14px}
-.price-values div{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
-.price-values dt,.calc-rows dt{color:#51596a}
-.price-values dd{margin:0;font-weight:700;white-space:nowrap}
-.loss-figure,.bp-demo{margin:0;background:#f8f7fd;border-left:1px solid #e3deef}
-.loss-figure figcaption{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:15px}
-.lesson-key,.axis-caption{font-size:12px;color:#5f5875}
-.lesson-key::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gd);margin-right:6px}
-.loss-figure svg{width:100%;height:auto;display:block;margin:12px 0 0}
-.axis-caption{text-align:center}
-.lesson-result{display:flex;justify-content:space-between;align-items:baseline;gap:6px 16px;flex-wrap:wrap;background:#fff;border:1px solid #e1dbee;border-radius:10px;margin-top:16px;padding:9px 14px}
-.lesson-result span{font-size:13px;color:#5f5875}
-.lesson-result strong,.calc-rows dd{color:#4c389f;font:600 20px/1.5 var(--math);font-variant-numeric:tabular-nums}
-.bp-switch{display:flex;border-bottom:1px solid #dcd7e9;gap:4px}
-.bp-switch button{border:0;border-bottom:3px solid transparent;color:var(--mut);padding:8px 12px;background:transparent;font-weight:700;font-size:14px}
-.bp-switch button[aria-pressed="true"]{border-bottom-color:var(--gd);color:#513caf}
-.bp-stage h3{margin:20px 0 6px;font-size:20px}
-.calc-rows{margin:14px 0 0}
-.calc-rows div{border-top:1px solid #e2ddef;padding:8px 0}
-.calc-rows div:last-child{padding-bottom:0}
-.calc-rows dt{font-size:13px}
-.calc-rows dd{margin:1px 0 0}
-.calc-rows dd small{font:400 13px/1.5 'Noto Sans KR',sans-serif;color:#5f5875;margin-left:4px}
-.lesson-note{padding:18px 0 0;margin:14px 0 24px}
-.lesson-note h2{font-size:17px}
-.lesson-note p{margin:4px 0}
-.lesson-footer{justify-content:space-between;border-top:1px solid var(--line);padding-top:18px}
-@media(max-width:740px){
-  .lesson-workbench{grid-template-columns:minmax(0,1fr)}
-  .loss-figure,.bp-demo{border-left:0;border-top:1px solid #e3deef}
-  .lesson-head br{display:none}
-  .bp-switch button{flex:1;padding:8px 2px}
-}
 .xlinks{display:flex;gap:8px;flex-wrap:wrap}
 .xlink{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;text-decoration:none;color:var(--acc);background:#eef2fd;border:1px solid #d6dffa;border-radius:999px;padding:5px 12px;transition:.15s}
 .xlink:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
@@ -516,6 +464,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 .backbar{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--soft);border-radius:16px;padding:20px 22px;flex-wrap:wrap}
 #bp-live{white-space:normal}
 @media(max-width:700px){#v-basics .slide .sl-2{grid-template-columns:minmax(0,1fr)!important}#v-basics .map4{display:block;overflow-x:auto}}
+@media(max-width:520px){header .logo span{display:none}header .nav{gap:clamp(8px,3vw,14px)}}
 </style>
 </head>
 <body>
@@ -523,10 +472,11 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 
 <header>
   <div class="wrap">
-    <a class="logo" href="#home"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M7.5 15h9"/></svg></i>ML Playground</a>
+    <a class="logo" href="#home" aria-label="ML Playground 홈"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M7.5 15h9"/></svg></i><span>ML Playground</span></a>
     <nav class="nav">
       <a href="#home" data-v="home">홈</a>
       <a href="#gd" data-v="gd">경사하강법</a>
+      <a href="#basics" data-v="basics">손실·역전파</a>
       <a href="#svm" data-v="svm">SVM</a>
     </nav>
     <div class="hd-r"><span>누구나 시작하는 AI</span><div class="prog"><b id="progN">0</b> / 2</div></div>
@@ -586,7 +536,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
           <span class="eyebrow">LAB 01 · 약 5분</span>
           <h3>경사하강법 <span class="muted" style="font-size:15px;font-weight:500">Gradient Descent</span></h3>
           <p class="muted" style="margin:0">골짜기를 내려가는 공을 보며, 학습률 <i style="font-family:var(--math)">η</i>에 따라 달라지는 움직임을 실험합니다. 수식 속 <i style="font-family:var(--math)">η</i>를 끌면 화살표(한 걸음)의 길이가 바로 바뀝니다.</p>
-          <div class="tags"><span class="chip">경사하강법</span><span class="chip">학습률</span><a class="chip" href="#loss">손실 함수</a><a class="chip" href="#backprop">역전파</a><span class="chip">모멘텀 · Adam</span></div>
+          <div class="tags"><span class="chip">경사하강법</span><span class="chip">학습률</span><a class="chip" href="#basics">손실 함수</a><a class="chip" href="#backprop">역전파</a><span class="chip">모멘텀 · Adam</span></div>
           <a class="btn gdc" href="#gd" style="align-self:flex-start;margin-top:6px">경사하강법 실험하기 →</a>
         </div>
         <div class="card lab">
@@ -619,7 +569,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
     <div class="crumb"><a href="#home">실험실 홈</a> &nbsp;›&nbsp; 기초 개념 · 손실함수와 역전파</div>
     <div class="labhead"><div>
       <span class="eyebrow">기초 개념 · 경사하강법의 재료</span>
-      <h1 tabindex="-1">손실함수와 역전파<small>Loss Function &amp; Backpropagation</small></h1>
+      <h1>손실함수와 역전파<small>Loss Function &amp; Backpropagation</small></h1>
       <p>경사하강법 식 <span style="font-family:var(--math);font-size:18px">x ← x − η<b style="color:var(--err)">∇L</b></span>에서 <b>L은 무엇</b>이고, <b>∇L은 어떻게 구할까요?</b> 이 두 질문에 답하는 페이지예요.</p></div></div>
     <div class="stepper" style="grid-template-columns:repeat(2,1fr)"><button data-go="loss-sec" class="on"><b>01</b>손실함수 — L은 무엇?</button><button data-go="bp-sec"><b>02</b>역전파 — ∇L은 어떻게?</button></div>
     <section class="concept" id="loss-sec"><div class="sechead" style="margin-top:28px"><span class="eyebrow">PART 01 · 손실함수</span><h2>얼마나 틀렸는지 재는 자</h2><p><span class="kbd">←</span> <span class="kbd">→</span> 키나 스와이프로 넘길 수 있어요.</p></div>
@@ -705,101 +655,10 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 <div><svg id="bp-svg" class="plot" viewBox="0 0 460 300"></svg></div></div></div><div class="slide" data-t="전체 흐름"><span class="sl-k">05 · 정리</span><div class="sl-t sm">학습 = 이 네 단계의 반복</div>
 <div class="loop"><div><b>01 순전파</b>입력 → 예측 ŷ 계산</div><div><b>02 손실 계산</b>손실함수로 L 구하기</div><div><b>03 역전파</b>L에서 거꾸로, 모든 값의 기울기 ∇L 구하기</div><div><b>04 경사하강법</b>θ ← θ − η∇L 로 값 고치기 ↺</div></div>
 <div class="say" style="margin-top:16px">실제 신경망은 앞 장의 작은 그래프가 <b>수백만~수십억 개 노드</b>로 커진 것일 뿐, 원리는 같아요. 요즘은 PyTorch 같은 도구가 역전파를 <b>자동으로</b> 계산해 줘서, 사람은 모델과 손실함수만 정하면 돼요.</div>
-<div class="xlinks" style="margin-top:16px"><a class="xlink" href="#gd-practice">경사하강법 실험으로 돌아가기 →</a></div></div></div>
+<div class="xlinks" style="margin-top:16px"><a class="xlink" href="#gd">경사하강법 실험으로 돌아가기 →</a></div></div></div>
         <div class="deck-nav"><button class="btn pv" type="button">← 이전</button><div class="dots"></div><button class="btn nx" type="button">다음 →</button></div>
       </div></section>
-    <div class="backbar" id="basics-end" style="margin:10px 0 70px"><span><b>이제 경사하강법 식이 완성됐어요.</b> L은 손실함수가, ∇L은 역전파가 알려줘요.</span><div class="row"><a class="btn gdc" href="#gd-practice">경사하강법 실험하기 →</a><a class="btn" href="#svm">SVM 실험하기 →</a></div></div>
-  </div>
-</main>
-
-<!-- ============ GD · supporting lessons ============ -->
-<main id="v-loss" class="view lesson-page" hidden>
-  <div class="wrap lesson-wrap">
-    <nav class="crumb" aria-label="현재 위치"><a href="#home">실험실 홈</a> › <a href="#gd">경사하강법</a> › 손실 함수</nav>
-    <div class="lesson-head">
-      <h1 tabindex="-1">손실 함수 <small lang="en">Loss function</small></h1>
-      <p>사과 두 개가 6천 원일 때, 4천 원이라는 예측은 얼마나 틀렸을까요?<br>
-      <b>손실 함수</b>는 예측값과 정답을 받아 틀린 정도를 숫자로 나타내는 규칙이에요. 이 숫자가 <b>손실</b>이에요.</p>
-    </div>
-    <div class="lesson-links"><a href="#basics">손실 함수 개념 슬라이드와 계산 실험 보기</a></div>
-    <section class="card lesson-workbench" aria-labelledby="loss-example">
-      <div class="lesson-controls">
-        <h2 id="loss-example">사과 한 개의 가격을 바꿔 보세요</h2>
-        <p>모델은 사과 한 개의 가격 <i>w</i>를 추정해요. 두 개를 사면 예측 가격은 <b>2 × <i class="weight-symbol">w</i></b>예요.</p>
-        <label class="weight-label" for="loss-weight">한 개의 예상 가격 <strong class="weight-reading"><i class="weight-symbol">w</i> = <output for="loss-weight" data-price></output>천 원</strong></label>
-        <input id="loss-weight" data-weight type="range" min="1" max="5" step="0.25" value="2">
-        <div class="range-ends" aria-hidden="true"><span>1천 원</span><span>5천 원</span></div>
-        <dl class="price-values">
-          <div><dt>두 개의 실제 가격</dt><dd>6천 원</dd></div>
-          <div><dt>두 개의 예측 가격</dt><dd><span data-prediction></span>천 원</dd></div>
-        </dl>
-      </div>
-      <figure class="loss-figure">
-        <figcaption><b>가격에 따른 제곱오차</b><span class="lesson-key">현재 예측</span></figcaption>
-        <svg viewBox="0 0 440 238" role="img" aria-labelledby="loss-plot-name loss-plot-desc">
-          <title id="loss-plot-name">사과 한 개의 예상 가격에 따른 손실</title>
-          <desc id="loss-plot-desc">예상 가격이 3천 원이면 손실이 0이고 양쪽으로 멀어질수록 커지는 U자 곡선입니다.</desc>
-          <g stroke="#e2deef" fill="none"><path d="M45 32H405 M45 76H405 M45 120H405 M45 164H405 M45 208H405"/></g>
-          <g fill="#626779" font-size="12" text-anchor="end"><text x="36" y="36">16</text><text x="36" y="80">12</text><text x="36" y="124">8</text><text x="36" y="168">4</text><text x="36" y="212">0</text></g>
-          <text x="18" y="17" fill="#555c71" font-size="12">손실</text>
-          <path d="M45 32 Q225 384 405 32" fill="none" stroke="var(--gd)" stroke-width="3.5"/>
-          <g fill="#626779" font-size="12" text-anchor="middle"><text x="45" y="229">1</text><text x="135" y="229">2</text><text x="225" y="229">3</text><text x="315" y="229">4</text><text x="405" y="229">5</text></g>
-          <path id="loss-guide" stroke="#8b7ed2" stroke-dasharray="4 4" fill="none"/>
-          <circle id="loss-dot" r="6.5" fill="var(--gd)" stroke="#fff" stroke-width="2.5"/>
-        </svg>
-        <div class="axis-caption">한 개의 예상 가격 w (천 원)</div>
-        <div class="lesson-result"><span>손실 = (예측값 − 정답)²</span><strong id="loss-equation"></strong></div>
-      </figure>
-    </section>
-    <aside class="lesson-note"><h2>왜 차이를 제곱할까요?</h2><p>4천 원과 8천 원은 정답 6천 원에서 각각 2천 원씩 벗어나요. 가격을 천 원 단위로 계산하면 두 예측의 손실은 모두 <b>4</b>예요. 제곱하면 오차의 부호가 사라지고, 두 배 더 크게 틀리면 손실은 네 배가 돼요. 여러 예측의 제곱오차를 평균 낸 값이 <b>평균제곱오차(MSE)</b>예요.</p></aside>
-    <nav class="lesson-footer" aria-label="학습 페이지 이동"><a class="btn" href="#gd">← 경사하강법 개념</a><a class="btn gdc" href="#backprop">역전파로 이어가기 →</a></nav>
-  </div>
-</main>
-
-<main id="v-backprop" class="view lesson-page" hidden>
-  <div class="wrap lesson-wrap">
-    <nav class="crumb" aria-label="현재 위치"><a href="#home">실험실 홈</a> › <a href="#gd">경사하강법</a> › 역전파</nav>
-    <div class="lesson-head">
-      <h1 tabindex="-1">역전파 <small lang="en">Backpropagation</small></h1>
-      <p>손실을 줄이려면 사과 한 개의 예상 가격을 올려야 할까요, 내려야 할까요?<br>
-      <b>역전파</b>는 손실에서 출발해 계산 과정을 거꾸로 따라가며, 각 가중치가 손실에 미치는 영향인 <b>기울기</b>를 구해요.</p>
-    </div>
-    <div class="lesson-links"><a href="#basics-backprop">역전파 개념 슬라이드와 계산 실험 보기</a></div>
-    <section class="card lesson-workbench" aria-labelledby="bp-example">
-      <div class="lesson-controls">
-        <h2 id="bp-example">예측 한 번을 따라가 보세요</h2>
-        <p>사과 두 개의 실제 가격은 6천 원이에요. 한 개의 예상 가격 <i>w</i>를 정하고, 세 단계를 차례로 눌러 보세요.</p>
-        <label class="weight-label" for="bp-weight">처음 한 개의 예상 가격 <strong class="weight-reading"><i class="weight-symbol">w</i> = <output for="bp-weight" data-price></output>천 원</strong></label>
-        <input id="bp-weight" data-weight type="range" min="1" max="5" step="0.25" value="2">
-        <div class="range-ends" aria-hidden="true"><span>1천 원</span><span>5천 원</span></div>
-        <dl class="price-values"><div><dt>두 개의 실제 가격</dt><dd>6천 원</dd></div><div><dt>처음 예측한 가격</dt><dd><span data-prediction></span>천 원</dd></div></dl>
-      </div>
-      <div class="bp-demo">
-        <div class="bp-switch" role="group" aria-label="계산 단계 선택">
-          <button type="button" data-bp-step="forward" aria-controls="bp-forward" aria-pressed="true">1. 순전파</button>
-          <button type="button" data-bp-step="backward" aria-controls="bp-backward" aria-pressed="false">2. 역전파</button>
-          <button type="button" data-bp-step="update" aria-controls="bp-update" aria-pressed="false">3. 업데이트</button>
-        </div>
-        <div id="bp-forward" class="bp-stage">
-          <h3>가중치 → 예측값 → 손실</h3>
-          <p>먼저 정한 가격으로 두 개의 값을 예측하고, 영수증 금액과 비교해요. 이렇게 계산 순서대로 값을 구하는 것이 <b>순전파</b>예요.</p>
-          <dl class="calc-rows"><div><dt>예측값 = 수량 × 한 개의 가격</dt><dd id="bp-forward-price"></dd></div><div><dt>손실 = (예측값 − 정답)²</dt><dd id="bp-forward-loss"></dd></div></dl>
-        </div>
-        <div id="bp-backward" class="bp-stage" hidden>
-          <h3>손실 → 예측값 → 가중치</h3>
-          <p>예측값이 변하면 손실이 얼마나 변할까요? 또 <i>w</i>가 변하면 예측값은 얼마나 변할까요? 두 기울기를 곱해 <i>w</i>에 대한 손실의 기울기를 구해요. 이 규칙을 <b>연쇄법칙</b>이라고 해요.</p>
-          <dl class="calc-rows"><div><dt>예측값에 대한 손실의 기울기</dt><dd id="bp-loss-slope"></dd></div><div><dt>w에 대한 예측값의 기울기</dt><dd>2 <small>사과가 두 개예요.</small></dd></div><div><dt>w에 대한 손실의 기울기</dt><dd id="bp-weight-slope"></dd></div></dl>
-          <p id="bp-direction"></p>
-        </div>
-        <div id="bp-update" class="bp-stage" hidden>
-          <h3>기울기로 가격을 한 번 고치기</h3>
-          <p>이제 <b>경사하강법</b>이 역전파로 구한 기울기를 사용해요. 학습률을 0.1로 두고, 현재 가격에서 <b>0.1 × 기울기</b>를 빼요.</p>
-          <dl class="calc-rows"><div><dt>새로 추정한 한 개의 가격</dt><dd id="bp-new-weight"></dd></div><div><dt>두 개의 예측 가격</dt><dd id="bp-new-prediction"></dd></div><div><dt>손실의 변화</dt><dd id="bp-new-loss"></dd></div></dl>
-        </div>
-      </div>
-    </section>
-    <aside class="lesson-note"><h2>신경망에 층이 여러 개라면?</h2><p>마지막 층에서 구한 기울기를 바로 앞 층으로 전달하고, 각 층에서 같은 연쇄법칙을 적용해요. 이렇게 구한 각 가중치의 기울기를 경사하강법이나 Adam 같은 최적화 방법이 사용해 가중치를 조정해요.</p></aside>
-    <nav class="lesson-footer" aria-label="학습 페이지 이동"><a class="btn" href="#loss">← 손실 함수</a><a class="btn gdc" href="#gd-practice">경사하강법 실험하기 →</a></nav>
+    <div class="backbar" id="basics-end" style="margin:10px 0 70px"><span><b>이제 경사하강법 식이 완성됐어요.</b> L은 손실함수가, ∇L은 역전파가 알려줘요.</span><div class="row"><a class="btn gdc" href="#gd">경사하강법 실험하기 →</a><a class="btn" href="#svm">SVM 실험하기 →</a></div></div>
   </div>
 </main>
 
@@ -814,7 +673,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         <p>산에서 내리막을 찾듯, 손실이 줄어드는 쪽으로 모델의 가중치를 한 걸음씩 조정해 봅니다.</p>
       </div>
     </div>
-    <nav class="lesson-links" aria-label="경사하강법 관련 개념"><span>함께 볼 개념</span><a href="#loss">손실 함수</a><a href="#backprop">역전파</a><a href="#basics">손실함수·역전파 슬라이드</a></nav>
+    <nav class="lesson-links" aria-label="경사하강법 관련 개념"><span>함께 볼 개념</span><a href="#basics">손실 함수</a><a href="#backprop">역전파</a></nav>
     <div class="stepper" data-for="gd">
       <button data-go="gd-concept" class="on" aria-current="step"><b>01</b>개념 이해</button>
       <button data-go="gd-1d"><b>02</b>기본 실험</button>
@@ -826,9 +685,9 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <div class="sechead" style="margin-top:0"><span class="eyebrow" style="color:var(--gd)">STEP 01 · 개념 이해</span><h2>안개 낀 산에서 가장 낮은 곳 찾기</h2><p>왜 필요한지 → 비유 → 수식 순서로, 한 장씩 넘겨 보세요. <span class="kbd">←</span> <span class="kbd">→</span> 키나 화면 스와이프로도 넘길 수 있어요.</p></div>
       <div class="deck " data-next="gd-1d" data-nextlabel="직접 실험하러 가기 ↓">
         <div class="deck-top"><div class="l"><b>개념 슬라이드</b><span class="cur"></span></div><div class="r"><span class="cnt"></span><button class="fs" type="button">⤢ 크게 보기</button></div></div>
-        <div class="slides"><div class="slide" data-t="어떤 문제를 풀까?"><div class="sl-2"><div><span class="sl-k">01 · 어떤 문제를 풀까?</span><div class="sl-t">예측이 정답에 가까워지려면<br>어떤 값을 바꿔야 할까요?</div>
-<p class="sl-p">모델이 사과 개수에 한 개의 예상 가격을 곱해서 총가격을 예측한다고 해 볼게요. 여기서 학습으로 고칠 수 있는 값, 즉 <b>가중치</b>는 한 개의 예상 가격이에요.</p>
-<div class="eg">두 개의 실제 가격은 <b>6천 원</b>이에요. 한 개를 2천 원으로 잡으면 두 개의 예측은 4천 원이에요. 이렇게 예측이 얼마나 빗나갔는지 재는 규칙이 <a class="lesson-term" href="#loss">손실 함수</a>예요.</div></div>
+        <div class="slides"><div class="slide" data-t="어떤 문제를 풀까?"><div class="sl-2"><div><span class="sl-k">01 · 어떤 문제를 풀까?</span><div class="sl-t">AI의 ‘학습’은<br>좋은 값을 찾는 일이에요</div>
+<p class="sl-p">AI 모델은 숫자(가중치)를 잔뜩 가진 계산식이에요. 학습이란 <b>예측이 정답에 가까워지도록 이 숫자들을 고치는 과정</b>입니다.</p>
+<div class="eg"><b>예)</b> 집값 = <b>w</b> × 면적 + <b>b</b><br>w와 b가 엉뚱하면 예측이 크게 틀려요. ‘얼마나 틀렸는지’를 숫자 하나로 나타낸 것이 <b>손실</b>이고, 이걸 가장 작게 만드는 w, b를 찾아야 해요. <a class="xlink" href="#basics" style="margin-top:8px">손실함수 자세히 →</a></div></div>
 <div><svg viewBox="0 0 400 300" class="plot" role="img" aria-label="예측, 손실 계산, 값 고치기를 반복하는 순환 그림">
 <defs><marker id="cy-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#9aa1ad"/></marker></defs>
 <path d="M200,58 A112,112 0 0 1 297,206" fill="none" stroke="#c9ced8" stroke-width="2.5" marker-end="url(#cy-a)"/>
@@ -1466,81 +1325,32 @@ defParam('bw',{v:1,min:-2,max:6,step:0.001,fmt:v=>v.toFixed(2),sym:'w',label:'�
 defParam('bb',{v:0.5,min:-4,max:6,step:0.001,fmt:v=>v.toFixed(2),sym:'b',label:'편향',lo:'작게',hi:'크게'});
 defParam('liftc',{v:5,min:0.5,max:16,step:0.1,sym:'c',label:'자르는 높이',lo:'낮게',hi:'높게',fmt:v=>v.toFixed(1)});
 
-/* Both lessons use one price so the example carries across pages. */
-function initPriceLessons(){
-  const sliders = $$('[data-weight]');
-  const quantity = 2, target = 6, learningRate = 0.1;
-  const format = value => M(Number(value.toFixed(4)));
-  const factor = value => value < 0 ? '(' + format(value) + ')' : format(value);
-
-  function render(weight){
-    const prediction = quantity * weight;
-    const error = prediction - target;
-    const loss = error ** 2;
-    const outputSlope = 2 * error;
-    const gradient = outputSlope * quantity;
-    const newWeight = weight - learningRate * gradient;
-    const newPrediction = quantity * newWeight;
-    const newLoss = (newPrediction - target) ** 2;
-    const lossEquation = '(' + format(prediction) + ' − 6)² = ' + format(loss);
-
-    for(const slider of sliders){
-      slider.value = weight;
-      slider.setAttribute('aria-valuetext', format(weight) + '천 원');
-      const fraction = (weight - Number(slider.min)) / (Number(slider.max) - Number(slider.min));
-      slider.closest('.lesson-controls').style.setProperty('--symbol-scale', symbolScale(fraction));
-    }
-    $$('[data-price]').forEach(el => el.value = format(weight));
-    $$('[data-prediction]').forEach(el => el.textContent = format(prediction));
-    $('#loss-equation').textContent = lossEquation;
-    const x = 45 + (weight - 1) * 90, y = 208 - 11 * loss;
-    $('#loss-dot').setAttribute('cx', x);
-    $('#loss-dot').setAttribute('cy', y);
-    $('#loss-guide').setAttribute('d', 'M45 ' + y + ' H' + x + ' V208');
-    $('#bp-forward-price').textContent = '2 × ' + format(weight) + ' = ' + format(prediction) + '천 원';
-    $('#bp-forward-loss').textContent = lossEquation;
-    $('#bp-loss-slope').textContent = '2 × (' + format(prediction) + ' − 6) = ' + format(outputSlope);
-    $('#bp-weight-slope').textContent = format(outputSlope) + ' × 2 = ' + format(gradient);
-    const direction = gradient < 0 ? '기울기가 음수라서 w를 조금 올리면 손실이 줄어요.'
-      : gradient > 0 ? '기울기가 양수라서 w를 조금 내리면 손실이 줄어요.'
-      : '예측이 정답과 일치해요. 이 예시에서는 기울기와 손실이 모두 0이에요.';
-    $('#bp-direction').textContent = direction;
-    $('#bp-new-weight').textContent = format(weight) + ' − 0.1 × ' + factor(gradient) + ' = ' + format(newWeight) + '천 원';
-    $('#bp-new-prediction').textContent = format(prediction) + '천 원 → ' + format(newPrediction) + '천 원';
-    $('#bp-new-loss').textContent = format(loss) + ' → ' + format(newLoss);
-  }
-  sliders.forEach(input => input.addEventListener('input', () => render(input.valueAsNumber)));
-  const stepButtons = $$('.bp-switch button');
-  stepButtons.forEach(button => button.addEventListener('click', () => {
-    for(const item of stepButtons){
-      const selected = item === button;
-      item.setAttribute('aria-pressed', String(selected));
-      document.getElementById(item.getAttribute('aria-controls')).hidden = !selected;
-    }
-  }));
-  render(sliders[0].valueAsNumber);
-}
-initPriceLessons();
-
 /* ================= router ================= */
-const views=['home','gd','svm','loss','backprop','basics'];
+const views=['home','gd','basics','svm'];
 function go(){
   const h=location.hash.slice(1);
-  const v=h==='gd-practice'?'gd':h==='basics-backprop'?'basics':(views.includes(h)?h:'home');
-  const lesson=v==='loss'||v==='backprop'||v==='basics';
+  const backprop=h==='backprop'||h==='basics-backprop';
+  const route=backprop||h==='loss'?'basics':h==='gd-practice'?'gd':h;
+  const v=views.includes(route)?route:'home';
   const activeDeck=$('.deck.full');
   if(activeDeck) $('.fs',activeDeck).click();
   $$('.view').forEach(s=>s.hidden=s.id!=='v-'+v);
-  $$('.nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===(lesson?'gd':v)));
-  const visibleView=document.getElementById('v-'+v);
-  if(lesson) visibleView.querySelector('h1').focus({preventScroll:true});
-  document.title=lesson ? visibleView.querySelector('h1').textContent+' | ML Playground' : 'Machine Learning Playground | 직접 발견하는 머신러닝';
+  $$('.nav a').forEach(a=>{
+    const active=a.dataset.v===v;
+    a.classList.toggle('on',active);
+    if(active) a.setAttribute('aria-current','page');
+    else a.removeAttribute('aria-current');
+  });
+  document.title=v==='basics'?'손실함수와 역전파 | ML Playground':'Machine Learning Playground | 직접 발견하는 머신러닝';
   window.scrollTo({top:0,behavior:'instant'}); hideTip();
   if(v==='gd'){gdc.render();optc.render();gd1.render();gd2.redraw();}
   if(v==='svm'){svmc.render();svm.render();lift.render();}
   if(v==='basics'){
     basics.render();
-    if(h==='basics-backprop')window.scrollTo({top:$('#bp-sec').getBoundingClientRect().top+scrollY-80,behavior:'instant'});
+    const heading=$(backprop?'#bp-sec h2':'#v-basics h1');
+    heading.tabIndex=-1;
+    heading.focus({preventScroll:true});
+    if(backprop)window.scrollTo({top:$('#bp-sec').getBoundingClientRect().top+scrollY-80,behavior:'instant'});
   }
   if(h==='gd-practice') $('#fbar').parentElement.scrollIntoView({behavior:'instant'});
   syncLabNavigation();
