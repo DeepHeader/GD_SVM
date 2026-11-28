@@ -1529,7 +1529,7 @@ const TER={
 const hooks={};
 const gd2=(()=>{
   const N=250,X0=-2.4,X1=2.4,Y0=-1.6,Y1=1.6,W=600,H=400;
-  const stepsPerSecond=25;
+  const stepsPerSecond=12.5;
   const px=x=>(x-X0)/(X1-X0)*W, py=y=>(1-(y-Y0)/(Y1-Y0))*H, ix=X=>X0+X/W*(X1-X0), iy=Y=>Y0+(1-Y/H)*(Y1-Y0);
   let terr='wells',tr=null,k=0,playing=false,speed=1,raf=0,last=0;
   const cv=$('#gd2-cv'),ctx=cv.getContext('2d'),svg=$('#gd2-svg'),lossv=$('#gd2-loss');
