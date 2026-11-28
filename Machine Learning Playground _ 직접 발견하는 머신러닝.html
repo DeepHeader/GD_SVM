@@ -507,6 +507,15 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
   .lesson-head br{display:none}
   .bp-switch button{flex:1;padding:8px 2px}
 }
+.xlinks{display:flex;gap:8px;flex-wrap:wrap}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;text-decoration:none;color:var(--acc);background:#eef2fd;border:1px solid #d6dffa;border-radius:999px;padding:5px 12px;transition:.15s}
+.xlink:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.xlink i{font-style:normal;font-family:var(--math);font-size:14px}
+.deck.acc{--c:var(--acc)}
+.bp-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.backbar{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--soft);border-radius:16px;padding:20px 22px;flex-wrap:wrap}
+#bp-live{white-space:normal}
+@media(max-width:700px){#v-basics .slide .sl-2{grid-template-columns:minmax(0,1fr)!important}#v-basics .map4{display:block;overflow-x:auto}}
 </style>
 </head>
 <body>
@@ -604,6 +613,105 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
   </div>
 </main>
 
+<!-- ============ BASICS ============ -->
+<main id="v-basics" class="view" hidden>
+  <div class="wrap">
+    <div class="crumb"><a href="#home">실험실 홈</a> &nbsp;›&nbsp; 기초 개념 · 손실함수와 역전파</div>
+    <div class="labhead"><div>
+      <span class="eyebrow">기초 개념 · 경사하강법의 재료</span>
+      <h1 tabindex="-1">손실함수와 역전파<small>Loss Function &amp; Backpropagation</small></h1>
+      <p>경사하강법 식 <span style="font-family:var(--math);font-size:18px">x ← x − η<b style="color:var(--err)">∇L</b></span>에서 <b>L은 무엇</b>이고, <b>∇L은 어떻게 구할까요?</b> 이 두 질문에 답하는 페이지예요.</p></div></div>
+    <div class="stepper" style="grid-template-columns:repeat(2,1fr)"><button data-go="loss-sec" class="on"><b>01</b>손실함수 — L은 무엇?</button><button data-go="bp-sec"><b>02</b>역전파 — ∇L은 어떻게?</button></div>
+    <section class="concept" id="loss-sec"><div class="sechead" style="margin-top:28px"><span class="eyebrow">PART 01 · 손실함수</span><h2>얼마나 틀렸는지 재는 자</h2><p><span class="kbd">←</span> <span class="kbd">→</span> 키나 스와이프로 넘길 수 있어요.</p></div>
+      <div class="deck acc" data-next="bp-sec" data-nextlabel="다음: 역전파 ↓">
+        <div class="deck-top"><div class="l"><b>개념 슬라이드</b><span class="cur"></span></div><div class="r"><span class="cnt"></span><button class="fs" type="button">⤢ 크게 보기</button></div></div>
+        <div class="slides"><div class="slide" data-t="손실함수란?"><div class="sl-2"><div><span class="sl-k">01 · 손실함수란?</span><div class="sl-t">‘얼마나 틀렸나’를<br>숫자 하나로</div>
+<p class="sl-p">모델이 예측하면, 정답과 비교해서 <b>틀린 정도를 숫자 하나</b>로 매겨요. 이 숫자를 계산하는 규칙이 <b>손실함수(loss function)</b>, 결과가 <b>손실 L</b>이에요.</p>
+<p class="sl-p">손실이 <b>0이면 완벽</b>, 클수록 많이 틀린 거예요. 경사하강법의 목표는 바로 이 L을 가장 작게 만드는 것이죠.</p>
+<div class="eg"><b>예)</b> 집값 정답 5억, 모델 예측 4억 → 1억 틀림 → (5 − 4)² = 손실 1<br>예측이 4.8억이었다면 → (5 − 4.8)² = 손실 0.04 — 더 좋은 모델!</div></div>
+<div><svg viewBox="0 0 420 260" class="plot" role="img" aria-label="정답과 예측의 차이가 손실이 되는 그림"><rect width="420" height="260" rx="16" fill="#f6f8ff"/>
+<line x1="40" y1="150" x2="380" y2="150" stroke="#c9ced8" stroke-width="2"/>
+<g font-size="12" fill="#98a2b3" text-anchor="middle"><text x="40" y="172">0</text><text x="125" y="172">2</text><text x="210" y="172">4억</text><text x="295" y="172">6</text><text x="380" y="172">8</text></g>
+<circle cx="252" cy="150" r="11" fill="#202735"/><text x="252" y="122" font-size="13" font-weight="800" text-anchor="middle">정답 5억</text>
+<circle cx="210" cy="150" r="11" fill="#fff" stroke="#3f5bd8" stroke-width="3"/><text x="200" y="208" font-size="13" font-weight="800" fill="#3f5bd8" text-anchor="middle">예측 4억</text>
+<path d="M210,135 L252,135" stroke="#d6455d" stroke-width="3"/><text x="231" y="98" font-size="12" fill="#d6455d" text-anchor="middle" font-weight="700">↕ 차이</text>
+<rect x="268" y="196" width="128" height="40" rx="12" fill="#d6455d"/><text x="332" y="222" font-size="15" fill="#fff" font-weight="800" text-anchor="middle">손실 L = 1</text>
+</svg></div></div></div><div class="slide" data-t="왜 숫자 하나일까?"><div class="sl-2"><div><span class="sl-k">02 · 왜 숫자 하나여야 할까?</span><div class="sl-t sm">‘더 나아졌는지’<br>비교할 수 있어야 하니까</div>
+<p class="sl-p">데이터가 1,000개면 오차도 1,000개예요. 어떤 건 줄고 어떤 건 늘면, 모델이 좋아졌는지 알 수 없죠.</p>
+<p class="sl-p">그래서 모든 오차를 <b>평균 내서 하나로</b> 합쳐요. 그러면 “손실 3.2 → 2.7, 좋아졌다!”처럼 판단할 수 있고, 경사하강법은 이 숫자가 <b>줄어드는 방향</b>을 찾을 수 있어요.</p>
+<div class="say">경사하강법 실험의 <b>L(x) = x²</b>는, 이런 손실을 가장 단순한 골짜기 모양으로 바꿔 놓은 거예요. 다음 장에서 진짜 손실이 왜 골짜기 모양인지 볼게요.</div></div>
+<div class="flow" style="flex-direction:column;align-items:stretch;gap:10px;font-size:15px">
+<span>데이터 1 오차² = 0.8</span><span>데이터 2 오차² = 2.1</span><span>데이터 3 오차² = 0.3</span><span style="text-align:center;border:0;background:none">⋮ 평균 내기 ↓</span><span class="k" style="background:var(--acc);border-color:var(--acc);text-align:center;font-size:17px">손실 L = 1.07 (숫자 하나)</span></div></div></div><div class="slide" data-t="평균제곱오차 (MSE)"><div class="sl-2"><div><span class="sl-k">03 · 대표 손실함수 ① 평균제곱오차</span><div class="sl-t sm">숫자를 맞히는 문제엔<br>‘차이의 제곱’ 평균</div>
+<div class="fx blue"><div class="fl md">L(<span class="sym" data-p="lw" style="--c:var(--acc)"><span class="g">w</span></span>) = <span style="font-size:.8em">1/n</span> Σ (<span class="mv">y</span><sub>i</sub> − <span class="mv">w</span><span class="mv">x</span><sub>i</sub>)²</div></div>
+<p class="sl-p" style="margin-top:10px">직선 ŷ = w·x로 점 5개를 맞힌다고 해요. 수식 속 <b style="color:var(--acc)">w</b>를 끌면 직선이 기울고, <b>빨간 막대(오차)</b>와 손실이 바뀌어요.</p>
+<div class="say" id="mse-say"></div></div>
+<div><svg id="mse-svg" class="plot" viewBox="0 0 420 300"></svg></div></div></div><div class="slide" data-t="교차 엔트로피"><div class="sl-2"><div><span class="sl-k">04 · 대표 손실함수 ② 교차 엔트로피</span><div class="sl-t sm">분류 문제엔<br>‘정답 확률’로 벌점</div>
+<div class="fx blue"><div class="fl md">L = −log(<span class="sym" data-p="lp" style="--c:var(--acc)"><span class="g">p</span></span>)</div></div>
+<p class="sl-p" style="margin-top:10px">“고양이 사진”에 모델이 <b>고양이일 확률 p</b>를 얼마로 줬는지 봐요. <b style="color:var(--acc)">p</b>를 끌어 보세요.</p>
+<div class="say" id="ce-say"></div></div>
+<div><svg id="ce-svg" class="plot" viewBox="0 0 420 300"></svg></div></div></div><div class="slide" data-t="문제별 손실함수"><span class="sl-k">05 · 정리</span><div class="sl-t sm">문제 종류에 따라 손실함수를 골라요</div>
+<table class="map4 cmp3"><tr><th>문제 종류</th><th>대표 손실함수</th><th>식</th><th>핵심 아이디어</th></tr>
+<tr><td><b>숫자 맞히기 (회귀)</b></td><td>평균제곱오차 (MSE)</td><td style="font-family:var(--math)">(y − ŷ)²의 평균</td><td>많이 틀릴수록 제곱으로 더 크게 벌점</td></tr>
+<tr><td><b>종류 맞히기 (분류)</b></td><td>교차 엔트로피</td><td style="font-family:var(--math)">−log p<sub>정답</sub></td><td>정답에 준 확률이 낮을수록 큰 벌점, 확신하고 틀리면 매우 큼</td></tr>
+<tr><td><b>SVM 분류</b></td><td>힌지 손실</td><td style="font-family:var(--math)">max(0, 1 − y·f(x))</td><td>마진 밖에서 맞히면 0, 마진 안이거나 틀리면 벌점 — SVM 실험의 ‘마진 위반’이 바로 이것</td></tr></table>
+<div class="say" style="margin-top:14px">어떤 손실함수든 공통점은 같아요: <b>틀릴수록 커지는 숫자 하나.</b> 그런데 경사하강법은 이 숫자의 <b>기울기 ∇L</b>도 알아야 움직일 수 있어요. 값이 수백만 개라면 그 기울기는 어떻게 구할까요? → 다음: 역전파</div></div></div>
+        <div class="deck-nav"><button class="btn pv" type="button">← 이전</button><div class="dots"></div><button class="btn nx" type="button">다음 →</button></div>
+      </div></section>
+    <section class="concept" id="bp-sec"><div class="sechead"><span class="eyebrow">PART 02 · 역전파</span><h2>기울기를 거꾸로 전달하기</h2><p>손실함수로 L을 구했다면, 이제 모든 값에 대한 기울기 ∇L이 필요해요.</p></div>
+      <div class="deck acc" data-next="basics-end" data-nextlabel="경사하강법 실험하러 가기 ↓">
+        <div class="deck-top"><div class="l"><b>개념 슬라이드</b><span class="cur"></span></div><div class="r"><span class="cnt"></span><button class="fs" type="button">⤢ 크게 보기</button></div></div>
+        <div class="slides"><div class="slide" data-t="왜 필요할까?"><div class="sl-2"><div><span class="sl-k">01 · 왜 필요할까?</span><div class="sl-t">기울기 수백만 개를<br>빠르게 구하는 법</div>
+<p class="sl-p">경사하강법은 모든 값(가중치)마다 <b>“이걸 조금 바꾸면 손실이 얼마나 변하나?”</b>, 즉 기울기를 알아야 해요.</p>
+<p class="sl-p">무식한 방법은 값을 하나씩 살짝 바꿔 보고 손실을 다시 재는 거예요. 하지만 값이 100만 개면 <b>매 걸음마다 계산을 100만 번</b> 해야 하죠.</p>
+<p class="sl-p"><b>역전파(backpropagation)</b>는 손실에서 출발해 <b>거꾸로 한 번만</b> 계산하면서 모든 기울기를 한꺼번에 구해요.</p></div>
+<div><div class="vs" style="grid-template-columns:1fr;gap:14px"><div class="bad"><b>✗ 하나씩 바꿔 보기</b>값 100만 개 → 손실 계산 100만 번 (매 걸음마다!)</div><div class="good" style="background:#eef2fd;border-color:#d6dffa"><b>✓ 역전파</b>순전파 1번 + 역전파 1번 → 모든 기울기 완성</div></div></div></div></div><div class="slide" data-t="비유: 공장 라인"><div class="sl-2 wide"><div><svg viewBox="0 0 460 230" class="plot" role="img" aria-label="순전파로 만들고 역전파로 책임을 나누는 공장 라인">
+<defs><marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#3f5bd8"/></marker>
+<marker id="fb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#d6455d"/></marker></defs>
+<rect width="460" height="230" rx="14" fill="#f6f8ff"/>
+<g font-size="12.5" font-weight="700" text-anchor="middle">
+<rect x="18" y="88" width="76" height="54" rx="12" fill="#fff" stroke="#202735"/><text x="56" y="112">재료</text><text x="56" y="130" font-size="11" fill="#667085" font-weight="500">입력 x</text>
+<rect x="128" y="88" width="76" height="54" rx="12" fill="#fff" stroke="#3f5bd8"/><text x="166" y="112">공정 1</text><text x="166" y="130" font-size="11" fill="#3f5bd8" font-weight="500">가중치 w₁</text>
+<rect x="238" y="88" width="76" height="54" rx="12" fill="#fff" stroke="#3f5bd8"/><text x="276" y="112">공정 2</text><text x="276" y="130" font-size="11" fill="#3f5bd8" font-weight="500">가중치 w₂</text>
+<rect x="348" y="82" width="96" height="66" rx="12" fill="#d6455d"/><text x="396" y="110" fill="#fff">불량 검사</text><text x="396" y="130" font-size="11" fill="#fff" font-weight="500">손실 L</text></g>
+<g stroke="#3f5bd8" stroke-width="2.5"><line x1="96" y1="100" x2="124" y2="100" marker-end="url(#fa)"/><line x1="206" y1="100" x2="234" y2="100" marker-end="url(#fa)"/><line x1="316" y1="100" x2="344" y2="100" marker-end="url(#fa)"/></g>
+<g stroke="#d6455d" stroke-width="2.5" stroke-dasharray="5 4"><line x1="344" y1="132" x2="318" y2="132" marker-end="url(#fb)"/><line x1="234" y1="132" x2="208" y2="132" marker-end="url(#fb)"/></g>
+<g font-size="12.5" font-weight="700"><text x="230" y="50" fill="#3f5bd8" text-anchor="middle">→ 순전파: 앞에서부터 만들어 결과(예측) 내기</text>
+<text x="230" y="186" fill="#d6455d" text-anchor="middle">← 역전파: 불량에서 거꾸로, 각 공정의 ‘책임(기울기)’ 나누기</text>
+<text x="230" y="210" fill="#667085" text-anchor="middle" font-weight="500">책임이 큰 공정(w)부터 크게 고치면 → 경사하강법</text></g>
+</svg></div><div><span class="sl-k">02 · 비유</span><div class="sl-t sm">불량품이 나왔을 때<br>책임을 거꾸로 나누기</div>
+<p class="sl-p">공장 라인은 재료가 공정을 차례로 거쳐 완성품이 돼요. 이게 <b>순전파</b> — 입력에서 예측까지 앞으로 계산하는 과정이에요.</p>
+<p class="sl-p">완성품에 불량(손실)이 있으면, <b>마지막 공정부터 거꾸로</b> “너 때문에 불량이 얼마나 생겼나”를 따져요. 이게 <b>역전파</b>예요.</p>
+<p class="sl-p">각 공정이 받은 ‘책임’이 바로 <b>기울기</b>. 책임이 큰 공정을 크게 고치는 게 경사하강법이에요.</p></div></div></div><div class="slide" data-t="연쇄법칙"><div class="sl-2 wide"><div><svg viewBox="0 0 460 220" class="plot" role="img" aria-label="세 개의 톱니바퀴로 연쇄법칙을 설명하는 그림">
+<rect width="460" height="220" rx="14" fill="#f6f8ff"/>
+<g stroke-width="3" fill="#fff"><circle cx="90" cy="110" r="58" stroke="#3f5bd8" stroke-dasharray="6 5"/><circle cx="196" cy="110" r="44" stroke="#6f5ce6" stroke-dasharray="5 4"/><circle cx="286" cy="110" r="44" stroke="#6f5ce6" stroke-dasharray="5 4"/><circle cx="374" cy="110" r="40" stroke="#d6455d" stroke-dasharray="4 4"/></g>
+<g font-weight="800" text-anchor="middle"><text x="90" y="104" font-size="20" fill="#3f5bd8">w</text><text x="90" y="126" font-size="11" fill="#667085">+1 바꾸면</text>
+<text x="196" y="104" font-size="20" fill="#6f5ce6">ŷ</text><text x="196" y="126" font-size="11" fill="#667085">+2</text>
+<text x="286" y="104" font-size="18" fill="#6f5ce6">오차</text><text x="286" y="126" font-size="11" fill="#667085">+2</text>
+<text x="374" y="104" font-size="20" fill="#d6455d">L</text><text x="374" y="126" font-size="11" fill="#667085">+12</text></g>
+<g font-size="12.5" font-weight="700" text-anchor="middle"><rect x="118" y="18" width="56" height="22" rx="11" fill="#202735"/><text x="146" y="33" fill="#fff">×2</text>
+<rect x="213" y="18" width="56" height="22" rx="11" fill="#202735"/><text x="241" y="33" fill="#fff">×1</text>
+<rect x="302" y="18" width="56" height="22" rx="11" fill="#202735"/><text x="330" y="33" fill="#fff">×6</text>
+<text x="230" y="186" fill="#202735">w가 1 변하면 L은 2 × 1 × 6 = 12만큼 변해요</text><text x="230" y="206" fill="#667085" font-weight="500" font-size="11">(x = 2라서 ×2, 오차가 3일 때 오차² 의 비율은 2×3 = ×6)</text></g>
+</svg></div><div><span class="sl-k">03 · 핵심 원리: 연쇄법칙</span><div class="sl-t sm">맞물린 톱니바퀴처럼<br>비율을 곱해요</div>
+<p class="sl-p">w를 바꾸면 예측 ŷ이 바뀌고, ŷ이 바뀌면 손실 L이 바뀌어요. 각 구간에서 <b>“얼마나 따라 변하나(비율)”</b>만 알면, 전부 곱해서 w → L의 영향을 구할 수 있어요.</p>
+<div class="fx blue"><div class="fl md" style="padding-bottom:6px">∂L/∂w = ∂L/∂ŷ × ∂ŷ/∂w</div></div>
+<p class="sl-p" style="margin-top:10px">역전파는 L 쪽에서부터 이 비율을 <b>하나씩 곱해 나가며</b> 거꾸로 전달해요. 이미 곱한 값을 재사용하니 빠른 거예요.</p></div></div></div><div class="slide" data-t="직접 계산해 보기"><span class="sl-k">04 · 직접 계산해 보기</span><div class="sl-t sm">순전파 → 역전파 → 경사하강법 한 걸음</div>
+<div class="sl-2" style="align-items:start;gap:28px;grid-template-columns:1fr 1.15fr"><div>
+<div class="fx blue"><div class="fx-h"><b>아주 작은 모델</b><span>⇆ w, b를 끌어 보세요</span></div>
+<div class="fl md">ŷ = <span class="sym" data-p="bw" style="--c:var(--acc)"><span class="g">w</span></span> · <span class="mv">x</span> + <span class="sym" data-p="bb" style="--c:var(--b)"><span class="g">b</span></span>,&nbsp; L = (ŷ − <span class="mv">y</span>)²</div>
+<div class="live" id="bp-live"></div></div>
+<div class="bp-ctl"><button class="btn pri" id="bp-step">▶ 경사하강법 한 걸음 (η = 0.05)</button><button class="btn sm" id="bp-reset">처음으로</button></div>
+<div class="say" id="bp-say"></div></div>
+<div><svg id="bp-svg" class="plot" viewBox="0 0 460 300"></svg></div></div></div><div class="slide" data-t="전체 흐름"><span class="sl-k">05 · 정리</span><div class="sl-t sm">학습 = 이 네 단계의 반복</div>
+<div class="loop"><div><b>01 순전파</b>입력 → 예측 ŷ 계산</div><div><b>02 손실 계산</b>손실함수로 L 구하기</div><div><b>03 역전파</b>L에서 거꾸로, 모든 값의 기울기 ∇L 구하기</div><div><b>04 경사하강법</b>θ ← θ − η∇L 로 값 고치기 ↺</div></div>
+<div class="say" style="margin-top:16px">실제 신경망은 앞 장의 작은 그래프가 <b>수백만~수십억 개 노드</b>로 커진 것일 뿐, 원리는 같아요. 요즘은 PyTorch 같은 도구가 역전파를 <b>자동으로</b> 계산해 줘서, 사람은 모델과 손실함수만 정하면 돼요.</div>
+<div class="xlinks" style="margin-top:16px"><a class="xlink" href="#gd-practice">경사하강법 실험으로 돌아가기 →</a></div></div></div>
+        <div class="deck-nav"><button class="btn pv" type="button">← 이전</button><div class="dots"></div><button class="btn nx" type="button">다음 →</button></div>
+      </div></section>
+    <div class="backbar" id="basics-end" style="margin:10px 0 70px"><span><b>이제 경사하강법 식이 완성됐어요.</b> L은 손실함수가, ∇L은 역전파가 알려줘요.</span><div class="row"><a class="btn gdc" href="#gd-practice">경사하강법 실험하기 →</a><a class="btn" href="#svm">SVM 실험하기 →</a></div></div>
+  </div>
+</main>
+
 <!-- ============ GD · supporting lessons ============ -->
 <main id="v-loss" class="view lesson-page" hidden>
   <div class="wrap lesson-wrap">
@@ -613,6 +721,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <p>사과 두 개가 6천 원일 때, 4천 원이라는 예측은 얼마나 틀렸을까요?<br>
       <b>손실 함수</b>는 예측값과 정답을 받아 틀린 정도를 숫자로 나타내는 규칙이에요. 이 숫자가 <b>손실</b>이에요.</p>
     </div>
+    <div class="lesson-links"><a href="#basics">손실 함수 개념 슬라이드와 계산 실험 보기</a></div>
     <section class="card lesson-workbench" aria-labelledby="loss-example">
       <div class="lesson-controls">
         <h2 id="loss-example">사과 한 개의 가격을 바꿔 보세요</h2>
@@ -655,6 +764,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
       <p>손실을 줄이려면 사과 한 개의 예상 가격을 올려야 할까요, 내려야 할까요?<br>
       <b>역전파</b>는 손실에서 출발해 계산 과정을 거꾸로 따라가며, 각 가중치가 손실에 미치는 영향인 <b>기울기</b>를 구해요.</p>
     </div>
+    <div class="lesson-links"><a href="#basics-backprop">역전파 개념 슬라이드와 계산 실험 보기</a></div>
     <section class="card lesson-workbench" aria-labelledby="bp-example">
       <div class="lesson-controls">
         <h2 id="bp-example">예측 한 번을 따라가 보세요</h2>
@@ -704,7 +814,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
         <p>산에서 내리막을 찾듯, 손실이 줄어드는 쪽으로 모델의 가중치를 한 걸음씩 조정해 봅니다.</p>
       </div>
     </div>
-    <nav class="lesson-links" aria-label="경사하강법 관련 개념"><span>함께 볼 개념</span><a href="#loss">손실 함수</a><a href="#backprop">역전파</a></nav>
+    <nav class="lesson-links" aria-label="경사하강법 관련 개념"><span>함께 볼 개념</span><a href="#loss">손실 함수</a><a href="#backprop">역전파</a><a href="#basics">손실함수·역전파 슬라이드</a></nav>
     <div class="stepper" data-for="gd">
       <button data-go="gd-concept" class="on" aria-current="step"><b>01</b>개념 이해</button>
       <button data-go="gd-1d"><b>02</b>기본 실험</button>
@@ -1350,6 +1460,10 @@ defParam('cx',{v:-3,min:-4.5,max:4.5,step:0.1,sym:'x',label:'공의 위치',lo:'
 defParam('sang',{v:100,min:0,max:180,step:1,sym:'θ',label:'경계 방향 (각도)',lo:'0°',hi:'180°',fmt:v=>v.toFixed(0)+'°'});
 defParam('bmem',{v:0.9,min:0,max:0.99,step:0.01,sym:'β',label:'모멘텀의 기억 비율',lo:'잊음',hi:'오래 기억'});
 defParam('gst',{v:10,min:0.1,max:30,log:true,sym:'g_y',label:'가파른 방향의 기울기',lo:'완만',hi:'가파름',fmt:v=>v<1?v.toFixed(2):v.toFixed(1)});
+defParam('lw',{v:0.8,min:0,max:3.2,step:0.01,sym:'w',label:'직선의 기울기',lo:'완만',hi:'가파름'});
+defParam('lp',{v:0.7,min:0.01,max:0.99,step:0.01,sym:'p',label:'정답(고양이)에 준 확률',lo:'확신하고 틀림',hi:'확신하고 맞음'});
+defParam('bw',{v:1,min:-2,max:6,step:0.001,fmt:v=>v.toFixed(2),sym:'w',label:'가중치',lo:'작게',hi:'크게'});
+defParam('bb',{v:0.5,min:-4,max:6,step:0.001,fmt:v=>v.toFixed(2),sym:'b',label:'편향',lo:'작게',hi:'크게'});
 defParam('liftc',{v:5,min:0.5,max:16,step:0.1,sym:'c',label:'자르는 높이',lo:'낮게',hi:'높게',fmt:v=>v.toFixed(1)});
 
 /* Both lessons use one price so the example carries across pages. */
@@ -1409,11 +1523,11 @@ function initPriceLessons(){
 initPriceLessons();
 
 /* ================= router ================= */
-const views=['home','gd','svm','loss','backprop'];
+const views=['home','gd','svm','loss','backprop','basics'];
 function go(){
   const h=location.hash.slice(1);
-  const v=h==='gd-practice'?'gd':(views.includes(h)?h:'home');
-  const lesson=v==='loss'||v==='backprop';
+  const v=h==='gd-practice'?'gd':h==='basics-backprop'?'basics':(views.includes(h)?h:'home');
+  const lesson=v==='loss'||v==='backprop'||v==='basics';
   const activeDeck=$('.deck.full');
   if(activeDeck) $('.fs',activeDeck).click();
   $$('.view').forEach(s=>s.hidden=s.id!=='v-'+v);
@@ -1424,6 +1538,10 @@ function go(){
   window.scrollTo({top:0,behavior:'instant'}); hideTip();
   if(v==='gd'){gdc.render();optc.render();gd1.render();gd2.redraw();}
   if(v==='svm'){svmc.render();svm.render();lift.render();}
+  if(v==='basics'){
+    basics.render();
+    if(h==='basics-backprop')window.scrollTo({top:$('#bp-sec').getBoundingClientRect().top+scrollY-80,behavior:'instant'});
+  }
   if(h==='gd-practice') $('#fbar').parentElement.scrollIntoView({behavior:'instant'});
   syncLabNavigation();
   if((v==='gd'||v==='svm')&&!coachDone) setTimeout(placeCoach,80);
@@ -2277,6 +2395,65 @@ const optc=(()=>{
   P.bmem.subs.push(rb);P.gst.subs.push(rg);
   $$('.go3').forEach(b=>b.onclick=()=>{const t=b.dataset.t;const btn=$(`#gd2-terr button[data-t=${t}]`);if(btn)btn.click();const el=$('#gd-2d');window.scrollTo({top:el.getBoundingClientRect().top+scrollY-80,behavior:'smooth'});});
   return {render(){rb();rg();}};
+})();
+/* ================= Basics (loss + backprop) ================= */
+const basics=(()=>{
+  const D=[[1,2.1],[2,3.9],[3,6.2],[4,7.8],[5,10.1]];
+  const Lw=w=>D.reduce((a,[x,y])=>a+(y-w*x)**2,0)/D.length;
+  let bestW=0;{let n=0,d=0;D.forEach(([x,y])=>{n+=x*y;d+=x*x;});bestW=n/d;}
+  function mse(){
+    const w=P.lw.v,W=420,H=300;
+    // left: scatter (0..220), right: L(w) curve (240..410)
+    const sx=x=>24+x/5.5*190,sy=y=>250-y/12*220;
+    let s=`<rect width="420" height="300" rx="14" fill="#f6f8ff"/><line x1="24" y1="250" x2="214" y2="250" stroke="#c9ced8"/><line x1="24" y1="30" x2="24" y2="250" stroke="#c9ced8"/>`;
+    s+=`<line x1="${sx(0)}" y1="${sy(0)}" x2="${sx(5.5)}" y2="${sy(w*5.5)}" stroke="#3f5bd8" stroke-width="2.6"/>`;
+    D.forEach(([x,y])=>{s+=`<line x1="${sx(x)}" y1="${sy(y)}" x2="${sx(x)}" y2="${sy(w*x)}" stroke="#d6455d" stroke-width="3" opacity=".75"/><circle cx="${sx(x)}" cy="${sy(y)}" r="5.5" fill="#202735"/>`;});
+    s+=`<text x="120" y="282" font-size="11.5" fill="#667085" text-anchor="middle">빨간 막대 = 오차</text>`;
+    const lx=w2=>246+w2/3.2*160,Lmax=Math.max(Lw(0),Lw(3.2)),ly=v=>250-Math.min(v/Lmax,1.05)*200;
+    s+=`<line x1="246" y1="250" x2="406" y2="250" stroke="#c9ced8"/><line x1="246" y1="40" x2="246" y2="250" stroke="#c9ced8"/>`;
+    let d='';for(let i=0;i<=80;i++){const w2=3.2*i/80;d+=(i?'L':'M')+lx(w2).toFixed(1)+','+ly(Lw(w2)).toFixed(1);}
+    s+=`<path d="${d}" fill="none" stroke="#6f5ce6" stroke-width="2.4"/><circle cx="${lx(w)}" cy="${ly(Lw(w))}" r="7" fill="#3f5bd8" stroke="#fff" stroke-width="2"/>`;
+    s+=`<text x="326" y="30" font-size="12" fill="#5a46d6" text-anchor="middle" font-weight="700">w에 따른 손실 L — 골짜기!</text><text x="406" y="268" font-size="11" fill="#98a2b3" text-anchor="end">w →</text>`;
+    $('#mse-svg').innerHTML=s;
+    const L=Lw(w);
+    $('#mse-say').innerHTML=`w = <b>${w.toFixed(2)}</b> → 손실 L = <b>${L.toFixed(2)}</b>. `+(Math.abs(w-bestW)<0.05?'<b>골짜기 바닥!</b> 오차가 가장 작은 직선이에요.':`최적값(약 ${bestW.toFixed(2)})에서 멀수록 손실이 커져요. 오른쪽 그래프가 바로 경사하강법이 내려가는 <b>골짜기</b>예요.`);
+  }
+  function ce(){
+    const p=P.lp.v,W=420,H=300,sx=v=>40+v*350,mx=4.7,sy=v=>250-Math.min(v,mx)/mx*210;
+    let s=`<rect width="420" height="300" rx="14" fill="#f6f8ff"/><line x1="40" y1="250" x2="395" y2="250" stroke="#c9ced8"/><line x1="40" y1="34" x2="40" y2="250" stroke="#c9ced8"/>`;
+    let d='';for(let i=1;i<=100;i++){const q=i/100;d+=(i>1?'L':'M')+sx(q).toFixed(1)+','+sy(-Math.log(q)).toFixed(1);}
+    s+=`<path d="${d}" fill="none" stroke="#3f5bd8" stroke-width="2.6"/>`;
+    const L=-Math.log(p);
+    s+=`<line x1="${sx(p)}" y1="250" x2="${sx(p)}" y2="${sy(L)}" stroke="#d6455d" stroke-dasharray="4 3"/><circle cx="${sx(p)}" cy="${sy(L)}" r="7" fill="#d6455d" stroke="#fff" stroke-width="2"/>`;
+    s+=`<g font-size="11.5" fill="#98a2b3"><text x="40" y="270" text-anchor="middle">0</text><text x="215" y="270" text-anchor="middle">0.5</text><text x="390" y="270" text-anchor="middle">1</text><text x="395" y="290" text-anchor="end">고양이일 확률 p →</text><text x="46" y="30">벌점 L</text></g>`;
+    // probability bar
+    s+=`<rect x="230" y="40" width="160" height="16" rx="8" fill="#e6e8ee"/><rect x="230" y="40" width="${160*p}" height="16" rx="8" fill="#3f5bd8"/><text x="230" y="76" font-size="11.5" fill="#202735">🐱 고양이 ${Math.round(p*100)}% · 🐶 강아지 ${Math.round((1-p)*100)}%</text>`;
+    $('#ce-svg').innerHTML=s;
+    $('#ce-say').innerHTML=`정답(고양이)에 <b>${Math.round(p*100)}%</b>를 줬어요 → 벌점 L = <b>${L.toFixed(2)}</b>. `+(p>0.9?'거의 확신하고 맞혀서 벌점이 0에 가까워요.':p<0.1?'<b style="color:var(--err)">확신하고 틀렸어요!</b> 벌점이 급격히 커져요. 이래서 모델이 “아는 척”하지 않도록 학습돼요.':'확률이 낮아질수록 벌점이 점점 더 가파르게 커져요.');
+  }
+  const X=2,Y=10,ETA=0.05;let hist=[];
+  function bp(){
+    const w=P.bw.v,b=P.bb.v,wx=w*X,yh=wx+b,L=(yh-Y)**2,dy=2*(yh-Y),dw=dy*X,db=dy;
+    const f=v=>M((Math.abs(v)<0.005?0:v).toFixed(2));
+    const N=[[50,150,'x',`${X}`,'#202735','입력'],[50,60,'w',f(w),'#3f5bd8','가중치'],[160,105,'×',f(wx),'#202735','w·x'],[160,220,'b',f(b),'#e39b3d','편향'],[270,150,'+',f(yh),'#6f5ce6','예측 ŷ'],[390,150,'L',f(L),'#d6455d','손실']];
+    let s=`<defs><marker id="bpa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#9aa1ad"/></marker></defs><rect width="460" height="300" rx="14" fill="#f6f8ff"/>`;
+    const E=[[0,2],[1,2],[2,4],[3,4],[4,5]];
+    E.forEach(([a,c])=>{const A=N[a],B=N[c],dx=B[0]-A[0],dyy=B[1]-A[1],l=Math.hypot(dx,dyy);s+=`<line x1="${A[0]+dx/l*26}" y1="${A[1]+dyy/l*26}" x2="${B[0]-dx/l*28}" y2="${B[1]-dyy/l*28}" stroke="#9aa1ad" stroke-width="2" marker-end="url(#bpa)"/>`;});
+    N.forEach(([x,y,t,v,c,lab])=>{s+=`<circle cx="${x}" cy="${y}" r="24" fill="#fff" stroke="${c}" stroke-width="2.5"/><text x="${x}" y="${y+6}" font-size="17" font-weight="800" fill="${c}" text-anchor="middle" font-family="STIX Two Text,serif">${t}</text><text x="${x}" y="${y-32}" font-size="12.5" font-weight="700" fill="#3f5bd8" text-anchor="middle">${v}</text><text x="${x}" y="${y+42}" font-size="10.5" fill="#667085" text-anchor="middle">${lab}</text>`;});
+    s+=`<text x="390" y="100" font-size="11" fill="#667085" text-anchor="middle">정답 y = ${Y}</text>`;
+    // backward grads (red)
+    const g=(x,y,t)=>`<rect x="${x-38}" y="${y-11}" width="76" height="22" rx="11" fill="#fdecef" stroke="#f3cfd6"/><text x="${x}" y="${y+4}" font-size="11.5" font-weight="700" fill="#b42340" text-anchor="middle">${t}</text>`;
+    s+=g(330,188,'∂L/∂ŷ '+f(dy))+g(108,100,'∂L/∂w '+f(dw))+g(236,222,'∂L/∂b '+f(db));
+    s+=`<text x="230" y="292" font-size="11" fill="#98a2b3" text-anchor="middle">파란 숫자 = 순전파 값 · 빨간 상자 = 역전파로 구한 기울기</text>`;
+    $('#bp-svg').innerHTML=s;
+    $('#bp-live').innerHTML=`순전파: ŷ = ${f(w)}×${X} + ${f(b)} = <b>${f(yh)}</b>, L = (${f(yh)} − ${Y})² = <b>${f(L)}</b><br>역전파: ∂L/∂ŷ = 2(ŷ − y) = <b>${f(dy)}</b> → ∂L/∂w = ${f(dy)} × x(${X}) = <b style="color:var(--err)">${f(dw)}</b>, ∂L/∂b = ${f(dy)} × 1 = <b style="color:var(--err)">${f(db)}</b>`;
+    $('#bp-say').innerHTML=hist.length?`${hist.length}걸음 학습: 손실 ${hist.map(v=>v.toFixed(1)).concat([L.toFixed(2)]).slice(-5).join(' → ')}. ${L<0.01?'<b>정답에 도착!</b>':'기울기가 가리키는 반대 방향으로 w, b를 고치니 손실이 줄어요.'}`:
+      `w의 기울기(${f(dw)})가 b의 기울기(${f(db)})보다 ${Math.abs(dw)>Math.abs(db)?'커요 — x = 2가 곱해지기 때문. 그래서 w가 더 크게 고쳐져요.':'작아요.'} 버튼을 눌러 경사하강법 한 걸음을 적용해 보세요.`;
+  }
+  $('#bp-step').onclick=()=>{const w=P.bw.v,b=P.bb.v,yh=w*X+b,dy=2*(yh-Y);hist.push((yh-Y)**2);setParam('bw',w-ETA*dy*X,true);setParam('bb',b-ETA*dy,true);bp();};
+  $('#bp-reset').onclick=()=>{hist=[];setParam('bw',1,true);setParam('bb',0.5,true);bp();};
+  P.lw.subs.push(mse);P.lp.subs.push(ce);P.bw.subs.push(()=>{hist=[];bp();});P.bb.subs.push(()=>{hist=[];bp();});
+  return {render(){mse();ce();bp();}};
 })();
 const svmc=(()=>{
   const A=[[-2.6,1.4],[-1.6,2.7],[-3.1,-0.1],[-1.0,0.9],[-2.2,3.0]],B=[[1.4,-0.6],[2.6,1.1],[1.1,-2.5],[3.0,-1.9],[2.2,-0.2]];
