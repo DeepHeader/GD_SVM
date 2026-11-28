@@ -731,10 +731,9 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 <p class="sl-p">값이 2개라면 이것저것 대입해 볼 수도 있어요. 큰 신경망에는 조절할 값이 <b>수백만 개 이상</b> 들어가기도 해요.</p>
 <p class="sl-p">경사하강법은 전부 시도하는 대신, <b>지금 위치에서 손실이 줄어드는 방향</b>만 계산해서 조금씩 나아가요. 가중치가 많은 신경망도 이 방식으로 학습할 수 있어요.</p></div>
 <div><div class="bigstat"><div class="n1">100<sup>10</sup> = 10<sup>20</sup></div><div class="n2">값 10개를 각각 100가지씩만 시도해도 나오는 조합 수</div><div class="n3">1초에 10억 번 계산해도 3천 년+</div></div>
-<div class="vs"><div class="bad"><b>✗ 전부 시도하기</b>조합이 폭발적으로 늘어나 현실적으로 불가능</div><div class="good"><b>✓ 경사 따라가기</b>매번 ‘내려가는 방향’ 하나만 계산</div></div></div></div></div><div class="slide" data-t="언제 쓸까?"><div class="sl-2"><div><span class="sl-k">03 · 언제 쓸까?</span><div class="sl-t">기울기를 구할 수 있는<br>모델을 학습할 때</div>
-<p class="sl-p">신경망을 학습할 때는 <a class="lesson-term" href="#backprop">역전파</a>로 각 가중치에 대한 손실의 기울기를 구해요. 경사하강법은 그 기울기의 반대 방향으로 가중치를 조금씩 조정해요. 모멘텀을 적용한 경사하강법과 Adam도 기울기를 활용해요.</p>
+<div class="vs"><div class="bad"><b>✗ 전부 시도하기</b>조합이 폭발적으로 늘어나 현실적으로 불가능</div><div class="good"><b>✓ 경사 따라가기</b>매번 ‘내려가는 방향’ 하나만 계산</div></div></div></div></div><div class="slide" data-t="언제 쓸까?"><div class="sl-2"><div><span class="sl-k">03 · 언제 쓸까?</span><div class="sl-t">손실을 줄여야 하는<br>거의 모든 곳에서</div>
 <ul class="fit"><li class="y">조절할 값이 아주 많을 때</li><li class="y">손실의 기울기를 계산할 수 있을 때</li><li class="w">학습률을 잘못 고르면 느리거나 발산 — 아래 실험의 주제예요</li><li class="w">가장 낮은 곳(전역 최솟값)을 항상 보장하진 않아요</li></ul></div>
-<div class="uses"><span>💬 신경망 기반 언어 모델</span><span>🖼 이미지 분류 신경망</span><span>📈 선형 · 로지스틱 회귀 학습</span></div></div></div><div class="slide" data-t="비유: 안개 낀 산"><div class="sl-2 wide"><div><svg class="illu" viewBox="0 0 460 240" role="img" aria-label="안개 낀 산에서 등산객이 발밑 경사를 느끼며 내려가는 그림">
+<div class="uses"><span>🧠 딥러닝 · 신경망 학습</span><span>💬 ChatGPT 같은 언어 모델</span><span>🖼 이미지 인식</span><span>📈 선형 · 로지스틱 회귀</span><span>🎬 추천 시스템</span></div></div></div><div class="slide" data-t="비유: 안개 낀 산"><div class="sl-2 wide"><div><svg class="illu" viewBox="0 0 460 240" role="img" aria-label="안개 낀 산에서 등산객이 발밑 경사를 느끼며 내려가는 그림">
 <defs>
  <linearGradient id="gi-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eeebff"/><stop offset="1" stop-color="#fbfaff"/></linearGradient>
  <linearGradient id="gi-gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a8df3"/><stop offset="1" stop-color="#5a46d6"/></linearGradient>
