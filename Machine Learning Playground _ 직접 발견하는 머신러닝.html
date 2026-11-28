@@ -144,7 +144,7 @@ svg text{font-family:'Noto Sans KR',Arial,sans-serif}
 .regime{font-size:12.5px;margin-top:8px;padding:9px 11px;border-radius:9px;background:#f3f1fe;color:#4b3cb8}
 .regime.warn{background:#fff3e8;color:#b05a12}
 .regime.bad{background:#fdecef;color:#b42340}
-.coach{position:absolute;z-index:5;background:var(--ink);color:#fff;font-size:12px;padding:6px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;animation:bob 1.4s ease-in-out infinite}
+.coach{max-width:calc(100% - 8px);position:absolute;z-index:5;background:var(--ink);color:#fff;font-size:12px;padding:6px 10px;border-radius:8px;white-space:normal;pointer-events:none;animation:bob 1.4s ease-in-out infinite}
 .coach::after{content:'';position:absolute;left:18px;bottom:-5px;border:5px solid transparent;border-top-color:var(--ink);border-bottom:0}
 @keyframes bob{50%{transform:translateY(-3px)}}
 #tip{position:fixed;z-index:100;pointer-events:none;transform:translate(-50%,-100%);background:var(--ink);color:#fff;border-radius:10px;padding:8px 11px 9px;min-width:170px;opacity:0;transition:opacity .12s;box-shadow:0 8px 24px rgba(16,24,40,.25)}
@@ -306,6 +306,7 @@ select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10
 @media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
 .sl-2{display:grid;grid-template-columns:1fr 1.05fr;gap:44px;align-items:center}
 .sl-2.wide{grid-template-columns:1.25fr 1fr}
+.sl-2>*,.fxcards>.fx,.labgrid>.side,.hero>*,.slide{min-width:0}
 .sl-k{font:700 12px var(--mono);color:var(--c);letter-spacing:.02em}
 .sl-t{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.28;margin:8px 0 16px}
 .sl-t.sm{font-size:27px}
@@ -347,7 +348,8 @@ select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10
 .dots button{width:9px;height:9px;border-radius:5px;border:0;background:#d5d9e2;padding:0;transition:width .2s,background .2s}
 .dots button.on{width:28px;background:var(--c)}
 .deck.full{position:fixed;inset:0;z-index:200;margin:0;border-radius:0;display:flex;flex-direction:column;border:0}
-.deck.full .slides{flex:1;overflow:auto}
+.deck.full .slides{flex:1;min-height:0;align-items:safe center;overflow:auto}
+.deck.full .deck-top,.deck.full .deck-nav{flex-shrink:0}
 .deck.full .slide.on{max-width:1240px;margin:0 auto}
 @media (min-width:1100px){.deck.full .slide.on{zoom:1.15}}
 .kbd{font:600 11px var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;color:var(--mut);background:#fff}
@@ -355,17 +357,17 @@ select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10
 @media (max-width:960px){.sl-2,.sl-2.wide{grid-template-columns:1fr;gap:22px}.slide{padding:26px 22px}.sl-t{font-size:26px}.slides{min-height:0}.slide .decode{font-size:30px}.deck-top .kh{display:none}}
 /* 3D VIEW */
 .view3d{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,#f7f6ff,#fff 70%);user-select:none}
-#gd3-canvas{width:100%;aspect-ratio:3/2;max-height:560px;cursor:grab;touch-action:none}
+#gd3-canvas{position:relative;width:100%;aspect-ratio:3/2;max-height:560px;cursor:grab;touch-action:none}
 #gd3-canvas.grab{cursor:grabbing}
 #gd3-canvas.pick{cursor:crosshair}
 #gd3-canvas canvas{display:block;width:100%!important;height:100%!important}
-.v3-ctl{position:absolute;left:12px;top:12px;display:flex;gap:6px;flex-wrap:wrap;z-index:3}
+.v3-ctl{position:absolute;left:12px;right:54px;top:12px;display:flex;gap:6px;flex-wrap:wrap;z-index:3}
 .v3-ctl button{border:1px solid var(--line);background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;font-size:12px;color:var(--mut)}
 .v3-ctl button.on{color:#fff;background:var(--ink);border-color:var(--ink)}
 .v3-ctl button.pk.on{background:var(--gd);border-color:var(--gd)}
 .v3-zoom{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:4px;z-index:3}
 .v3-zoom button{width:30px;height:30px;border:1px solid var(--line);background:rgba(255,255,255,.92);border-radius:8px;font-size:16px;line-height:1}
-.v3-hint{position:absolute;left:12px;bottom:10px;font-size:11.5px;color:var(--mut);background:rgba(255,255,255,.85);border-radius:8px;padding:4px 9px;z-index:3;pointer-events:none}
+.v3-hint{max-width:calc(100% - min(30%,210px) - 36px);position:absolute;left:12px;bottom:10px;font-size:11.5px;color:var(--mut);background:rgba(255,255,255,.85);border-radius:8px;padding:4px 9px;z-index:3;pointer-events:none}
 .minimap{position:absolute;right:12px;bottom:12px;width:min(30%,210px);border-radius:10px;overflow:hidden;border:2px solid #fff;box-shadow:0 4px 16px rgba(16,24,40,.18);z-index:3}
 .minimap canvas{display:block;width:100%;height:auto}
 .minimap svg{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:none}
@@ -428,6 +430,7 @@ select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10
 .decode .pt small{font-family:'Noto Sans KR',sans-serif;font-size:11.5px;font-style:normal;color:var(--mut);margin-top:8px;padding-top:6px;border-top:2px solid currentColor;white-space:nowrap}
 .decode .op{padding-top:2px;color:var(--mut2)}
 .loop{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}
+.loop.three{grid-template-columns:repeat(3,1fr)}
 .loop div{border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;position:relative;background:#fff}
 .loop b{display:block;font-family:var(--mono);font-size:11px;color:var(--acc);margin-bottom:4px}
 .loop div:not(:last-child)::after{content:'→';position:absolute;right:-10px;top:50%;transform:translate(50%,-50%);color:var(--mut2);font-size:13px}
@@ -463,7 +466,30 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 .bp-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .backbar{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--soft);border-radius:16px;padding:20px 22px;flex-wrap:wrap}
 #bp-live{white-space:normal}
-@media(max-width:700px){#v-basics .slide .sl-2{grid-template-columns:minmax(0,1fr)!important}#v-basics .map4{display:block;overflow-x:auto}}
+@media(max-width:960px){#v-basics .slide .sl-2{grid-template-columns:minmax(0,1fr)!important}}
+@media(max-width:700px){
+  .slide .map4{display:block;overflow-x:auto}
+  .map4 th,.slide .map4 td{padding:9px 11px}
+  .map4 td:not(:last-child){min-width:7em}
+  .map4.cmp3 td{min-width:9em}
+  .map4.cmp3 td:first-child{min-width:6em}
+  .slide .loop.three{grid-template-columns:1fr}
+  .live{white-space:normal;overflow-wrap:anywhere}
+}
+@media(max-width:560px){
+  .view3d:not(.no3d){display:grid;grid-template-areas:"controls" "scene" "help";grid-template-columns:minmax(0,1fr)}
+  .v3-ctl,.v3-hint{position:static}
+  .v3-ctl{grid-area:controls;padding:8px}
+  #gd3-canvas,.v3-zoom,.view3d:not(.no3d) .minimap{grid-area:scene}
+  .v3-zoom{position:static;place-self:start end;margin:6px}
+  .view3d:not(.no3d) .minimap{position:relative;inset:auto;place-self:end;margin:6px}
+  .v3-hint{grid-area:help;max-width:none;border-radius:0}
+  .deck-top .cur{white-space:normal;overflow:visible;overflow-wrap:anywhere}
+  .deck-nav .btn{flex-shrink:0;padding-inline:10px}
+  .deck-nav .dots{min-width:0}
+  .fx-h,.bowl-toolbar{flex-wrap:wrap}
+}
+@media(max-width:360px){header .wrap{gap:5px;padding-inline:8px}header .prog{padding-inline:4px}}
 @media(max-width:520px){header .logo span{display:none}header .nav{gap:clamp(8px,3vw,14px)}}
 </style>
 </head>
@@ -923,7 +949,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 <tr><td><b>약점</b></td><td>느림, 웅덩이에 갇힘, 지그재그</td><td>속도가 붙어 최솟값을 지나칠 수 있음(오버슈트)</td><td>항상 가장 깊은 곳을 보장하진 않음</td></tr>
 <tr><td><b>어디서 쓰나</b></td><td>개념 이해, 단순한 문제</td><td>이미지 모델 학습 등에서 SGD+모멘텀으로 자주 사용</td><td>딥러닝에서 가장 흔히 쓰는 기본 선택지 중 하나</td></tr></table></div><div class="slide" data-t="실험에서 볼 것"><span class="sl-k">07 · 이제 직접 확인해 봐요</span><div class="sl-t sm">세 지형, 세 가지 질문</div>
 <p class="sl-p">아래 3D 실험에는 세 가지 지형이 있어요. 각 지형은 앞에서 본 세 가지 문제와 하나씩 짝지어져 있어요. 눌러서 바로 시작해 보세요.</p>
-<div class="loop" style="grid-template-columns:repeat(3,1fr)">
+<div class="loop three">
 <div><b>지형 ① 두 웅덩이 → 문제 ①</b>모멘텀이 관성으로 가운데 턱을 넘을까? <b>β</b>를 줄이면?<br><button class="btn sm go3" data-t="wells" style="margin-top:10px">두 웅덩이로 시작 →</button></div>
 <div><b>지형 ② 안장점 → 문제 ②</b>평평한 가운데에서 누가 먼저 빠져나갈까?<br><button class="btn sm go3" data-t="saddle" style="margin-top:10px">안장점으로 시작 →</button></div>
 <div><b>지형 ③ 좁은 골짜기 → 문제 ③</b>기본 GD의 지그재그 vs Adam. <b>η</b>를 키우면 누가 먼저 튈까?<br><button class="btn sm go3" data-t="valley" style="margin-top:10px">좁은 골짜기로 시작 →</button></div></div>
@@ -1109,7 +1135,7 @@ body[data-hl=sang] .lk-sang{stroke-width:4}
 <span class="pt" style="color:var(--a)"><span class="mv">w</span><small>경계의 방향</small></span><span class="op">·</span>
 <span class="pt" style="color:#5b6478"><span class="mv">x</span><small>데이터</small></span><span class="op">+</span>
 <span class="pt" style="color:var(--b)"><span class="mv">b</span><small>위치 보정</small></span></div>
-<div class="loop" style="grid-template-columns:repeat(3,1fr);margin-top:20px"><div><b>f(x) = 0</b>결정 경계 — 길 한가운데</div><div><b>f(x) = ±1</b>마진 경계 — 길의 양쪽 가장자리</div><div><b>폭 = 2 / ‖w‖</b>‖w‖를 줄일수록 길이 넓어져요</div></div>
+<div class="loop three" style="margin-top:20px"><div><b>f(x) = 0</b>결정 경계 — 길 한가운데</div><div><b>f(x) = ±1</b>마진 경계 — 길의 양쪽 가장자리</div><div><b>폭 = 2 / ‖w‖</b>‖w‖를 줄일수록 길이 넓어져요</div></div>
 <div class="say">그래서 SVM은 <b>½‖w‖²을 최소화</b>(= 길을 최대한 넓게)하면서, 모든 점이 자기 쪽 길 밖에 있도록(<span style="font-family:var(--math);font-style:italic">yᵢ f(xᵢ) ≥ 1</span>) 경계를 찾습니다. 직접 실험에서 보게 될 수식이 바로 이것이에요.</div></div><div class="slide" data-t="핵심 용어 5개"><span class="sl-k">08 · 정리</span><div class="sl-t sm">실험 전에 기억할 다섯 단어</div>
 <div class="terms"><div><b>결정 경계</b>두 그룹을 나누는 기준선<i>길 한가운데 선</i></div><div><b>마진</b>경계 주변의 여유 공간<i>길의 폭</i></div><div><b>서포트 벡터</b>경계 위치를 정하는 점<i>길 가장자리에 닿은 학생</i></div><div><b>소프트 마진 · C</b>일부 점이 길을 침범해도 허용하는 정도<i>C가 크면 침범에 엄격</i></div><div><b>커널 · γ</b>직선으로 안 될 때, 공간을 바꿔 곡선 경계를 만드는 방법<i>아래 ‘위로 올리기’ 실험</i></div></div></div></div>
         <div class="deck-nav"><button class="btn pv" type="button">← 이전</button><div class="dots"></div><button class="btn nx" type="button">다음 →</button></div>
@@ -1265,7 +1291,10 @@ function showTip(el,name){tipFor=name;tipEl=el;tip.classList.add('on');updateTip
 function updateTip(){
   if(!tipFor)return; const p=P[tipFor], f=clamp(frac(p,p.v),0,1);
   tip.innerHTML=`<div class="tl"><b>${p.sym}</b>${p.label}</div><div class="tv">${p.fmt(p.v)}</div><div class="tt"><i style="width:${f*100}%"></i></div><div class="te"><span>← ${p.lo}</span><span>${p.hi} →</span></div>`;
-  const r=tipEl.getBoundingClientRect(); tip.style.left=(r.left+r.width/2)+'px'; tip.style.top=(r.top-10)+'px';
+  const r=tipEl.getBoundingClientRect(), half=tip.offsetWidth/2;
+  tip.style.left=clamp(r.left+r.width/2,half+6,document.documentElement.clientWidth-half-6)+'px';
+  const top=r.top-tip.offsetHeight-10;
+  tip.style.top=(top>=6?r.top-10:r.bottom+tip.offsetHeight+8)+'px';
 }
 function hideTip(){tipFor=null;tip.classList.remove('on');}
 window.addEventListener('scroll',()=>{if(tipFor&&!document.body.classList.contains('scrubbing'))hideTip();else if(tipFor)updateTip();},{passive:true});
@@ -1365,7 +1394,8 @@ function placeCoach(){
   c.textContent=v.id==='v-gd'?'← η를 클릭한 채 좌우로 끌어보세요 →':'← C를 클릭한 채 좌우로 끌어보세요 →';
   box.appendChild(c);
   const br=box.getBoundingClientRect(), er=el.getBoundingClientRect();
-  c.style.left=Math.max(4,er.left-br.left-12)+'px'; c.style.top=(er.top-br.top-34)+'px';
+  c.style.left=clamp(er.left-br.left-12,4,box.clientWidth-c.offsetWidth-4)+'px';
+  c.style.top=(er.top-br.top-c.offsetHeight-6)+'px';
 }
 function syncLabNavigation(){
   const view=$('.view:not([hidden])');
@@ -1669,8 +1699,8 @@ const gd3=(()=>{
     const cg=new T.BufferGeometry();cg.setAttribute('position',new T.Float32BufferAttribute(seg,3));
     cont=new T.LineSegments(cg,new T.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.45}));scene.add(cont);
     // base outline
-    labels.forEach(l=>l.el.remove());labels=t.marks.map(([x,y,txt])=>{const el=document.createElement('div');el.className='v3-lab';el.textContent=txt;box.appendChild(el);return {el,v:W3(x,y,t.f(x,y),0)};});
-    const se=document.createElement('div');se.className='v3-lab st';se.textContent='출발';box.appendChild(se);labels.push({el:se,start:true,v:new T.Vector3()});
+    labels.forEach(l=>l.el.remove());labels=t.marks.map(([x,y,txt])=>{const el=document.createElement('div');el.className='v3-lab';el.textContent=txt;host.appendChild(el);return {el,v:W3(x,y,t.f(x,y),0)};});
+    const se=document.createElement('div');se.className='v3-lab st';se.textContent='출발';host.appendChild(se);labels.push({el:se,start:true,v:new T.Vector3()});
     sync();
   }
   let labels=[];
@@ -1747,7 +1777,11 @@ const gd3=(()=>{
   function frame(now){requestAnimationFrame(frame);if(!vis||!host.offsetParent)return;if(anim)anim(now);if(!dirty)return;dirty=false;
     renderer.render(scene,cam);
     const w=host.clientWidth,h=host.clientHeight;
-    labels.forEach(l=>{tmp.copy(l.v).project(cam);const ok=tmp.z<1&&Math.abs(tmp.x)<1.05&&Math.abs(tmp.y)<1.05;l.el.style.display=ok?'':'none';l.el.style.left=((tmp.x+1)/2*w)+'px';l.el.style.top=((1-tmp.y)/2*h-4)+'px';});}
+    labels.forEach(l=>{tmp.copy(l.v).project(cam);const ok=tmp.z<1&&Math.abs(tmp.x)<1.05&&Math.abs(tmp.y)<1.05;l.el.style.display=ok?'':'none';if(!ok)return;
+      const half=l.el.offsetWidth/2, height=l.el.offsetHeight;
+      l.el.style.left=clamp((tmp.x+1)/2*w,half+2,w-half-2)+'px';
+      const offset=l.start?-height:height*.4;
+      l.el.style.top=(clamp((1-tmp.y)/2*h-4+offset,2,h-height-2)-offset)+'px';});}
   hooks.sync=()=>sync();hooks.terrain=()=>buildTerrain();
   window.addEventListener('mouseover',()=>{});
   document.addEventListener('pointerover',e=>{if(e.target.closest&&e.target.closest('.sym'))sync();});
@@ -2252,8 +2286,8 @@ const basics=(()=>{
     N.forEach(([x,y,t,v,c,lab])=>{s+=`<circle cx="${x}" cy="${y}" r="24" fill="#fff" stroke="${c}" stroke-width="2.5"/><text x="${x}" y="${y+6}" font-size="17" font-weight="800" fill="${c}" text-anchor="middle" font-family="STIX Two Text,serif">${t}</text><text x="${x}" y="${y-32}" font-size="12.5" font-weight="700" fill="#3f5bd8" text-anchor="middle">${v}</text><text x="${x}" y="${y+42}" font-size="10.5" fill="#667085" text-anchor="middle">${lab}</text>`;});
     s+=`<text x="390" y="100" font-size="11" fill="#667085" text-anchor="middle">정답 y = ${Y}</text>`;
     // backward grads (red)
-    const g=(x,y,t)=>`<rect x="${x-38}" y="${y-11}" width="76" height="22" rx="11" fill="#fdecef" stroke="#f3cfd6"/><text x="${x}" y="${y+4}" font-size="11.5" font-weight="700" fill="#b42340" text-anchor="middle">${t}</text>`;
-    s+=g(330,188,'∂L/∂ŷ '+f(dy))+g(108,100,'∂L/∂w '+f(dw))+g(236,222,'∂L/∂b '+f(db));
+    const g=(x,y,t)=>`<rect x="${x-54}" y="${y-11}" width="108" height="22" rx="11" fill="#fdecef" stroke="#f3cfd6"/><text x="${x}" y="${y+4}" font-size="11.5" font-weight="700" fill="#b42340" text-anchor="middle">${t}</text>`;
+    s+=g(338,202,'∂L/∂ŷ '+f(dy))+g(135,44,'∂L/∂w '+f(dw))+g(250,225,'∂L/∂b '+f(db));
     s+=`<text x="230" y="292" font-size="11" fill="#98a2b3" text-anchor="middle">파란 숫자 = 순전파 값 · 빨간 상자 = 역전파로 구한 기울기</text>`;
     $('#bp-svg').innerHTML=s;
     $('#bp-live').innerHTML=`순전파: ŷ = ${f(w)}×${X} + ${f(b)} = <b>${f(yh)}</b>, L = (${f(yh)} − ${Y})² = <b>${f(L)}</b><br>역전파: ∂L/∂ŷ = 2(ŷ − y) = <b>${f(dy)}</b> → ∂L/∂w = ${f(dy)} × x(${X}) = <b style="color:var(--err)">${f(dw)}</b>, ∂L/∂b = ${f(dy)} × 1 = <b style="color:var(--err)">${f(db)}</b>`;
